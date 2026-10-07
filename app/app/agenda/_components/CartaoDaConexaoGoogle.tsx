@@ -122,9 +122,11 @@ export function CartaoDaConexaoGoogle({
     return (
       <div
         data-testid="google-conectado"
-        className="flex items-center gap-2 rounded-lg border border-border bg-surface p-3"
+        className="-mt-2 flex items-center gap-2"
       >
-        <GoogleLogo size={16} weight="bold" className="shrink-0 text-text-muted" aria-hidden />
+        {/* Claud.ia: una línea discreta bajo el título, sin tarjeta. */}
+        <span className="h-2 w-2 shrink-0 rounded-full bg-accent-500" aria-hidden />
+        <GoogleLogo size={14} weight="bold" className="shrink-0 text-text-muted" aria-hidden />
         <p className="min-w-0 flex-1 truncate text-sm">
           <span className="text-text-muted">{t("Agenda conectada:")} </span>
           <span className="font-medium">{contaConectada}</span>

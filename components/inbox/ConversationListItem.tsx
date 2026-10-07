@@ -296,6 +296,21 @@ export function ConversationListItem({
           )}
         </div>
 
+        {/* Claud.ia: quién tiene la conversación, en una etiqueta legible. */}
+        {(isAi || c?.force_human) && (
+          <div className="mt-1.5">
+            <span
+              className={cn(
+                "inline-flex h-5 items-center rounded-full px-2 text-[11px] font-medium",
+                c?.force_human
+                  ? "bg-warning-bg text-warning-fg"
+                  : "bg-accent-soft text-accent-800 dark:text-accent-200",
+              )}
+            >
+              {c?.force_human ? "Espera a una persona" : "Claud.ia"}
+            </span>
+          </div>
+        )}
         {temSelos && (
           <div className="mt-1.5 flex flex-wrap items-center gap-1">
             {visibleTags.map((t) => (

@@ -145,7 +145,7 @@ export function HistoricoDaAgenda({
       <div
         role="tablist"
         aria-label={t("Filtrar o histórico")}
-        className="flex flex-wrap items-center gap-0.5 rounded-md border border-border bg-surface p-0.5"
+        className="flex flex-wrap items-center gap-6 border-b border-border"
       >
         {ABAS.map((a) => {
           const n = grupos[a.id].length;
@@ -158,11 +158,12 @@ export function HistoricoDaAgenda({
               aria-selected={aba === a.id}
               onClick={() => setAba(a.id)}
               className={cn(
-                "flex items-center gap-1.5 rounded-sm px-2.5 py-1 text-xs transition-colors duration-fast ease-out",
+                // Claud.ia: pestañas subrayadas, como en la maqueta.
+                "-mb-px flex items-center gap-1.5 border-b-2 pb-2.5 pt-1 text-sm transition-colors duration-fast ease-out",
                 "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-500",
                 aba === a.id
-                  ? "bg-accent font-semibold text-accent-foreground"
-                  : "text-text-muted hover:bg-surface-elevated hover:text-text",
+                  ? "border-text font-semibold text-text"
+                  : "border-transparent text-text-muted hover:text-text",
               )}
             >
               <span>{t(a.rotulo)}</span>
@@ -172,8 +173,7 @@ export function HistoricoDaAgenda({
               <span
                 data-testid={`contador-${a.id}`}
                 className={cn(
-                  "rounded-full px-1.5 text-[10px] tabular-nums",
-                  aba === a.id ? "bg-accent-foreground/20" : "bg-surface-elevated text-text-subtle",
+                  "text-xs font-normal tabular-nums text-text-muted",
                 )}
               >
                 {n}
@@ -183,9 +183,9 @@ export function HistoricoDaAgenda({
         })}
       </div>
 
-      <div className="mt-3 min-h-0 flex-1 overflow-auto rounded-lg border border-border bg-surface">
+      <div className="mt-2 min-h-0 flex-1 overflow-auto">
         {daAba.length === 0 ? (
-          <p data-testid="historico-vazio" className="p-8 text-center text-sm text-text-muted">
+          <p data-testid="historico-vazio" className="py-3 text-sm text-text-muted">
             {aba === "proximos" && t("Nada marcado daqui para a frente.")}
             {aba === "aguardando" && t("Ninguém esperando confirmação.")}
             {aba === "passados" && t("Ainda não há atendimentos concluídos.")}

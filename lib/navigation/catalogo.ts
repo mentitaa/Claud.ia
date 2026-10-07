@@ -133,6 +133,16 @@ export const NAV_CATALOG = [
   },
   // ---- Atendimento — onde o operador passa o dia ----
   {
+    // Claud.ia: o painel do dono da clínica — citas de hoje com o estado do
+    // pagamento, quem espera uma pessoa e o resumo da semana.
+    href: "/app/inicio",
+    label: "Início",
+    description: "O dia da clínica: consultas de hoje, quem espera uma pessoa e o que a IA fez na semana.",
+    icon: "House",
+    group: "atendimento",
+    sidebar: true,
+  },
+  {
     href: "/app/inbox",
     label: "Inbox",
     description: "As conversas de WhatsApp, com você e a IA atendendo lado a lado.",

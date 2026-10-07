@@ -161,11 +161,11 @@ export function ConversationHeader({ conversation, onAbrirConversa }: Props) {
     // de antes (uma linha), e quando aperta a barra desce para a linha de baixo.
     // Nenhuma ação some — um menu "mais" esconderia o "Lembrar" que a spec
     // `canais-baseline` clica, e, pior, esconderia ação de quem atende.
-    <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border bg-background px-4 py-3">
+    <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border bg-background px-6 py-4">
       <div className="min-w-0">
         <div className="flex items-center gap-2">
           <ChannelLogo channel={conversation.channel_sessions} size={20} />
-          <h2 className="truncate text-sm font-semibold">{displayName}</h2>
+          <h2 className="truncate font-display text-[1.75rem] font-normal leading-tight">{displayName}</h2>
           <Badge variant="outline" className="h-4 px-1.5 text-[10px]">
             {t(STATUS_LABEL[status] ?? status)}
           </Badge>

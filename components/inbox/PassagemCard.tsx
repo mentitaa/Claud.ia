@@ -222,7 +222,7 @@ function Corpo({ cartao, tituloId }: { cartao: CartaoDaPassagem; tituloId: strin
 function Secao({ rotulo, children }: { rotulo: string; children: React.ReactNode }) {
   return (
     <div className="mt-2">
-      <p className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
+      <p className="font-display text-[15px] italic text-muted-foreground">
         {rotulo}
       </p>
       <div className="mt-0.5">{children}</div>

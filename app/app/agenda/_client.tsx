@@ -19,7 +19,6 @@ import { AgendaInterativa } from "@/components/agenda/AgendaInterativa";
 import { FiltroDePessoas } from "@/components/agenda/FiltroDePessoas";
 import { HistoricoDaAgenda } from "@/components/agenda/HistoricoDaAgenda";
 import type { Agendamento, HorarioLivre, VisaoDaAgenda } from "@/components/agenda/tipos";
-import { EmptyAgenda } from "@/components/empty";
 import { rotuloDoLocal } from "@/lib/agenda/locais";
 import { ancoraAoFecharPainel } from "@/lib/agenda/ancora-depois-de-marcar";
 import { ancoraLocalDoDia } from "@/lib/agenda/semana-semente";
@@ -406,7 +405,7 @@ export function AgendaClient({
       data-testid="tela-agenda"
       data-fonte={agendamentosIniciais.length > 0 ? "api" : "api-sem-dado"}
       data-fuso={fusoDeApresentacao ?? "organizacao"}
-      className="flex h-full flex-col gap-4 p-6"
+      className="flex h-full flex-col gap-5 px-6 py-8 lg:px-10"
     >
       {/*
         Em Suspense porque `useSearchParams` obriga: sem a fronteira, o Next
@@ -418,18 +417,10 @@ export function AgendaClient({
         <EntradaDaAgenda onContext={onContext} />
       </React.Suspense>
 
-      <CartaoDaConexaoGoogle
-        configurado={googleConfigurado}
-        falta={faltaNoGoogle}
-        linkDeConfiguracao={linkDeConfiguracaoDoGoogle}
-        contaConectada={contaConectada}
-        enderecoDeRetorno={enderecoDeRetorno}
-      />
-
       <header className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
         <div className="min-w-0">
-          <h1 className="text-2xl font-semibold tracking-tight">{t("Agenda")}</h1>
-          <p className="text-sm text-muted-foreground">
+          <h1 className="text-[3rem] leading-none">{t("Agenda")}</h1>
+          <p className="mt-2 text-sm text-muted-foreground">
             {t("O que está marcado, com quem, e quem atende — seu e da equipe.")}
           </p>
         </div>
@@ -497,6 +488,14 @@ export function AgendaClient({
         </div>
       </header>
 
+      <CartaoDaConexaoGoogle
+        configurado={googleConfigurado}
+        falta={faltaNoGoogle}
+        linkDeConfiguracao={linkDeConfiguracaoDoGoogle}
+        contaConectada={contaConectada}
+        enderecoDeRetorno={enderecoDeRetorno}
+      />
+
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div className="flex min-w-0 items-center gap-2">
           <div className="flex items-center gap-0.5">
@@ -528,7 +527,7 @@ export function AgendaClient({
           */}
           <span
             data-testid="periodo"
-            className="truncate text-sm font-semibold first-letter:uppercase"
+            className="truncate font-display text-[1.4rem] first-letter:uppercase"
           >
             {periodo}
           </span>
@@ -543,7 +542,7 @@ export function AgendaClient({
           <FiltroDePessoas pessoas={pessoas} isolada={isolada} onIsolar={setIsolada} />
           <div
             data-testid="alternador-de-visao"
-            className="flex items-center gap-0.5 rounded-md border border-border bg-surface p-0.5"
+            className="flex items-center gap-0.5 rounded-full bg-surface-elevated p-1"
           >
             {VISOES.map((v) => (
               <button
@@ -553,11 +552,11 @@ export function AgendaClient({
                 aria-pressed={visao === v.id}
                 onClick={() => setVisao(v.id)}
                 className={cn(
-                  "rounded-sm px-2.5 py-1 text-xs transition-colors duration-fast ease-out",
+                  "rounded-full px-3.5 py-1.5 text-[13px] transition-colors duration-fast ease-out",
                   "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-500",
                   visao === v.id
-                    ? "bg-accent font-semibold text-accent-foreground"
-                    : "text-text-muted hover:bg-surface-elevated hover:text-text",
+                    ? "bg-surface font-semibold text-text shadow-xs"
+                    : "text-text-muted hover:text-text",
                 )}
               >
                 {t(v.rotulo)}
@@ -1076,9 +1075,14 @@ export function AgendaClient({
           limpo. O mesmo formato do defeito que `agenda-tela-do-produto` já
           tinha pago: verde por banco sujo. */}
       {agendamentos.length === 0 ? (
-        <div className="rounded-lg border border-border bg-surface p-4">
-          <EmptyAgenda />
-        </div>
+        // Claud.ia: el aviso en una línea, para que la semana quede a la vista.
+        // Mismos textos que `EmptyAgenda`, sin el bloque grande de ilustración.
+        <p data-testid="agenda-vazia" className="text-sm text-text-muted">
+          <span className="font-medium text-text">{t("Sua agenda está livre esta semana")}.</span>{" "}
+          {t(
+            "Agendamentos aparecem aqui quando alguém marca pela tela, quando o agente marca por você, ou quando chegam da agenda do Google conectada.",
+          )}
+        </p>
       ) : null}
       {/* A GRADE INTERATIVA — clicar num bloco livre marca ali, arrastar um card
           remarca. Toda a fiação (a consulta de horários da janela desenhada, a

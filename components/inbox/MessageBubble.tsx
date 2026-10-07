@@ -167,10 +167,12 @@ export function MessageBubble({
           isBareSticker
             ? "px-0 py-0"
             : cn(
-                "rounded-2xl px-3 py-2 shadow-sm",
+                // Claud.ia: burbujas claras — menta para lo que sale, blanco con
+                // línea fina para lo que entra. Texto siempre oscuro.
+                "rounded-2xl px-3.5 py-2.5",
                 isOutbound
-                  ? "rounded-br-sm bg-primary text-primary-foreground"
-                  : "rounded-bl-sm bg-muted text-foreground",
+                  ? "rounded-br-sm bg-accent-soft text-text"
+                  : "rounded-bl-sm border border-border bg-surface text-foreground",
               ),
           isFailed && "border border-destructive",
         )}
@@ -186,8 +188,8 @@ export function MessageBubble({
             className={cn(
               "mb-1 rounded-md border-l-2 px-2 py-1 text-xs",
               isOutbound
-                ? "border-primary-foreground/50 bg-primary-foreground/10"
-                : "border-primary bg-background/60",
+                ? "border-accent-600/60 bg-surface/60"
+                : "border-accent-600 bg-surface-elevated",
             )}
           >
             <div className="font-medium opacity-80">
@@ -250,8 +252,8 @@ export function MessageBubble({
 
         <div
           className={cn(
-            "mt-1 flex items-center justify-end gap-1 text-[10px]",
-            isOutbound ? "text-primary-foreground" : "text-muted-foreground",
+            "mt-1 flex items-center justify-end gap-1 text-[11px]",
+            "text-muted-foreground",
           )}
         >
           {editada && (

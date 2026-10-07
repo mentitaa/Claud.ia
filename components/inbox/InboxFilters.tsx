@@ -238,7 +238,11 @@ export function InboxFilters({ value, onChange }: Props) {
 
   return (
     <div className="border-b border-border bg-background">
-      <div className="space-y-2 px-3 pt-3 pb-2">
+      <div className="space-y-3 px-4 pt-5 pb-2">
+        {/* Claud.ia: el título de la columna, como en el resto del panel. */}
+        <p className="font-display text-[2.1rem] leading-none text-text" aria-hidden>
+          Inbox
+        </p>
         <div className="flex items-center gap-2">
           <div className="relative min-w-0 flex-1">
             <MagnifyingGlass
@@ -379,7 +383,7 @@ export function InboxFilters({ value, onChange }: Props) {
               <TabsTrigger
                 key={tab}
                 value={tab}
-                className="-mb-px shrink-0 gap-1 rounded-none border-b-2 border-transparent px-0 pb-2 pt-1 text-xs font-medium text-text-muted data-[state=active]:border-accent data-[state=active]:bg-transparent data-[state=active]:text-text data-[state=active]:shadow-none"
+                className="-mb-px shrink-0 gap-1 rounded-none border-b-2 border-transparent px-0 pb-2 pt-1 text-[13px] font-medium text-text-muted data-[state=active]:border-text data-[state=active]:bg-transparent data-[state=active]:text-text data-[state=active]:shadow-none"
               >
                 {t(meta.label)}
                 {typeof count === "number" && count > 0 && (

@@ -19,6 +19,7 @@ export const interfaceSettingsSchema = z
 export type InterfaceSettings = z.infer<typeof interfaceSettingsSchema>;
 export const INTERFACE_COMPLETA: InterfaceSettings = { preset: "completa" };
 const SIMPLIFICADA: readonly NavDestinationId[] = [
+  "/app/inicio",
   "/app/inbox",
   "/app/agenda",
   "/app/kanban",
@@ -123,6 +124,8 @@ export function interfaceTemDestino(
 export function homeDaInterface(raw: unknown, platform: boolean, role: Role | null): string {
   const visible = destinosDaInterface(raw, platform, role);
   return (
+    // Claud.ia: o Início (painel da clínica) é a porta de entrada quando visível.
+    visible.find((d) => d.href === "/app/inicio")?.href ??
     visible.find((d) => d.href === "/app/inbox")?.href ??
     visible.find((d) => !essencial(d, role, platform))?.href ??
     "/app/settings/profile"

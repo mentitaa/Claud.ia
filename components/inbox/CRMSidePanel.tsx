@@ -606,12 +606,12 @@ export function CRMSidePanel({ conversation }: Props) {
   }
 
   return (
-    <aside className="flex h-full flex-col gap-4 overflow-y-auto border-l border-border bg-background p-4">
+    <aside className="flex h-full flex-col gap-7 overflow-y-auto border-l border-border bg-background px-5 py-6">
       <section>
-        <h3 className="text-xs font-semibold text-text">
+        <h3 className="border-b border-text pb-2 font-display text-[1.45rem] font-normal leading-none text-text">
           {t("Contato")}
         </h3>
-        <Card className="mt-2 space-y-2 p-3 text-sm">
+        <Card className="mt-3 space-y-2 border-0 bg-transparent p-0 text-sm shadow-none">
           <div className="font-medium">{displayName}</div>
           {contact?.phone_number && (
             <div className="text-xs text-muted-foreground">{phoneForDisplay(contact.phone_number)}</div>
@@ -694,7 +694,7 @@ export function CRMSidePanel({ conversation }: Props) {
           conversa está atendendo alguém que pediu alguma coisa — a primeira
           pergunta a responder é o que ainda está pendente, não quanto vale. */}
       <section data-testid="inbox-demandas">
-        <h3 className="text-xs font-semibold text-text">
+        <h3 className="border-b border-text pb-2 font-display text-[1.45rem] font-normal leading-none text-text">
           {t("Demandas abertas")}
         </h3>
         {sectionsLoading ? (
@@ -754,7 +754,7 @@ export function CRMSidePanel({ conversation }: Props) {
       <Separator />
 
       <section data-testid="inbox-memoria">
-        <h3 className="text-xs font-semibold">{t("Memória do contato")}</h3>
+        <h3 className="border-b border-text pb-2 font-display text-[1.45rem] font-normal leading-none text-text">{t("Memória do contato")}</h3>
         <p className="mt-1 text-xs text-muted-foreground">{t("Fatos duráveis registrados nas notas. Pendências pertencem à demanda vigente.")}</p>
         {!sectionsLoading && fatos.map((f) => <details key={f.id} className="mt-2 text-xs"><summary>{f.headline}</summary><p className="mt-1 whitespace-pre-wrap">{f.body}</p></details>)}
         {!sectionsLoading && fatos.length === 0 && <p className="mt-2 text-xs text-muted-foreground">{t("Nenhum fato durável registrado.")}</p>}
@@ -763,7 +763,7 @@ export function CRMSidePanel({ conversation }: Props) {
       <Separator />
 
       <section data-testid="inbox-campos-lead">
-        <h3 className="text-xs font-semibold text-text">
+        <h3 className="border-b border-text pb-2 font-display text-[1.45rem] font-normal leading-none text-text">
           {t("Leads recentes")}
         </h3>
         {sectionsLoading ? (
@@ -783,7 +783,7 @@ export function CRMSidePanel({ conversation }: Props) {
       <Separator />
 
       <section>
-        <h3 className="text-xs font-semibold text-text">
+        <h3 className="border-b border-text pb-2 font-display text-[1.45rem] font-normal leading-none text-text">
           {t("Pedidos recentes")}
         </h3>
         {sectionsLoading ? (
@@ -815,7 +815,7 @@ export function CRMSidePanel({ conversation }: Props) {
       <Separator />
 
       <section>
-        <h3 className="text-xs font-semibold text-text">
+        <h3 className="border-b border-text pb-2 font-display text-[1.45rem] font-normal leading-none text-text">
           {t("Atividade")}
         </h3>
         {sectionsLoading ? (

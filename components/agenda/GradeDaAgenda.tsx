@@ -333,6 +333,9 @@ function BlocoDeAgendamento({
   const duracao = Math.max(differenceInMinutes(termina, comeca), 15);
   const trilha = pessoa?.trilha ?? 1;
   const doGoogle = agendamento.origem === "google_sync";
+  // Claud.ia: la cita que el agente reservó tras recibir el adelanto llega con
+  // el título "PAGADO · Nombre · Tratamiento". Se pinta en menta, sin franja.
+  const pagado = !doGoogle && /^\s*pagad[oa]\b/i.test(agendamento.titulo);
   const cancelado = agendamento.situacao === "cancelled";
 
   return (
@@ -376,9 +379,11 @@ function BlocoDeAgendamento({
       }${pessoa ? `, ${t("atendido por")} ${pessoa.nome}` : ""}${
         doGoogle ? `, ${t("ocupado na agenda do Google")}` : ""
       }`}
+      data-pagado={pagado ? "true" : undefined}
       className={cn(
-        "absolute flex flex-col items-start overflow-hidden rounded-sm px-1.5 py-0.5 text-left",
-        "border border-border/60 transition-colors duration-fast ease-out",
+        "absolute flex flex-col items-start overflow-hidden rounded-md px-1.5 py-0.5 text-left",
+        pagado ? "border border-transparent" : "border border-border/60",
+        "transition-colors duration-fast ease-out",
         doGoogle ? "cursor-default" : "cursor-pointer hover:border-border-strong",
         // `grab` só quando remarcar é possível: o cursor é a única pista de que
         // o card se move, e prometê-la num card que não se move (ocupação do
@@ -417,18 +422,30 @@ function BlocoDeAgendamento({
             // é neutra de propósito — a agenda de fora não pertence a ninguém da
             // equipe, então não recebe trilha.
             "repeating-linear-gradient(135deg, var(--color-surface-elevated) 0 6px, var(--color-surface) 6px 12px)"
-          : fundoDaTrilha(trilha),
+          : pagado
+            ? "var(--color-accent-soft)"
+            : "var(--color-surface-elevated)",
         opacity: doGoogle ? 0.75 : undefined,
       }}
     >
       <span
         aria-hidden
         data-testid={`faixa-${agendamento.id}`}
-        className="absolute inset-y-0 left-0 w-[3px] rounded-l-sm"
+        className={cn("absolute inset-y-0 left-0 w-[3px] rounded-l-sm", pagado && "hidden")}
         style={{ backgroundColor: doGoogle ? "var(--color-border-strong)" : corDaTrilha(trilha) }}
       />
-      <span className="ml-1 truncate text-[11px] font-semibold leading-4 text-text">
-        {agendamento.titulo}
+      <span
+        className={cn(
+          "ml-1 flex min-w-0 items-center gap-1 truncate text-[11.5px] font-semibold leading-4",
+          pagado ? "text-accent-800 dark:text-accent-200" : "text-text",
+        )}
+      >
+        {pagado && (
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden className="shrink-0">
+            <path d="M5 12.5l4.5 4.5L19 7.5" />
+          </svg>
+        )}
+        <span className="truncate">{pagado ? tituloSemMarca(agendamento.titulo) : agendamento.titulo}</span>
       </span>
       {duracao >= 45 && (
         <span className="ml-1 truncate text-[10px] leading-3 tabular-nums text-text-muted">
@@ -438,6 +455,11 @@ function BlocoDeAgendamento({
       )}
     </button>
   );
+}
+
+/** "PAGADO · Ana Torres · Endolifting" → "Ana Torres · Endolifting". */
+function tituloSemMarca(titulo: string): string {
+  return titulo.replace(/^\s*pagad[oa]\s*[·•|:-]?\s*/i, "") || titulo;
 }
 
 /** A régua do agora — a linha que faz a tela parecer viva em vez de impressa. */

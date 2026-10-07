@@ -63,7 +63,7 @@ type Modo = BudgetStatus["enforcement_mode"];
  * provedor cobra. Formatar em BRL fazia o dono do negócio ler um teto ~5x maior
  * do que o que estava armando.
  */
-const usd = new Intl.NumberFormat("pt-BR", { style: "currency", currency: "USD" });
+const usd = new Intl.NumberFormat("es-PE", { style: "currency", currency: "USD" });
 
 function fmtCents(cents: number): string {
   return usd.format((cents ?? 0) / 100);

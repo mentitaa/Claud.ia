@@ -114,9 +114,15 @@ const FORA_DO_PRODUTO: Record<string, string> = {
 const EM_PORTUGUES_DE_PROPOSITO: { arquivo: string; texto: string; motivo: string }[] = [
   {
     arquivo: "app/global-error.tsx",
-    texto: "Tente novamente em instantes. Se persistir, contate o suporte com o ID abaixo.",
+    texto: "Algo salió mal",
     motivo:
-      "é o error boundary da RAIZ: renderiza fora de qualquer provider, quando o app já falhou. Chamar um hook de contexto ali é justamente o que não pode falhar de novo",
+      "já é ESPANHOL, escrito direto: é o error boundary da RAIZ, renderiza fora de qualquer provider quando o app já falhou, então não há t(). Esta instalação só atende em espanhol; o guarda só o acusa porque o acento espanhol casa com MARCA_DE_PORTUGUES",
+  },
+  {
+    arquivo: "app/global-error.tsx",
+    texto: "Inténtalo de nuevo en unos momentos. Si el problema continúa, contacta a soporte con el ID de abajo.",
+    motivo:
+      "já é ESPANHOL, escrito direto: é o error boundary da RAIZ, renderiza fora de qualquer provider quando o app já falhou, então não há t(). Esta instalação só atende em espanhol; o guarda só o acusa porque o acento espanhol casa com MARCA_DE_PORTUGUES",
   },
   {
     arquivo: "app/app/settings/tenant/pipelines/_stages.tsx",
@@ -612,12 +618,6 @@ const DIVIDA_CONGELADA: { arquivo: string; chave: string; motivo: string }[] = [
     chave: "Quando um horário pendente for confirmado",
     motivo:
       "valor de TRIGGER_LABELS (app/app/webhooks/_components/labels.ts): a chave ainda não tem linha no dicionário",
-  },
-  {
-    arquivo: "app/onboarding/invite-team/_form.tsx",
-    chave: "Assistente com autonomia de operação",
-    motivo:
-      "valor de ROTULO_DO_PAPEL (lib/auth/types.ts): a chave ainda não tem linha no dicionário",
   },
 ];
 

@@ -343,7 +343,7 @@ function CartaoDoPadrao({ dados, aoSalvar }: { dados: Dados; aoSalvar: () => Pro
               <Input
                 value={modelId}
                 onChange={(e) => setModelId(e.target.value)}
-                placeholder="ex.: meta-llama/llama-3.3-70b-instruct"
+                placeholder={`${t("ex.:")} meta-llama/llama-3.3-70b-instruct`}
                 data-testid="padrao-modelo"
               />
               <p className="mt-1 text-xs text-muted-foreground">
@@ -578,7 +578,7 @@ function CartaoDoPonto({
                 <Input
                   value={modelId}
                   onChange={(e) => setModelId(e.target.value)}
-                  placeholder="ex.: meta-llama/llama-3.3-70b-instruct"
+                  placeholder={`${t("ex.:")} meta-llama/llama-3.3-70b-instruct`}
                   data-testid={`modelo-${ponto.id}`}
                 />
                 <p className="mt-1 text-xs text-muted-foreground">

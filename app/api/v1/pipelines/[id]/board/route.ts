@@ -12,6 +12,7 @@
  * (PGRST116). Routing through the API ensures the server-side cookie reader
  * runs, same as every other authed query.
  */
+import { IDIOMA_PADRAO } from "@/lib/i18n/idiomas";
 import { randomUUID } from "node:crypto";
 import { type NextRequest } from "next/server";
 
@@ -433,7 +434,7 @@ export async function GET(_req: NextRequest, ctx: RouteCtx): Promise<Response> {
     return fail("unauthenticated", "Auth required.", 401, { requestId });
   }
   const authUser = await loadAuthUser();
-  const t = (texto: string) => traduzir(texto, authUser?.idioma ?? "pt-BR");
+  const t = (texto: string) => traduzir(texto, authUser?.idioma ?? IDIOMA_PADRAO);
 
   const [
     { data: pipeline, error: pipelineErr },

@@ -52,6 +52,8 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 import { marcaDaOrigem, origemDeCampanhaDaConversa } from "@/lib/campanhas/origem-do-lead";
 
 import { logger } from "@/lib/logger";
+import { traduzir } from "@/lib/i18n/dicionario";
+import { IDIOMA_PADRAO } from "@/lib/i18n/idiomas";
 
 import { lerClientePelaAgenda } from "@/lib/contacts/cliente-pela-agenda";
 import { ehIdentificadorTecnico, rotuloDoContato, SEM_NOME } from "@/lib/contacts/rotulo-do-contato";
@@ -346,7 +348,7 @@ export async function garantirLeadDaConversa(
         ? doPayload
         : // "Sem nome" serve para uma linha de lista; um card de kanban precisa
           // dizer de onde veio, senão o quadro vira uma coluna de anônimos iguais.
-          `Novo contato pelo ${origem.rotulo}`;
+          `${traduzir("Novo contato pelo", IDIOMA_PADRAO)} ${origem.rotulo}`;
 
   // De onde veio: o contato já carrega a atribuição de anúncio (gravada no
   // primeiro toque, por `fn_estampar_atribuicao_de_anuncio` — ver

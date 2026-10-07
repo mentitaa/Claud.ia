@@ -1,3 +1,4 @@
+import { IDIOMA_PADRAO } from "@/lib/i18n/idiomas";
 import { requireSupportWrite } from "@/lib/impersonate/support";
 /**
  * GET  /api/v1/contacts — list (handler em ./_handler.ts)
@@ -115,7 +116,7 @@ export async function GET(req: NextRequest): Promise<Response> {
   const auth = await resolveContactsAuth(req, requestId);
   if (!auth.ok) return auth.response;
   const { organizationId, actor, supabase, idioma } = auth;
-  const t = (texto: string) => traduzir(texto, idioma ?? "pt-BR");
+  const t = (texto: string) => traduzir(texto, idioma ?? IDIOMA_PADRAO);
 
   const url = new URL(req.url);
   const qsParsed = contactListQuerySchema.safeParse({

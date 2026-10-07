@@ -31,6 +31,7 @@
  * acento no campo de configuração seria pior que uma hora de diferença.
  */
 
+import { normalizarIdioma, type Idioma } from '@/lib/i18n/idiomas';
 import { FUSO_PADRAO, fusoValido } from '@/lib/tempo/fusos';
 
 import type { Queryable } from '../queue/queue';
@@ -74,4 +75,34 @@ export async function fusoDaOrganizacao(
     fuso_padrao: FUSO_PADRAO,
   });
   return FUSO_PADRAO;
+}
+
+/**
+ * Claud.ia — o idioma da organização, para dizer ao modelo em que língua
+ * escrever o que fica guardado (resumos, notas, títulos de caso). Os prompts do
+ * motor são em português; sem esta linha o Haiku responde em português nos
+ * campos internos mesmo com a clínica toda em espanhol. Nunca lança.
+ */
+export async function idiomaDaOrganizacao(db: Queryable, organizationId: string): Promise<Idioma> {
+  try {
+    const { rows } = await db.query<{ locale: string | null }>(
+      'select locale from organizations where id = $1',
+      [organizationId],
+    );
+    return normalizarIdioma(rows[0]?.locale ?? null);
+  } catch {
+    return normalizarIdioma(null);
+  }
+}
+
+/** Bloco de idioma para a abertura do turno. Vazio para português. */
+export function blocoDeIdioma(idioma: Idioma): string {
+  if (idioma !== 'es') return '';
+  return (
+    '## Idioma\n' +
+    'Escribe SIEMPRE en español (Perú): los mensajes al cliente, las notas de memoria, los títulos y ' +
+    'resúmenes de casos, los campos de las herramientas (request_human_handoff, schedule_followup, ' +
+    'open_human_case) y todo el texto del JSON de cierre (commitments, objections, next_action, ' +
+    'rolling_summary, declaracao). Nunca en portugués, aunque estas instrucciones internas estén en portugués.'
+  );
 }

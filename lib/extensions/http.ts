@@ -1,3 +1,4 @@
+import { IDIOMA_PADRAO } from "@/lib/i18n/idiomas";
 import { randomUUID } from "node:crypto";
 import { z } from "zod";
 
@@ -191,7 +192,7 @@ export async function readExtensionBody(request: Request, maxBytes: number): Pro
   }
 }
 
-export function extensionFailure(error: unknown, locale: Idioma = "pt-BR"): Response {
+export function extensionFailure(error: unknown, locale: Idioma = IDIOMA_PADRAO): Response {
   const requestId = randomUUID();
   const t = (text: string) => traduzir(text, locale);
   if (error instanceof ExtensionServiceError) {

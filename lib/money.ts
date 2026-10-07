@@ -77,7 +77,7 @@ export function formatCentsBRL(cents: number): string {
  * mas ali ela não pode importar daqui (o módulo é do engine e roda no worker).
  */
 export function formatCentsUSD(cents: number): string {
-  return ((cents ?? 0) / 100).toLocaleString("pt-BR", { style: "currency", currency: "USD" });
+  return ((cents ?? 0) / 100).toLocaleString("es-PE", { style: "currency", currency: "USD" });
 }
 
 /**
@@ -248,7 +248,7 @@ export function formatCents(cents: number, moeda: string): string {
  * `LOCALE_DA_MOEDA_SEM_PAIS`): sem a exceção, `formatCents(24990, "EUR")`
  * sairia `€249.90`, e a varredura de degradação deixaria passar.
  */
-export const MOEDAS_SERVIDAS = ["AOA", "BRL", "EUR", "MXN", "USD"] as const;
+export const MOEDAS_SERVIDAS = ["AOA", "BRL", "EUR", "MXN", "PEN", "USD"] as const;
 export type MoedaServida = (typeof MOEDAS_SERVIDAS)[number];
 
 /** O que o `default` da coluna grava quando ninguém escolheu. */

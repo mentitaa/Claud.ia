@@ -1,3 +1,4 @@
+import { IDIOMA_PADRAO } from "@/lib/i18n/idiomas";
 import { createAdminClient } from "@/lib/supabase/admin";
 /**
  * Core handlers para /api/v1/conversations.
@@ -365,7 +366,7 @@ export async function listConversationsHandler(
         "invalid_cursor",
         undefined,
         ctx.requestId,
-        traduzir("Cursor inválido.", ctx.idioma ?? "pt-BR"),
+        traduzir("Cursor inválido.", ctx.idioma ?? IDIOMA_PADRAO),
       );
     }
     const op = asc ? "gt" : "lt";
@@ -422,7 +423,7 @@ export async function getConversationHandler(
       "not_found",
       undefined,
       ctx.requestId,
-      traduzir("Conversa não encontrada.", ctx.idioma ?? "pt-BR"),
+      traduzir("Conversa não encontrada.", ctx.idioma ?? IDIOMA_PADRAO),
     );
   }
   return data as unknown as Conversation;
@@ -503,7 +504,7 @@ export async function patchConversationHandler(
       "not_found",
       undefined,
       ctx.requestId,
-      traduzir("Conversa não encontrada.", ctx.idioma ?? "pt-BR"),
+      traduzir("Conversa não encontrada.", ctx.idioma ?? IDIOMA_PADRAO),
     );
   }
 
@@ -571,7 +572,7 @@ export async function markConversationReadHandler(
       "not_found",
       undefined,
       ctx.requestId,
-      traduzir("Conversa não encontrada.", ctx.idioma ?? "pt-BR"),
+      traduzir("Conversa não encontrada.", ctx.idioma ?? IDIOMA_PADRAO),
     );
   }
   return data as unknown as Conversation;

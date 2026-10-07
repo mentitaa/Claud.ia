@@ -35,8 +35,13 @@ export interface EscadaSpec {
   toques: Toque[];
   /** Quanto cada nó de resposta segura a inscrição antes de seguir por "sem resposta". */
   prazoDeRespostaMs: number;
-  /** O ramo que fecha o fluxo como ganho — o que o paciente escreve quando topa. */
-  sim: { rotulo: string; padrao: string };
+  /**
+   * O ramo que fecha o fluxo como ganho — o que o paciente escreve quando topa.
+   * `padrao` pode ser uma lista: cada termo vira um ramo `contains` próprio
+   * (`topou`, `topou-2`, …), todos ligados ao mesmo fim — o nó só tem um
+   * `pattern` por ramo, e o paciente pode escrever "reprogramar" ou "reagendar".
+   */
+  sim: { rotulo: string; padrao: string | readonly string[] };
   /** Nota do fim "o paciente respondeu": quem assume dali em diante. */
   notaDeResposta: string;
 }
@@ -59,7 +64,10 @@ export function montarEscada(spec: EscadaSpec): FlowGraph {
   const FIM_RESPONDEU = "fim-respondeu";
   const FIM_ESGOTOU = "fim-esgotou";
 
-  nodes.push({ id: INICIO, type: "trigger", label: "Início", position: { x: x(), y: 0 }, config: {} });
+  const padroes = typeof spec.sim.padrao === "string" ? [spec.sim.padrao] : spec.sim.padrao;
+  const ramosDoSim = padroes.map((padrao, i) => ({ id: i === 0 ? "topou" : `topou-${i + 1}`, padrao }));
+
+  nodes.push({ id: INICIO, type: "trigger", label: "Inicio", position: { x: x(), y: 0 }, config: {} });
 
   spec.toques.forEach((toque, i) => {
     const n = i + 1;
@@ -100,10 +108,10 @@ export function montarEscada(spec: EscadaSpec): FlowGraph {
     nodes.push({
       id: resposta,
       type: "match_reply",
-      label: "Espera a resposta",
+      label: "Espera la respuesta",
       position: { x: x(), y: 0 },
       config: {
-        branches: [{ id: "topou", label: spec.sim.rotulo, op: "contains", pattern: spec.sim.padrao }],
+        branches: ramosDoSim.map((ramo) => ({ id: ramo.id, label: spec.sim.rotulo, op: "contains" as const, pattern: ramo.padrao })),
         grace_timeout_ms: spec.prazoDeRespostaMs,
       },
     });
@@ -115,7 +123,9 @@ export function montarEscada(spec: EscadaSpec): FlowGraph {
     // modelo de clínica), a reatividade cancela a inscrição na primeira resposta,
     // antes de o nó rotear. Continuam ligados porque o publish exige cobertura
     // de TODA saída, e porque desligar a opção não pode deixar buraco no grafo.
-    edges.push(aresta(resposta, FIM_MARCOU, { type: "branch", branch_id: "topou" }));
+    for (const ramo of ramosDoSim) {
+      edges.push(aresta(resposta, FIM_MARCOU, { type: "branch", branch_id: ramo.id }));
+    }
     edges.push(aresta(resposta, FIM_RESPONDEU, { type: "always" }));
 
     if (i === spec.toques.length - 1) {
@@ -128,21 +138,21 @@ export function montarEscada(spec: EscadaSpec): FlowGraph {
     {
       id: FIM_MARCOU,
       type: "end",
-      label: "Fim: quis marcar",
+      label: "Fin: quiso agendar",
       position: { x: xFim, y: -200 },
       config: { outcome: "converted" },
     },
     {
       id: FIM_RESPONDEU,
       type: "end",
-      label: "Fim: respondeu",
+      label: "Fin: respondió",
       position: { x: xFim, y: 0 },
       config: { outcome: "custom", note: spec.notaDeResposta },
     },
     {
       id: FIM_ESGOTOU,
       type: "end",
-      label: "Fim: sem resposta",
+      label: "Fin: sin respuesta",
       position: { x: xFim, y: 200 },
       config: { outcome: "exhausted" },
     },
@@ -176,7 +186,7 @@ const HORA_MS = 3_600_000;
 export function rotuloDaEspera(ms: number): string {
   if (ms >= DIA_MS) {
     const dias = Math.round(ms / DIA_MS);
-    return dias === 1 ? "Espera 1 dia" : `Espera ${dias} dias`;
+    return dias === 1 ? "Espera 1 día" : `Espera ${dias} días`;
   }
   const horas = Math.max(1, Math.round(ms / HORA_MS));
   return horas === 1 ? "Espera 1 hora" : `Espera ${horas} horas`;

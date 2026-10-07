@@ -6,6 +6,7 @@
  * A URL desta rota é usada diretamente como src de <img>/<video>/<audio>
  * (cookie de sessão vai junto por ser same-origin; RLS decide o acesso).
  */
+import { IDIOMA_PADRAO } from "@/lib/i18n/idiomas";
 import { randomUUID } from "node:crypto";
 import { NextResponse, type NextRequest } from "next/server";
 
@@ -44,7 +45,7 @@ export async function GET(_req: NextRequest, ctx: RouteCtx): Promise<Response> {
     return fail("unauthenticated", "Auth required.", 401, { requestId });
   }
   const authUser = await loadAuthUser();
-  const t = (texto: string) => traduzir(texto, authUser?.idioma ?? "pt-BR");
+  const t = (texto: string) => traduzir(texto, authUser?.idioma ?? IDIOMA_PADRAO);
   const activeOrg = authUser ? await resolveActiveOrg(authUser) : null;
   if (!activeOrg) {
     return fail("no_active_org", t("No active organization."), 403, { requestId });

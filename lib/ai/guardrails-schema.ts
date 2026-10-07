@@ -170,7 +170,7 @@ export const agentCreateSchema = z
       .min(20)
       .max(10000)
       .default(
-        "Você é um assistente da loja. Responda com clareza e cordialidade, em português do Brasil. Use a base de conhecimento abaixo quando relevante.",
+        "Eres un asistente del negocio. Responde con claridad y cordialidad, en español de Perú, tuteando. Usa la base de conocimiento de abajo cuando sea relevante.",
       ),
   })
   .strict();

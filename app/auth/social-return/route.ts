@@ -33,7 +33,7 @@ export async function GET(request: Request) {
   const nome = escapeHtml(marca.nome);
 
   return new Response(
-    `<!doctype html><html lang="pt-BR"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Voltando ao ${nome}</title><body><p>Voltando para suas conexões…</p><a href="${escapeHtml(target)}">Continuar no ${nome}</a><script>${script}</script></body></html>`,
+    `<!doctype html><html lang="es"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Voltando ao ${nome}</title><body><p>Voltando para suas conexões…</p><a href="${escapeHtml(target)}">Continuar no ${nome}</a><script>${script}</script></body></html>`,
     {
       headers: {
         "Content-Type": "text/html; charset=utf-8",

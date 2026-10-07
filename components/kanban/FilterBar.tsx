@@ -103,7 +103,7 @@ export function FilterBar({ filters, onChange, leads }: FilterBarProps) {
         version: a.version_number,
       })),
     ];
-    return rows.sort((x, y) => x.name.localeCompare(y.name, "pt-BR"));
+    return rows.sort((x, y) => x.name.localeCompare(y.name, "es"));
   }, [members, agents, user.id, t]);
   const ownerLabel =
     filters.owner === "unassigned"

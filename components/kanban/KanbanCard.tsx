@@ -50,7 +50,7 @@ function formatBRL(cents: number | null, currency: string | null): string | null
   if (cents == null) return null;
   const code = currency ?? "BRL";
   try {
-    return new Intl.NumberFormat("pt-BR", {
+    return new Intl.NumberFormat("es-PE", {
       style: "currency",
       currency: code,
       maximumFractionDigits: 0,

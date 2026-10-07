@@ -1,3 +1,4 @@
+import { IDIOMA_PADRAO } from "@/lib/i18n/idiomas";
 import { observeServiceOrigin } from "@/lib/atendimento/origem";
 import { createAdminClient } from "@/lib/supabase/admin";
 /**
@@ -50,7 +51,7 @@ async function ownerPatchOrThrow(
       "validation_failed",
       undefined,
       ctx.requestId,
-      traduzir("Um lead tem um dono: informe owner_user_id OU owner_agent_id.", ctx.idioma ?? "pt-BR"),
+      traduzir("Um lead tem um dono: informe owner_user_id OU owner_agent_id.", ctx.idioma ?? IDIOMA_PADRAO),
     );
   }
   if (!result.patch) return null;
@@ -73,7 +74,7 @@ async function ownerPatchOrThrow(
         "validation_failed",
         undefined,
         ctx.requestId,
-        traduzir("Agente não encontrado nesta organização.", ctx.idioma ?? "pt-BR"),
+        traduzir("Agente não encontrado nesta organização.", ctx.idioma ?? IDIOMA_PADRAO),
       );
     }
   }
@@ -185,7 +186,7 @@ export async function listLeadsHandler(
         "invalid_cursor",
         undefined,
         ctx.requestId,
-        traduzir("Cursor inválido.", ctx.idioma ?? "pt-BR"),
+        traduzir("Cursor inválido.", ctx.idioma ?? IDIOMA_PADRAO),
       );
     }
     query = query.or(
@@ -241,7 +242,7 @@ export async function getLeadHandler(
       "not_found",
       undefined,
       ctx.requestId,
-      traduzir("Lead não encontrado.", ctx.idioma ?? "pt-BR"),
+      traduzir("Lead não encontrado.", ctx.idioma ?? IDIOMA_PADRAO),
     );
   }
   return data as Record<string, unknown>;
@@ -283,7 +284,7 @@ export async function createLeadHandler(
       "not_found",
       undefined,
       ctx.requestId,
-      traduzir("Stage não encontrado.", ctx.idioma ?? "pt-BR"),
+      traduzir("Stage não encontrado.", ctx.idioma ?? IDIOMA_PADRAO),
     );
   }
   if (stage.pipeline_id !== input.pipeline_id) {
@@ -292,7 +293,7 @@ export async function createLeadHandler(
       "stage_pipeline_mismatch",
       undefined,
       ctx.requestId,
-      traduzir("Stage não pertence ao pipeline informado.", ctx.idioma ?? "pt-BR"),
+      traduzir("Stage não pertence ao pipeline informado.", ctx.idioma ?? IDIOMA_PADRAO),
     );
   }
 
@@ -365,7 +366,7 @@ export async function createLeadHandler(
       "internal_error",
       undefined,
       ctx.requestId,
-      insErr?.message ?? traduzir("Falha ao criar lead.", ctx.idioma ?? "pt-BR"),
+      insErr?.message ?? traduzir("Falha ao criar lead.", ctx.idioma ?? IDIOMA_PADRAO),
     );
   }
 
@@ -445,7 +446,7 @@ export async function updateLeadHandler(
       "not_found",
       undefined,
       ctx.requestId,
-      traduzir("Lead não encontrado.", ctx.idioma ?? "pt-BR"),
+      traduzir("Lead não encontrado.", ctx.idioma ?? IDIOMA_PADRAO),
     );
   }
 
@@ -499,7 +500,7 @@ export async function updateLeadHandler(
       "not_found",
       undefined,
       ctx.requestId,
-      traduzir("Lead não encontrado.", ctx.idioma ?? "pt-BR"),
+      traduzir("Lead não encontrado.", ctx.idioma ?? IDIOMA_PADRAO),
     );
   }
 
@@ -664,7 +665,7 @@ export async function moveLeadHandler(
       "not_found",
       undefined,
       ctx.requestId,
-      traduzir("Lead não encontrado.", ctx.idioma ?? "pt-BR"),
+      traduzir("Lead não encontrado.", ctx.idioma ?? IDIOMA_PADRAO),
     );
   }
 
@@ -682,7 +683,7 @@ export async function moveLeadHandler(
       "not_found",
       undefined,
       ctx.requestId,
-      traduzir("Stage não encontrado.", ctx.idioma ?? "pt-BR"),
+      traduzir("Stage não encontrado.", ctx.idioma ?? IDIOMA_PADRAO),
     );
   }
   if (stage.pipeline_id !== lead.pipeline_id) {
@@ -691,7 +692,7 @@ export async function moveLeadHandler(
       "pipeline_immutable_use_clone",
       { use: "/api/v1/leads/{id}/clone" },
       ctx.requestId,
-      traduzir(RECUSA_DE_TROCA_DE_FUNIL, ctx.idioma ?? "pt-BR"),
+      traduzir(RECUSA_DE_TROCA_DE_FUNIL, ctx.idioma ?? IDIOMA_PADRAO),
     );
   }
 
@@ -752,7 +753,7 @@ export async function moveLeadHandler(
       "lead_stage_changed_concurrent",
       undefined,
       ctx.requestId,
-      traduzir("Lead foi modificado concorrentemente.", ctx.idioma ?? "pt-BR"),
+      traduzir("Lead foi modificado concorrentemente.", ctx.idioma ?? IDIOMA_PADRAO),
     );
   }
 

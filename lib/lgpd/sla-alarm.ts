@@ -125,7 +125,7 @@ export async function triggerSlaAlarm(
           ? "D+5 (acesso a dados)"
           : "D+10 (anonimização/exclusão)";
 
-      const dueFmt = new Date(request.due_at).toLocaleString("pt-BR", {
+      const dueFmt = new Date(request.due_at).toLocaleString("es-PE", {
         timeZone: "America/Sao_Paulo",
         day: "2-digit",
         month: "2-digit",
@@ -141,7 +141,7 @@ export async function triggerSlaAlarm(
           : `<p>O prazo vence em <strong>${dueFmt}</strong>.</p>`;
 
       const html = `<!doctype html>
-<html lang="pt-BR">
+<html lang="es">
 <body style="font-family:-apple-system,Helvetica,Arial,sans-serif;color:${NEUTROS_DE_SAIDA.texto};line-height:1.5;max-width:560px;margin:0 auto;padding:24px;">
   <h2 style="margin:0 0 12px;font-size:18px;">[LGPD] Alerta de SLA — Solicitação #${shortId}</h2>
   <p>Olá,</p>

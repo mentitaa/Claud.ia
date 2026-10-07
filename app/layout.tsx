@@ -285,7 +285,7 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html
-      lang="pt-BR"
+      lang="es"
       data-theme="light"
       suppressHydrationWarning
       className={`${geist.variable} ${instrumentSerif.variable} ${plexMono.variable}`}

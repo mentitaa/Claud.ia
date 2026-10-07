@@ -53,7 +53,7 @@ test.describe("follow-ups · modelos prontos de clínica", () => {
     await expect(dialog.getByText("Modelos prontos")).toBeVisible();
 
     // As quatro jornadas, com a régua de decisão visível — não só o nome.
-    for (const jornada of ["Consulta", "Exame", "Cirurgia", "Falta"]) {
+    for (const jornada of ["Consulta", "Examen", "Cirugía", "Inasistencia"]) {
       await expect(dialog.getByText(jornada, { exact: true }).first()).toBeVisible();
     }
     const cartaoDaFalta = dialog.getByTestId("modelo-clinica-falta-remarcar");
@@ -86,7 +86,7 @@ test.describe("follow-ups · modelos prontos de clínica", () => {
     }
 
     // Nasce RASCUNHO: instalar não manda mensagem para ninguém.
-    const cartaoNaLista = page.locator("li", { hasText: "Falta · remarcar quem não veio" });
+    const cartaoNaLista = page.locator("li", { hasText: "Inasistencia · reprogramar a quien no vino" });
     await expect(cartaoNaLista).toBeVisible();
     await expect(cartaoNaLista.getByText("Rascunho", { exact: true })).toBeVisible();
 

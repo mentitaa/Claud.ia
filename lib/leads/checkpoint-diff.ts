@@ -33,6 +33,8 @@ export interface CheckpointDiff {
 export function diffCheckpoint(
   anterior: CheckpointContent | null,
   atual: CheckpointContent,
+  /** Claud.ia: idioma da organização para os rótulos da linha do tempo. */
+  idioma: "pt-BR" | "es" | string = "pt-BR",
 ): CheckpointDiff {
   const antesCommit = new Set(normalizar(anterior?.commitments));
   const antesObj = new Set(normalizar(anterior?.objections));
@@ -52,7 +54,7 @@ export function diffCheckpoint(
     addedObjections,
     nextActionChanged,
     reason: emit
-      ? motivo(addedObjections, addedCommitments, nextActionChanged, atual.next_action)
+      ? motivo(addedObjections, addedCommitments, nextActionChanged, atual.next_action, idioma)
       : anterior === null
         ? "primeiro checkpoint sem compromisso, objeção ou próxima ação"
         : "só reescreveu o resumo — não muda o que fazer a seguir",
@@ -65,18 +67,37 @@ function motivo(
   compromissos: string[],
   mudouAcao: boolean,
   proximaAcao: string | null,
+  idioma: string = "pt-BR",
 ): string {
+  const r = idioma === "es" ? ROTULOS.es : ROTULOS.pt;
   const partes: string[] = [];
-  if (objecoes.length === 1) partes.push(`Nova objeção: ${objecoes[0]}`);
-  else if (objecoes.length > 1) partes.push(`${objecoes.length} novas objeções: ${objecoes.join("; ")}`);
+  if (objecoes.length === 1) partes.push(`${r.objecao}: ${objecoes[0]}`);
+  else if (objecoes.length > 1) partes.push(`${objecoes.length} ${r.objecoes}: ${objecoes.join("; ")}`);
 
-  if (compromissos.length === 1) partes.push(`Novo compromisso: ${compromissos[0]}`);
+  if (compromissos.length === 1) partes.push(`${r.compromisso}: ${compromissos[0]}`);
   else if (compromissos.length > 1)
-    partes.push(`${compromissos.length} novos compromissos: ${compromissos.join("; ")}`);
+    partes.push(`${compromissos.length} ${r.compromissos}: ${compromissos.join("; ")}`);
 
-  if (mudouAcao && proximaAcao) partes.push(`Próxima ação: ${proximaAcao}`);
+  if (mudouAcao && proximaAcao) partes.push(`${r.acao}: ${proximaAcao}`);
   return partes.join(" · ");
 }
+
+const ROTULOS = {
+  pt: {
+    objecao: "Nova objeção",
+    objecoes: "novas objeções",
+    compromisso: "Novo compromisso",
+    compromissos: "novos compromissos",
+    acao: "Próxima ação",
+  },
+  es: {
+    objecao: "Nueva objeción",
+    objecoes: "nuevas objeciones",
+    compromisso: "Nuevo compromiso",
+    compromissos: "nuevos compromisos",
+    acao: "Próxima acción",
+  },
+} as const;
 
 /** Compara por conteúdo normalizado: reescrever com outro espaçamento não é fato novo. */
 function chave(valor: string): string {

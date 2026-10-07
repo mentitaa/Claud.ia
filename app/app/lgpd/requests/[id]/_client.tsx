@@ -171,10 +171,10 @@ export function LgpdRequestDetail({ id }: Props) {
             <Row label={t("Escopo")} value={request.scope} />
             <Row label={t("Tentativas")} value={String(request.attempts)} />
             {request.contact_id && (
-              <Row label="Contact ID" value={request.contact_id} mono />
+              <Row label={t("ID do contato")} value={request.contact_id} mono />
             )}
             {request.external_customer_id && (
-              <Row label="External customer ID" value={request.external_customer_id} />
+              <Row label={t("ID externo do cliente")} value={request.external_customer_id} />
             )}
             {request.completed_at && (
               <Row

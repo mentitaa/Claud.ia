@@ -1,3 +1,4 @@
+import { IDIOMA_PADRAO } from "@/lib/i18n/idiomas";
 import type { TimelineItemView } from "@/lib/types/contacts";
 
 /**
@@ -100,7 +101,7 @@ export function agrupaTimeline(
   chegouAoVivo: Set<string> = new Set(),
   // O idioma atravessa até `diaDe`, que é quem imprime "24 de jul.". Default
   // para o padrão do produto: chamador que ainda não passa continua como antes.
-  idioma: string = "pt-BR",
+  idioma: string = IDIOMA_PADRAO,
 ): BlocoDaTimeline[] {
   const fino = agrupaFino(itens, chegouAoVivo);
   return fino.length <= LIMITE_DE_BLOCOS ? fino : agrupaPorDia(itens, chegouAoVivo, idioma);

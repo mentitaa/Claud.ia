@@ -6,6 +6,7 @@
  * em modo own* recebe a contagem do SEU escopo, NUNCA o total da org — a mesma
  * garantia do listing. Head count (count:'exact', head:true) não devolve linhas.
  */
+import { IDIOMA_PADRAO } from "@/lib/i18n/idiomas";
 import { randomUUID } from "node:crypto";
 
 import type { NextRequest } from "next/server";
@@ -84,7 +85,7 @@ export async function GET(req: NextRequest): Promise<Response> {
   if (!activeOrg) {
     return fail(
       "no_active_org",
-      traduzir("No active organization.", authUser?.idioma ?? "pt-BR"),
+      traduzir("No active organization.", authUser?.idioma ?? IDIOMA_PADRAO),
       403,
       { requestId },
     );

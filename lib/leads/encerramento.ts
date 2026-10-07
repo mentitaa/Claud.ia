@@ -18,6 +18,7 @@
  * só existia em `event_log` e `api_audit_log` — nenhum dos dois aparece na tela.
  * O dossiê de um negócio fechado terminava sem dizer que fechou.
  */
+import { IDIOMA_PADRAO } from "@/lib/i18n/idiomas";
 import type { SupabaseClient } from "@supabase/supabase-js";
 
 import type { Actor, HandlerCtx } from "@/lib/api/handlers/types";
@@ -93,7 +94,7 @@ export async function encerraDemanda(
       "validation_failed",
       undefined,
       ctx.requestId,
-      traduzir("Informe o motivo da perda.", ctx.idioma ?? "pt-BR"),
+      traduzir("Informe o motivo da perda.", ctx.idioma ?? IDIOMA_PADRAO),
     );
   }
 
@@ -113,7 +114,7 @@ export async function encerraDemanda(
       "not_found",
       undefined,
       ctx.requestId,
-      traduzir("Lead não encontrado.", ctx.idioma ?? "pt-BR"),
+      traduzir("Lead não encontrado.", ctx.idioma ?? IDIOMA_PADRAO),
     );
   }
 
@@ -146,7 +147,7 @@ export async function encerraDemanda(
         input.desfecho === "won"
           ? "Pipeline não tem stage de fechamento como ganho."
           : "Pipeline não tem stage de fechamento como perda.",
-        ctx.idioma ?? "pt-BR",
+        ctx.idioma ?? IDIOMA_PADRAO,
       ),
     );
   }

@@ -101,7 +101,7 @@ export function MatchReplyForm({
                 aria-label={`Texto da regra ${index + 1}`}
                 value={branch.pattern}
                 onChange={(e) => atualizar(index, { pattern: e.target.value })}
-                placeholder="texto a casar"
+                placeholder={t("texto a casar")}
               />
               <Button
                 type="button"
@@ -135,7 +135,7 @@ export function MatchReplyForm({
               commit({ branches: next, graceMin, saveTo, ifExists });
             }}
           >
-            <Plus size={14} aria-hidden className="mr-1" /> Adicionar regra
+            <Plus size={14} aria-hidden className="mr-1" /> {t("Adicionar regra")}
           </Button>
         )}
       </div>

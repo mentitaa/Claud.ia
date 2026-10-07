@@ -476,7 +476,7 @@ export function renderVetoDeVazamento(termos: readonly string[]): string {
     'Quem lê é o cliente da empresa: ele não tem acesso ao sistema e não conhece ferramenta, ' +
     'tabela, campo, papel de acesso nem código de erro — ler isso quebra a confiança dele. ' +
     'REESCREVA a MESMA mensagem trocando o termo técnico pelo EFEITO na vida dele: diga o que ' +
-    'você conseguiu ou não conseguiu fazer, em português de gente, ou simplesmente omita o ' +
+    'você conseguiu ou não conseguiu fazer, em linguagem simples e no mesmo idioma da conversa, ou simplesmente omita o ' +
     'detalhe interno. Se o termo era a razão de você não conseguir algo, diga apenas que não ' +
     'conseguiu — sem nomear o motivo interno.'
   );

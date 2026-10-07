@@ -37,7 +37,7 @@ export function Stepper({ passos }: { passos: PassoVisivel[] }) {
 
   return (
     <ol
-      aria-label="onboarding steps"
+      aria-label={t("Etapas do onboarding")}
       className="flex w-full items-center justify-between gap-2 px-2 py-3"
     >
       {passos.map((p, i) => {

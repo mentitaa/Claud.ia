@@ -31,6 +31,7 @@
  * contagem de hoje: contagem responde sobre o que existe, não sobre o que o
  * código permite, e aqui o zero estava dos dois lados do argumento.
  */
+import { IDIOMA_PADRAO } from "@/lib/i18n/idiomas";
 import { randomUUID } from "node:crypto";
 import { type NextRequest } from "next/server";
 
@@ -66,7 +67,7 @@ export async function GET(req: NextRequest, ctx: RouteCtx): Promise<Response> {
     return fail("unauthenticated", "Auth required.", 401, { requestId });
   }
   const authUser = await loadAuthUser();
-  const t = (texto: string) => traduzir(texto, authUser?.idioma ?? "pt-BR");
+  const t = (texto: string) => traduzir(texto, authUser?.idioma ?? IDIOMA_PADRAO);
 
   const url = new URL(req.url);
   const types = url.searchParams.getAll("type").filter(Boolean);

@@ -626,7 +626,7 @@ export function TiposDeAgendamentoClient({
                         )
                       }
                     >
-                      Desativar
+                      {t("Desativar")}
                     </Button>
                   ) : (
                     <Button
@@ -649,7 +649,7 @@ export function TiposDeAgendamentoClient({
                         )
                       }
                     >
-                      Reativar
+                      {t("Reativar")}
                     </Button>
                   )}
                 </span>
@@ -723,7 +723,7 @@ export function TiposDeAgendamentoClient({
               >
                 <div className="grid min-w-0 gap-3 sm:grid-cols-[minmax(0,1fr)_8rem_minmax(0,18rem)]">
                   <label className="flex flex-col gap-1 text-xs text-text-muted">
-                    Nome
+                    {t("Nome")}
                     <input
                       name="name"
                       defaultValue={tipo.name}

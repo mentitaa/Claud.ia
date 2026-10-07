@@ -391,8 +391,8 @@ export function AgentForm(props: Props) {
     const tamanhoDoPrompt = form.system_prompt.trim().length;
     if (tamanhoDoPrompt > 20000)
       errors.system_prompt =
-        `${t("As instruções têm")} ${tamanhoDoPrompt.toLocaleString("pt-BR")} ${t("caracteres, e o máximo é 20.000. Corte")} ` +
-        `${(tamanhoDoPrompt - 20000).toLocaleString("pt-BR")} ${t("para conseguir salvar.")}`;
+        `${t("As instruções têm")} ${tamanhoDoPrompt.toLocaleString("es-PE")} ${t("caracteres, e o máximo é 20.000. Corte")} ` +
+        `${(tamanhoDoPrompt - 20000).toLocaleString("es-PE")} ${t("para conseguir salvar.")}`;
     if (!form.model) errors.model = t("Escolha o modelo de inteligência artificial.");
     if (!form.credential_id)
       errors.credential_id = t("Escolha a chave de acesso da empresa de inteligência artificial.");
@@ -1033,7 +1033,7 @@ export function AgentForm(props: Props) {
                       : "text-xs text-muted-foreground"
                   }
                 >
-                  {form.system_prompt.trim().length.toLocaleString("pt-BR")}/20.000
+                  {form.system_prompt.trim().length.toLocaleString("es-PE")}/20.000
                 </span>
                 <TokenCounter
                   text={form.system_prompt}

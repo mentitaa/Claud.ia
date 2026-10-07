@@ -13,10 +13,10 @@ describe("mediaSrc", () => {
 });
 
 describe("formatBytes", () => {
-  it("formata em pt-BR base 1024", () => {
+  it("formata en es-PE base 1024", () => {
     expect(formatBytes(853)).toBe("853 B");
-    expect(formatBytes(41598)).toBe("40,6 KB");
-    expect(formatBytes(12563831)).toBe("12,0 MB");
+    expect(formatBytes(41598)).toBe("40.6 KB");
+    expect(formatBytes(12563831)).toBe("12.0 MB");
   });
   it("devolve travessão sem valor", () => {
     expect(formatBytes(null)).toBe("—");

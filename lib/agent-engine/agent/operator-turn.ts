@@ -92,7 +92,8 @@ export const SYSTEM_DO_OPERADOR =
   'na frase não é evidência de ação — trate a promessa como pendente até você mesmo confirmar ou ' +
   'registrar (mover o lead, abrir nota, o que fizer sentido com as ferramentas que você tem).\n\n' +
   'Use apenas o que a conversa sustenta. Não invente avanço, não registre o que ninguém disse. ' +
-  'Se não houver nada a fazer, não faça nada — um turno sem ação é uma resposta válida.';
+  'Se não houver nada a fazer, não faça nada — um turno sem ação é uma resposta válida.\n\n' +
+  'Escreva tudo o que registrar no CRM (notas, títulos, tarefas) no mesmo idioma da conversa.';
 
 /**
  * O briefing do turno: o que o Conversador declarou, em linguagem de negócio.

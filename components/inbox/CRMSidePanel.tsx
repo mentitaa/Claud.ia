@@ -245,7 +245,7 @@ function formatMoney(cents: number | null, currency: string | null): string {
   if (cents == null) return "—";
   const cur = currency ?? "BRL";
   try {
-    return new Intl.NumberFormat("pt-BR", { style: "currency", currency: cur }).format(
+    return new Intl.NumberFormat("es-PE", { style: "currency", currency: cur }).format(
       cents / 100,
     );
   } catch {
@@ -449,7 +449,7 @@ function CamposDoFunil({
         disabled={edit.isPending}
         onClick={() => void salvar()}
       >
-        {edit.isPending ? "Salvando…" : "Salvar"}
+        {edit.isPending ? t("Salvando…") : t("Salvar")}
       </Button>
     </div>
   );
@@ -723,7 +723,7 @@ export function CRMSidePanel({ conversation }: Props) {
                   {/* O invariante 4 na frase, não só na cor: quem enxerga mal
                       cor precisa ler a mesma informação. */}
                   <div className={cn("mt-0.5", semPasso ? "font-medium" : "text-muted-foreground")}>
-                    {d.proximo_passo ?? t("Sem próximo passo definido")}
+                    {d.proximo_passo ? t(d.proximo_passo) : t("Sem próximo passo definido")}
                   </div>
                   {/* A SAÍDA. Sem ela esta seção só denunciava: o atendente via o
                       vazamento e tinha de sair da tela para resolver — peça que

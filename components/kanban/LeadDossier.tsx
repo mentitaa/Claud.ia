@@ -29,7 +29,7 @@ interface Props {
 function formatBRL(cents: number | null, currency: string | null): string {
   if (cents === null) return "—";
   try {
-    return new Intl.NumberFormat("pt-BR", {
+    return new Intl.NumberFormat("es-PE", {
       style: "currency",
       currency: currency ?? "BRL",
       maximumFractionDigits: 0,

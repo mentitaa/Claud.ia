@@ -36,17 +36,17 @@ const MIN_MS = 60_000;
 const DIA_MS = 86_400_000;
 
 /** Quem responde um follow-up está falando com o atendimento, não com o fluxo. */
-const O_ATENDIMENTO_ASSUME = "O paciente respondeu — quem segue a conversa é o atendimento.";
+const O_ATENDIMENTO_ASSUME = "El paciente respondió; la conversación la sigue el equipo de atención.";
 
 export const MODELOS_DE_CLINICA: readonly ModeloDeFollowup[] = [
   {
     id: "clinica-consulta-retomada",
     nicho: "clinica",
-    nome: "Consulta · retomar quem sumiu na marcação",
+    nome: "Consulta · retomar a quien no terminó de agendar",
     jornada: "Consulta",
     resumo:
-      "O paciente perguntou sobre consulta, a conversa parou antes de marcar e ninguém voltou nela.",
-    oQueDispara: "Um dia inteiro sem o paciente responder, com a marcação em aberto.",
+      "El paciente preguntó por una consulta, la conversación se detuvo antes de agendar la cita y nadie la retomó.",
+    oQueDispara: "Un día entero sin que el paciente responda, con la cita pendiente.",
     pedeEtapa: false,
     // `pause`: atendente assumiu a conversa, o follow-up espera. Não cancela —
     // se o atendimento não fechar a marcação, a escada continua de onde parou.
@@ -58,25 +58,25 @@ export const MODELOS_DE_CLINICA: readonly ModeloDeFollowup[] = [
     }),
     grafo: montarEscada({
       prazoDeRespostaMs: 2 * DIA_MS,
-      sim: { rotulo: "Quer marcar", padrao: "quero" },
+      sim: { rotulo: "Quiere agendar", padrao: "quiero" },
       notaDeResposta: O_ATENDIMENTO_ASSUME,
       toques: [
         {
-          rotulo: "Retoma a marcação",
+          rotulo: "Retoma la cita",
           texto:
-            "Oi! Ficamos de acertar o horário da sua consulta e a conversa parou por aqui. Quer que eu veja o que ainda está livre?",
+            "¡Hola! Habíamos quedado en coordinar el horario de tu consulta y la conversación se quedó aquí. ¿Quieres que revise qué horarios siguen libres?",
         },
         {
           esperaAntesMs: 2 * DIA_MS,
-          rotulo: "Pergunta o período",
+          rotulo: "Pregunta el momento del día",
           texto:
-            "Passando de novo por aqui 🙂 Se ainda quiser marcar, me diz só o melhor período para você — manhã ou tarde — que eu procuro um horário.",
+            "Paso de nuevo por aquí 🙂 Si todavía quieres agendar, solo dime qué momento te acomoda más —mañana o tarde— y te busco un horario.",
         },
         {
           esperaAntesMs: 4 * DIA_MS,
-          rotulo: "Último toque",
+          rotulo: "Último mensaje",
           texto:
-            "Esta é a última vez que eu apareço sobre isso. Se quiser retomar a marcação, é só me responder a qualquer momento. Se preferir deixar para mais para a frente, tudo bem também.",
+            "Esta es la última vez que te escribo sobre esto. Si quieres retomar la cita, respóndeme cuando gustes. Y si prefieres dejarlo para más adelante, también está bien.",
         },
       ],
     }),
@@ -85,11 +85,11 @@ export const MODELOS_DE_CLINICA: readonly ModeloDeFollowup[] = [
   {
     id: "clinica-exame-marcar",
     nicho: "clinica",
-    nome: "Exame · marcar o exame que foi pedido",
-    jornada: "Exame",
+    nome: "Examen · agendar el examen indicado",
+    jornada: "Examen",
     resumo:
-      "Saiu o pedido de exame e o paciente ainda não marcou. O fluxo cobra por duas semanas e sai de cena.",
-    oQueDispara: "O negócio entrar na etapa do funil que você escolher.",
+      "Ya salió la orden del examen y el paciente todavía no agenda su cita. El flujo insiste durante dos semanas y después se retira.",
+    oQueDispara: "Que el negocio entre en la etapa del embudo que elijas.",
     pedeEtapa: true,
     handoffPolicy: "pause",
     gatilho: ({ stageId }) => ({
@@ -99,28 +99,28 @@ export const MODELOS_DE_CLINICA: readonly ModeloDeFollowup[] = [
     }),
     grafo: montarEscada({
       prazoDeRespostaMs: 3 * DIA_MS,
-      sim: { rotulo: "Quer marcar", padrao: "quero" },
+      sim: { rotulo: "Quiere agendar", padrao: "quiero" },
       notaDeResposta: O_ATENDIMENTO_ASSUME,
       toques: [
         {
           // Um dia de espera, e não zero: a etapa quase sempre muda DURANTE a
           // conversa, e mandar na mesma hora é falar por cima de quem atende.
           esperaAntesMs: DIA_MS,
-          rotulo: "Oferece marcar",
+          rotulo: "Ofrece agendar",
           texto:
-            "Oi! Sobre o exame que foi pedido: quer que eu veja os horários para você? Me responde aqui que eu organizo.",
+            "¡Hola! Sobre el examen que te indicaron: ¿quieres que revise los horarios disponibles? Respóndeme por aquí y lo coordino.",
         },
         {
           esperaAntesMs: 3 * DIA_MS,
-          rotulo: "Pergunta o período",
+          rotulo: "Pregunta el momento del día",
           texto:
-            "Ainda dá para marcar o seu exame. Me diz o período que funciona melhor — manhã ou tarde — e eu procuro uma data.",
+            "Todavía puedes agendar tu examen. Dime qué momento te acomoda mejor —mañana o tarde— y te busco una fecha.",
         },
         {
           esperaAntesMs: 5 * DIA_MS,
-          rotulo: "Encerra e libera",
+          rotulo: "Cierra y libera",
           texto:
-            "Último lembrete sobre o exame 🙂 Se quiser marcar, me responde que eu vejo uma data. E se você já tiver feito em outro lugar, me avisa que eu encerro por aqui.",
+            "Último recordatorio sobre el examen 🙂 Si quieres agendarlo, respóndeme y te busco una fecha. Y si ya te lo hiciste en otro lugar, avísame y cierro el tema por aquí.",
         },
       ],
     }),
@@ -129,11 +129,11 @@ export const MODELOS_DE_CLINICA: readonly ModeloDeFollowup[] = [
   {
     id: "clinica-cirurgia-decisao",
     nicho: "clinica",
-    nome: "Cirurgia · acompanhar a decisão",
-    jornada: "Cirurgia",
+    nome: "Cirugía · acompañar la decisión",
+    jornada: "Cirugía",
     resumo:
-      "Quem foi avaliado e não marcou não desistiu: está decidindo. O fluxo acompanha por quase três meses, sem pressionar.",
-    oQueDispara: "O negócio entrar na etapa do funil que você escolher.",
+      "Quien fue evaluado y no agendó no desistió: está decidiendo. El flujo lo acompaña durante casi tres meses, sin presionar.",
+    oQueDispara: "Que el negocio entre en la etapa del embudo que elijas.",
     pedeEtapa: true,
     // `pause` também aqui: a decisão de uma cirurgia passa por conversa com
     // médico e família, e essa conversa é sempre humana. O fluxo espera.
@@ -145,32 +145,32 @@ export const MODELOS_DE_CLINICA: readonly ModeloDeFollowup[] = [
     }),
     grafo: montarEscada({
       prazoDeRespostaMs: 5 * DIA_MS,
-      sim: { rotulo: "Quer retomar", padrao: "quero" },
+      sim: { rotulo: "Quiere retomar", padrao: "quiero" },
       notaDeResposta: O_ATENDIMENTO_ASSUME,
       toques: [
         {
           esperaAntesMs: 3 * DIA_MS,
-          rotulo: "Abre para dúvidas",
+          rotulo: "Abre espacio a dudas",
           texto:
-            "Oi! Sei que essa decisão não é simples e não tem pressa nenhuma da nossa parte. Ficou alguma dúvida do que foi conversado na consulta? Pode perguntar por aqui.",
+            "¡Hola! Sé que no es una decisión sencilla y no hay ningún apuro de nuestra parte. ¿Te quedó alguna duda de lo que conversaron en la consulta? Puedes preguntarme por aquí.",
         },
         {
           esperaAntesMs: 10 * DIA_MS,
-          rotulo: "Oferece rever condições",
+          rotulo: "Ofrece revisar condiciones",
           texto:
-            "Passando para saber como você está pensando. Se quiser rever as condições, o preparo ou as datas possíveis, me chama que eu explico tudo de novo com calma.",
+            "Te escribo para saber cómo lo vas pensando. Si quieres revisar las condiciones, la preparación o las fechas posibles, escríbeme y te lo explico todo de nuevo con calma.",
         },
         {
           esperaAntesMs: 21 * DIA_MS,
-          rotulo: "Convida a retomar",
+          rotulo: "Invita a retomar",
           texto:
-            "Faz um tempo que a gente não conversa sobre o seu caso. Se quiser retomar, me responde aqui que eu vejo uma data com a equipe.",
+            "Hace un tiempo que no conversamos sobre tu caso. Si quieres retomarlo, respóndeme por aquí y veo una fecha con el equipo.",
         },
         {
           esperaAntesMs: 30 * DIA_MS,
-          rotulo: "Deixa a porta aberta",
+          rotulo: "Deja la puerta abierta",
           texto:
-            "Esta é a minha última mensagem sobre isso — não quero incomodar. Se em algum momento você quiser retomar, é só me escrever: o seu histórico continua com a gente.",
+            "Este es mi último mensaje sobre esto; no quiero incomodarte. Si en algún momento quieres retomarlo, solo escríbeme: tu historial sigue con nosotros.",
         },
       ],
     }),
@@ -179,17 +179,17 @@ export const MODELOS_DE_CLINICA: readonly ModeloDeFollowup[] = [
   {
     id: "clinica-falta-remarcar",
     nicho: "clinica",
-    nome: "Falta · remarcar quem não veio",
-    jornada: "Falta",
+    nome: "Inasistencia · reprogramar a quien no vino",
+    jornada: "Inasistencia",
     resumo:
-      "A falta foi confirmada na agenda e o horário ficou vago. O fluxo oferece outra data em vez de deixar o paciente sumir.",
-    oQueDispara: "Alguém confirmar na agenda que o paciente não compareceu.",
+      "Se confirmó en la agenda la inasistencia del paciente y el horario quedó libre. El flujo ofrece otra fecha en lugar de dejar que el paciente desaparezca.",
+    oQueDispara: "Que alguien confirme en la agenda que el paciente no asistió.",
     pedeEtapa: false,
     handoffPolicy: "pause",
     gatilho: () => ({ kind: "appointment_no_show", cancel_on_reply: true }),
     grafo: montarEscada({
       prazoDeRespostaMs: 2 * DIA_MS,
-      sim: { rotulo: "Quer remarcar", padrao: "remarcar" },
+      sim: { rotulo: "Quiere reprogramar", padrao: ["reprogramar", "reagendar"] },
       notaDeResposta: O_ATENDIMENTO_ASSUME,
       toques: [
         {
@@ -197,21 +197,21 @@ export const MODELOS_DE_CLINICA: readonly ModeloDeFollowup[] = [
           // registrada logo depois do horário, e o paciente pode estar a
           // caminho, preso no trânsito ou resolvendo o que o fez faltar.
           esperaAntesMs: 120 * MIN_MS,
-          rotulo: "Oferece outra data",
+          rotulo: "Ofrece otra fecha",
           texto:
-            "Oi! Vi que a gente não conseguiu se encontrar no horário de hoje. Acontece 🙂 Quer que eu veja outra data para você?",
+            "¡Hola! Vi que no pudimos vernos en el horario de hoy. Son cosas que pasan 🙂 ¿Quieres que te busque otra fecha?",
         },
         {
           esperaAntesMs: 2 * DIA_MS,
-          rotulo: "Pede dia e período",
+          rotulo: "Pide día y momento",
           texto:
-            "Consigo encaixar você em outro horário. Me diz o dia da semana e o período que funcionam melhor para você.",
+            "Puedo darte otro horario. Dime qué día de la semana y en qué momento del día te acomoda más.",
         },
         {
           esperaAntesMs: 5 * DIA_MS,
-          rotulo: "Encerra o assunto",
+          rotulo: "Cierra el tema",
           texto:
-            "Se ainda quiser remarcar, é só me responder. Depois desta eu paro de lembrar, para não encher a sua caixa de mensagem 🙂",
+            "Si todavía quieres reprogramar, solo respóndeme. Después de este mensaje ya no te escribo más, para no llenarte la bandeja 🙂",
         },
       ],
     }),

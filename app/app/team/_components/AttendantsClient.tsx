@@ -248,7 +248,7 @@ function ScheduleDialog({
                     )
                   }
                 >
-                  <SelectTrigger className="w-[90px]" aria-label="Dia da semana">
+                  <SelectTrigger className="w-[90px]" aria-label={t("Dia da semana")}>
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
@@ -273,7 +273,7 @@ function ScheduleDialog({
                 <Input
                   type="time"
                   value={w.end}
-                  aria-label="Fim"
+                  aria-label={t("Fim")}
                   onChange={(e) =>
                     setWindows((ws) =>
                       ws.map((x, j) => (j === i ? { ...x, end: e.target.value } : x)),
@@ -283,7 +283,7 @@ function ScheduleDialog({
                 <Button
                   variant="ghost"
                   size="icon"
-                  aria-label="Remover janela"
+                  aria-label={t("Remover janela")}
                   onClick={() => setWindows((ws) => ws.filter((_, j) => j !== i))}
                 >
                   <Trash size={18} />
@@ -297,17 +297,17 @@ function ScheduleDialog({
                 setWindows((ws) => [...ws, { dow: 1, start: "08:00", end: "18:00" }])
               }
             >
-              <Plus size={16} className="mr-1" /> Adicionar janela
+              <Plus size={16} className="mr-1" /> {t("Adicionar janela")}
             </Button>
           </div>
         </div>
 
         <DialogFooter>
           <Button variant="ghost" onClick={() => onOpenChange(false)}>
-            Cancelar
+            {t("Cancelar")}
           </Button>
           <Button disabled={isPending} onClick={() => onSave(windows, timezone)}>
-            Salvar
+            {t("Salvar")}
           </Button>
         </DialogFooter>
       </DialogContent>
@@ -365,24 +365,24 @@ function RoutingCard({ canManage }: { canManage: boolean }) {
       <CardContent className="space-y-4">
         <div className="grid gap-4 sm:grid-cols-3">
           <div className="space-y-1.5">
-            <Label>Modo</Label>
+            <Label>{t("Modo")}</Label>
             <Select
               value={current.mode}
               disabled={!canManage}
               onValueChange={(v) => set({ mode: v as RoutingConfig["mode"] })}
             >
-              <SelectTrigger aria-label="Modo de roteamento">
+              <SelectTrigger aria-label={t("Modo de roteamento")}>
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
                 {ROUTING_MODES.map((m) => (
                   <SelectItem key={m} value={m}>
-                    {MODE_LABELS[m]}
+                    {t(MODE_LABELS[m])}
                   </SelectItem>
                 ))}
                 {/* 'load' (balanceamento por carga) é pós-MVP: a API rejeita — desabilitado. */}
                 <SelectItem value="load" disabled>
-                  Balanceamento por carga (em breve)
+                  {t("Balanceamento por carga (em breve)")}
                 </SelectItem>
               </SelectContent>
             </Select>
@@ -400,7 +400,7 @@ function RoutingCard({ canManage }: { canManage: boolean }) {
             />
           </div>
           <div className="space-y-1.5">
-            <Label htmlFor="backoff">Backoff (s)</Label>
+            <Label htmlFor="backoff">{t("Espera entre tentativas (s)")}</Label>
             <Input
               id="backoff"
               type="number"
@@ -419,7 +419,7 @@ function RoutingCard({ canManage }: { canManage: boolean }) {
               onClick={() => update.mutate(current, { onSuccess: () => setDraft(null) })}
               className="w-full sm:w-auto"
             >
-              Salvar
+              {t("Salvar")}
             </Button>
           </div>
         ) : null}
@@ -482,7 +482,7 @@ export function AttendantsClient({ canManage }: Props) {
             ))}
           </div>
         ) : isError ? (
-          <p className="p-4 text-sm text-destructive">Erro ao carregar atendentes.</p>
+          <p className="p-4 text-sm text-destructive">{t("Erro ao carregar atendentes.")}</p>
         ) : attendants.length === 0 ? (
           <p className="p-4 text-sm text-muted-foreground">
             {t("Nenhum atendente na organização. Convide membros com papel de atendente ou superior.")}

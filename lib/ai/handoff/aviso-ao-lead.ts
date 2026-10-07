@@ -53,7 +53,7 @@ import type {
   MotivoDoAviso as MotivoDoAvisoDaPassagem,
 } from "@/lib/escalacao/passagem";
 import type { QuemPodeAssumir } from "@/lib/escalacao/disponibilidade";
-import { normalizarIdioma, type Idioma } from "@/lib/i18n/idiomas";
+import { IDIOMA_PADRAO, normalizarIdioma, type Idioma } from "@/lib/i18n/idiomas";
 import { logger } from "@/lib/logger";
 
 /** Ator do envio — é o automático falando, não uma pessoa. */
@@ -212,7 +212,7 @@ async function idiomaDaOrganizacao(
       .maybeSingle();
     return normalizarIdioma((data as { locale?: string | null } | null)?.locale ?? null);
   } catch {
-    return "pt-BR";
+    return IDIOMA_PADRAO;
   }
 }
 

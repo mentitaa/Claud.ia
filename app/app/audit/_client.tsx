@@ -73,7 +73,7 @@ export function AuditClient() {
             <Input
               value={actionInput}
               onChange={(e) => setActionInput(e.target.value)}
-              placeholder="ex: lead.created"
+              placeholder={`${t("ex:")} lead.created`}
             />
           </div>
           <div className="space-y-1">
@@ -81,7 +81,7 @@ export function AuditClient() {
             <Input
               value={resourceType}
               onChange={(e) => setResourceType(e.target.value)}
-              placeholder="ex: contact"
+              placeholder={`${t("ex:")} contact`}
             />
           </div>
           <div className="space-y-1">

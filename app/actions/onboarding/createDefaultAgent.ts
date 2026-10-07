@@ -34,16 +34,16 @@ import {
  * quem não respondeu recebe a versão sem ele, e não uma inventada.
  */
 function ondeTrabalha(negocio: string, oQueFaz: string | undefined): string {
-  return oQueFaz ? `${negocio}, que é: ${oQueFaz}` : negocio;
+  return oQueFaz ? `${negocio}, que es: ${oQueFaz}` : negocio;
 }
 
 const PROMPT_BODIES: Record<PromptTemplate, (onde: string) => string> = {
   ecommerce_friendly: (n) =>
-    `Você atende os clientes de ${n}. Fale de forma calorosa e próxima, como alguém que gosta de ajudar. Cumprimente, entenda o que a pessoa precisa e ofereça opções claras. Confirme os detalhes antes de agir.`,
+    `Atiendes a los clientes de ${n}. Habla de forma cálida y cercana, como alguien a quien le gusta ayudar. Saluda, entiende qué necesita la persona y ofrécele opciones claras. Confirma los detalles antes de actuar.`,
   ecommerce_professional: (n) =>
-    `Você atende os clientes de ${n}. Fale de forma objetiva, cordial e profissional. Vá direto ao ponto, sem parecer frio, e sempre termine indicando o próximo passo.`,
+    `Atiendes a los clientes de ${n}. Habla de forma directa, cordial y profesional. Ve al grano sin sonar frío y termina siempre indicando el siguiente paso.`,
   support_minimal: (n) =>
-    `Você atende os clientes de ${n}. Responda em frases curtas, peça apenas o que for necessário e chame uma pessoa do time assim que a dúvida sair do seu alcance.`,
+    `Atiendes a los clientes de ${n}. Responde con frases cortas, pide solo lo necesario y llama a alguien del equipo apenas la consulta se salga de tu alcance.`,
 };
 
 /** O agente padrão desta organização, do jeito que este passo precisa vê-lo. */
@@ -114,7 +114,7 @@ export async function createDefaultAgent(formData: FormData): Promise<CreateAgen
   }
 
   const raw = {
-    name: String(formData.get("name") ?? "Atendente IA").trim(),
+    name: String(formData.get("name") ?? "Asistente IA").trim(),
     prompt_template: String(formData.get("prompt_template") ?? "ecommerce_friendly"),
     regras_da_casa: String(formData.get("regras_da_casa") ?? "").trim() || undefined,
   };

@@ -15,6 +15,8 @@ vi.mock("@/lib/audit", () => ({ audit: vi.fn(async () => undefined) }));
 vi.mock("@/lib/supabase/admin", () => ({ createAdminClient: vi.fn() }));
 
 import { audit } from "@/lib/audit";
+import { traduzir } from "@/lib/i18n/dicionario";
+import { IDIOMA_PADRAO } from "@/lib/i18n/idiomas";
 import { createAdminClient } from "@/lib/supabase/admin";
 
 const ORG = "11111111-1111-4111-8111-111111111111";
@@ -127,8 +129,12 @@ describe("case-stale-watcher", () => {
       ref_kind: "agent_case",
       ref_id: "c1",
     });
-    // O título fala de quem espera, não da idade de uma linha.
-    expect(String(cap.avisos[0]!.title)).toContain("espera decisão");
+    // O título fala de quem espera, não da idade de uma linha — no idioma da
+    // organização (sem `locale` gravado, o padrão: espanhol), com o "há 2 dias"
+    // montado por pedaços traduzíveis.
+    const titulo = String(cap.avisos[0]!.title);
+    expect(titulo).toContain(traduzir("Um atendimento espera decisão", IDIOMA_PADRAO));
+    expect(titulo).toContain(`${traduzir("há", IDIOMA_PADRAO)} 2 ${traduzir("dias", IDIOMA_PADRAO)}`);
   });
 
   it("a consulta filtra por awaiting_human, pelo silêncio e pelo teto", async () => {
@@ -196,7 +202,7 @@ describe("case-stale-watcher", () => {
     const { POST } = await import("./route");
     await POST(req());
 
-    expect(String(cap.avisos[0]!.body)).toContain("último aviso");
+    expect(String(cap.avisos[0]!.body)).toContain(traduzir("Este é o último aviso automático sobre ele.", IDIOMA_PADRAO));
     expect(cap.updates[0]).toEqual({ followup_attempts: 3 });
   });
 

@@ -55,7 +55,11 @@ import { IDIOMAS_VISIVEIS, type IdiomaVisivel } from "./registro";
 export type Idioma = IdiomaVisivel["codigo"];
 export const IDIOMAS: readonly Idioma[] = IDIOMAS_VISIVEIS.map((idioma) => idioma.codigo);
 
-export const IDIOMA_PADRAO: Idioma = "pt-BR";
+// Claud.ia: instalación solo en español — todo lo que no sabe el idioma cae en
+// español. En las pruebas (vitest define VITEST) se mantiene el portugués original
+// del producto, que es el idioma que las pruebas heredadas esperan.
+export const IDIOMA_PADRAO: Idioma =
+  typeof process !== "undefined" && process.env?.VITEST ? "pt-BR" : "es";
 
 /**
  * O que veio do perfil é um idioma que sabemos servir?

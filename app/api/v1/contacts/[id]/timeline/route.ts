@@ -17,6 +17,7 @@
  * as duas dividem as peças de `lib/leads/timeline-query.ts` e divergem só na
  * cláusula, que é justamente onde a diferença mora.
  */
+import { IDIOMA_PADRAO } from "@/lib/i18n/idiomas";
 import { randomUUID } from "node:crypto";
 import { type NextRequest } from "next/server";
 
@@ -51,7 +52,7 @@ export async function GET(
     return fail("unauthenticated", "Auth required.", 401, { requestId });
   }
   const authUser = await loadAuthUser();
-  const t = (texto: string) => traduzir(texto, authUser?.idioma ?? "pt-BR");
+  const t = (texto: string) => traduzir(texto, authUser?.idioma ?? IDIOMA_PADRAO);
 
   const url = new URL(req.url);
   const types = url.searchParams.getAll("type").filter(Boolean);

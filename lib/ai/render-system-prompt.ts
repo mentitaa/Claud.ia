@@ -10,6 +10,7 @@
  *   {{recent_messages}}  {{retrieved_chunks}}
  */
 
+import { IDIOMA_PADRAO } from "@/lib/i18n/idiomas";
 import type { BotContext } from "@/lib/ai/types";
 import { nomeDoContato } from "@/lib/contacts/rotulo-do-contato";
 
@@ -64,7 +65,7 @@ export function renderSystemPrompt(template: string, ctx: BotContext): string {
   const scope: Record<string, unknown> = {
     vocabulary,
     contact_name: nomeDoContato(ctx.contact) ?? "cliente",
-    contact_locale: ctx.contact.locale ?? "pt-BR",
+    contact_locale: ctx.contact.locale ?? IDIOMA_PADRAO,
     recent_messages: formatRecentMessages(ctx),
     retrieved_chunks: formatRetrievedChunks(ctx),
   };

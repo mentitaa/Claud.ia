@@ -129,7 +129,7 @@ function DialerDialog() {
 export function CallsClient() {
   const t = useT();
   // A data segue o idioma de quem lê — `tests/unit/i18n-a-data-segue-o-idioma`
-  // reprova `toLocaleString("pt-BR")` fixo.
+  // reprova `toLocaleString("es-PE")` fixo.
   const idioma = useTagDeIdioma();
   const { data: calls, isLoading } = useCallsQuery();
   const [selected, setSelected] = useState<CallRow | null>(null);

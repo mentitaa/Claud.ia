@@ -324,8 +324,9 @@ describe("inline prospecting agent setup", () => {
     const prompt = prospectingAgentPrompt(input);
     expect(prompt).toContain(input.instruction);
     expect(prompt).toContain(input.qualification);
-    expect(prompt).toContain("não significam qualificação");
-    expect(prompt).toContain("nunca alegue cadastro");
+    expect(prompt).toContain("no significan calificación");
+    expect(prompt).toContain("nunca afirmes un registro");
+    expect(prompt).toContain("español de Perú");
   });
 });
 

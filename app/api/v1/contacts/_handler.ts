@@ -6,6 +6,7 @@
  * - Lançam `ApiError` em caso de erro estruturado; sucesso retorna data.
  * - Audit + emit_event são responsabilidade do handler (DRY entre REST e MCP).
  */
+import { IDIOMA_PADRAO } from "@/lib/i18n/idiomas";
 import type { SupabaseClient } from "@supabase/supabase-js";
 
 import { createAdminClient } from "@/lib/supabase/admin";
@@ -180,7 +181,7 @@ export async function listContactsHandler(
         "invalid_cursor",
         undefined,
         ctx.requestId,
-        traduzir("Cursor inválido.", ctx.idioma ?? "pt-BR"),
+        traduzir("Cursor inválido.", ctx.idioma ?? IDIOMA_PADRAO),
       );
     }
     const op = asc ? "gt" : "lt";
@@ -302,7 +303,7 @@ export async function getContactHandler(
       "not_found",
       undefined,
       ctx.requestId,
-      traduzir("Contato não encontrado.", ctx.idioma ?? "pt-BR"),
+      traduzir("Contato não encontrado.", ctx.idioma ?? IDIOMA_PADRAO),
     );
   }
   const contact = data as Contact;
@@ -427,7 +428,7 @@ export async function createContactHandler(
           "contact_exists",
           { contact_id: existente.id },
           ctx.requestId,
-          traduzir("Já existe um contato com este telefone.", ctx.idioma ?? "pt-BR"),
+          traduzir("Já existe um contato com este telefone.", ctx.idioma ?? IDIOMA_PADRAO),
         );
       }
     }
@@ -512,7 +513,7 @@ export async function patchContactHandler(
       "not_found",
       undefined,
       ctx.requestId,
-      traduzir("Contato não encontrado.", ctx.idioma ?? "pt-BR"),
+      traduzir("Contato não encontrado.", ctx.idioma ?? IDIOMA_PADRAO),
     );
   }
   if (existing.is_anonymized) {
@@ -521,7 +522,7 @@ export async function patchContactHandler(
       "lgpd_anonymization_irreversible",
       undefined,
       ctx.requestId,
-      traduzir("Contato anonimizado — edição bloqueada (LGPD).", ctx.idioma ?? "pt-BR"),
+      traduzir("Contato anonimizado — edição bloqueada (LGPD).", ctx.idioma ?? IDIOMA_PADRAO),
     );
   }
 
@@ -577,7 +578,7 @@ export async function patchContactHandler(
       "invalid_request",
       undefined,
       ctx.requestId,
-      traduzir("Nenhum campo para atualizar.", ctx.idioma ?? "pt-BR"),
+      traduzir("Nenhum campo para atualizar.", ctx.idioma ?? IDIOMA_PADRAO),
     );
   }
 
@@ -603,7 +604,7 @@ export async function patchContactHandler(
       "not_found",
       undefined,
       ctx.requestId,
-      traduzir("Contato não encontrado após update.", ctx.idioma ?? "pt-BR"),
+      traduzir("Contato não encontrado após update.", ctx.idioma ?? IDIOMA_PADRAO),
     );
   }
 
@@ -688,7 +689,7 @@ export async function patchContactHandler(
 function throwOnDbError(
   err: { code?: string; message: string } | null,
   requestId: string,
-  idioma: Idioma = "pt-BR",
+  idioma: Idioma = IDIOMA_PADRAO,
 ): void {
   if (!err) return;
   // conversations/messages apontam para contacts com ON DELETE RESTRICT.
@@ -750,7 +751,7 @@ export async function deleteContactHandler(
       "not_found",
       undefined,
       ctx.requestId,
-      traduzir("Contato não encontrado.", ctx.idioma ?? "pt-BR"),
+      traduzir("Contato não encontrado.", ctx.idioma ?? IDIOMA_PADRAO),
     );
   }
 
@@ -797,7 +798,7 @@ export async function deleteContactHandler(
       "state_conflict",
       undefined,
       ctx.requestId,
-      traduzir("Não foi possível excluir: o contato ainda tem registros vinculados.", ctx.idioma ?? "pt-BR"),
+      traduzir("Não foi possível excluir: o contato ainda tem registros vinculados.", ctx.idioma ?? IDIOMA_PADRAO),
     );
   }
 
@@ -855,7 +856,7 @@ export async function deleteContactHandler(
       "not_found",
       undefined,
       ctx.requestId,
-      traduzir("Contato não encontrado.", ctx.idioma ?? "pt-BR"),
+      traduzir("Contato não encontrado.", ctx.idioma ?? IDIOMA_PADRAO),
     );
   }
 

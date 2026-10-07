@@ -1,6 +1,7 @@
 /**
  * GET /api/v1/conversations — list inbox (handler em ./_handler.ts).
  */
+import { IDIOMA_PADRAO } from "@/lib/i18n/idiomas";
 import { randomUUID } from "node:crypto";
 import { type NextRequest } from "next/server";
 
@@ -29,7 +30,7 @@ export async function GET(req: NextRequest): Promise<Response> {
   }
 
   const authUser = await loadAuthUser();
-  const t = (texto: string) => traduzir(texto, authUser?.idioma ?? "pt-BR");
+  const t = (texto: string) => traduzir(texto, authUser?.idioma ?? IDIOMA_PADRAO);
   const activeOrg = authUser ? await resolveActiveOrg(authUser) : null;
   if (!activeOrg) {
     return fail("no_active_org", t("No active organization."), 403, { requestId });

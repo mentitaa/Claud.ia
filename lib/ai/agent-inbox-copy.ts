@@ -4,6 +4,7 @@
  * 0050) — a central de avisos mostra o que aconteceu sem jargão.
  */
 
+import { IDIOMA_PADRAO } from "@/lib/i18n/idiomas";
 import type { InboxKind } from "@/lib/agent-engine/db/repository";
 import { traduzir } from "@/lib/i18n/dicionario";
 import type { Idioma } from "@/lib/i18n/idiomas";
@@ -141,7 +142,7 @@ export function copyDaPromessaSemDono(
    * veio, sem passar por `t()` —, então é na escrita que ele ganha o idioma de
    * quem vai ler, como o aviso de passagem para pessoa já fazia.
    */
-  idioma: Idioma = "pt-BR",
+  idioma: Idioma = IDIOMA_PADRAO,
 ): { title: string; body: string } {
   const title =
     quantas === 1

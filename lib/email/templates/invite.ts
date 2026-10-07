@@ -32,11 +32,16 @@ export function buildInviteEmail(opts: InviteEmailOptions): {
   html: string;
   text: string;
 } {
-  const expiresStr = opts.expiresAt.toLocaleString("pt-BR", {
-    timeZone: "America/Sao_Paulo",
+  const expiresStr = opts.expiresAt.toLocaleString("es-PE", {
+    timeZone: "America/Lima",
+    dateStyle: "long",
+    timeStyle: "short",
   });
   const marca = opts.marca.nome;
-  const subject = `${opts.inviterName} convidou você para a ${opts.orgName} no ${marca}`;
+  // Claud.ia: el correo sale en español (instalación solo en español) y el rol
+  // con su nombre legible, no el código interno ("agent").
+  const rol = ROL_LEGIBLE[opts.role] ?? opts.role;
+  const subject = `${opts.inviterName} te invitó a ${opts.orgName} en ${marca}`;
 
   /**
    * O logo de quem convidou, quando há um.
@@ -60,43 +65,51 @@ export function buildInviteEmail(opts: InviteEmailOptions): {
     : "";
 
   const html = `<!doctype html>
-<html lang="pt-BR">
+<html lang="es">
 <body style="margin:0;padding:0;background:${NEUTROS_DE_SAIDA.fundo};font-family:system-ui,-apple-system,Segoe UI,sans-serif;color:${NEUTROS_DE_SAIDA.texto}">
   <div style="max-width:560px;margin:0 auto;padding:32px 24px">
     ${logo}
     <h1 style="font-size:22px;line-height:1.3;margin:0 0 16px;color:${NEUTROS_DE_SAIDA.texto}">
-      Você foi convidado para a ${escapeHtml(opts.orgName)}
+      Te invitaron a ${escapeHtml(opts.orgName)}
     </h1>
     <p style="margin:0 0 16px;font-size:15px;line-height:1.5">
-      ${escapeHtml(opts.inviterName)} convidou você como
-      <strong>${escapeHtml(opts.role)}</strong> no ${escapeHtml(marca)}.
+      ${escapeHtml(opts.inviterName)} te invitó como
+      <strong>${escapeHtml(rol)}</strong> en ${escapeHtml(marca)}.
     </p>
     <p style="margin:24px 0">
       <a href="${opts.acceptUrl}" style="display:inline-block;padding:12px 24px;background:${opts.marca.accent};color:${opts.marca.accentFg};border-radius:6px;text-decoration:none;font-weight:600">
-        Aceitar convite
+        Aceptar invitación
       </a>
     </p>
     <p style="margin:0 0 8px;font-size:13px;color:${NEUTROS_DE_SAIDA.suave}">
-      Ou copie e cole este link no navegador:<br>
+      O copia y pega este enlace en tu navegador:<br>
       <span style="word-break:break-all;color:${opts.marca.accent}">${opts.acceptUrl}</span>
     </p>
     <p style="margin:24px 0 0;font-size:13px;color:${NEUTROS_DE_SAIDA.suave}">
-      Este link expira em <strong>${expiresStr}</strong>. Se você não esperava este convite, pode ignorá-lo.
+      Este enlace vence el <strong>${expiresStr}</strong>. Si no esperabas esta invitación, puedes ignorarla.
     </p>
   </div>
 </body>
 </html>`;
 
   const text = [
-    `Você foi convidado para a ${opts.orgName} como ${opts.role} no ${marca}.`,
+    `Te invitaron a ${opts.orgName} como ${rol} en ${marca}.`,
     "",
-    `Aceitar: ${opts.acceptUrl}`,
+    `Aceptar: ${opts.acceptUrl}`,
     "",
-    `Expira em ${expiresStr}.`,
+    `Vence el ${expiresStr}.`,
   ].join("\n");
 
   return { subject, html, text };
 }
+
+const ROL_LEGIBLE: Record<string, string> = {
+  viewer: "Solo lectura",
+  agent: "Asesor",
+  ai_operator: "Asistente con autonomía",
+  manager: "Gerente",
+  admin: "Administrador",
+};
 
 function escapeHtml(s: string): string {
   return s

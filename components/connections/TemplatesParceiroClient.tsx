@@ -296,8 +296,8 @@ export function TemplatesParceiroClient({
                   {/* NÃO usar t("Ligar") aqui: essa chave já existe no dicionário
                       traduzida como "Activar" (o toggle de automações em
                       RulesTab.tsx) — mesma palavra fonte, sentido diferente
-                      ("Llamar", não "Activar"). Texto puro evita a tradução errada. */}
-                  <option value="phone_number">Ligar</option>
+                      ("Llamar", não "Activar"). Chave própria evita a colisão. */}
+                  <option value="phone_number">{t("Ligar para número")}</option>
                 </select>
                 <input
                   value={b.texto}

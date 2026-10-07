@@ -189,7 +189,7 @@ import {
   type JailbreakLevel,
 } from '../guardrails/jailbreak/classifier';
 import { camadaLigada, lerCamadasDaOrg } from '../guardrails/camadas-da-org';
-import { fusoDaOrganizacao } from './fuso-da-org';
+import { blocoDeIdioma, fusoDaOrganizacao, idiomaDaOrganizacao } from './fuso-da-org';
 import { renderAgora } from '@/lib/tempo/agora';
 import { decidirElegibilidadeDaConversa } from '@/lib/ai/elegibilidade/consulta-pg';
 
@@ -209,7 +209,7 @@ export const AGENT_TOOL_DEFS = {
     description:
       'Envia UMA mensagem de WhatsApp ao lead desta conversa. É o ÚNICO jeito de falar com o lead; texto fora desta tool nunca é enviado.',
     inputSchema: z.object({
-      body: z.string().min(1).describe('corpo da mensagem, em pt-br, pronto para envio'),
+      body: z.string().min(1).describe('corpo da mensagem, no idioma em que o cliente escreve, pronto para envio'),
       produto_codigo: z
         .string()
         .optional()
@@ -308,7 +308,7 @@ export const AGENT_TOOL_DEFS = {
       'invente o que não encontrar. Sem resultados = diga que vai confirmar, nunca chute.',
     inputSchema: z
       .object({
-        query: z.string().min(2).describe('a pergunta ou termos a buscar, em pt-br'),
+        query: z.string().min(2).describe('a pergunta ou termos a buscar, no idioma da base de conhecimento'),
       })
       .passthrough(),
   },
@@ -392,7 +392,7 @@ export const AGENT_TOOL_DEFS = {
     inputSchema: z
       .object({
         title: z.string().describe('título curto, ex.: "Liberar acesso ao painel"'),
-        summary: z.string().describe('o que o lead precisa, em pt-br'),
+        summary: z.string().describe('o que o lead precisa, no idioma da conversa'),
         blocker: z.string().describe('por que você não consegue resolver sozinho'),
         // O assunto serve para quem TRIA a fila separar antes de ler. O detalhe
         // continua no título e no resumo — este campo não os substitui, e por
@@ -1899,6 +1899,8 @@ async function executarTurnoDoAgente(
   // longe do ponto de uso, para não virar duas respostas para a mesma pergunta.
   // Nunca lança e nunca vem vazio (ver `fuso-da-org.ts`).
   const fusoDaOrg = await fusoDaOrganizacao(pool, tenantId, runLog);
+  // Claud.ia: em que língua o modelo escreve o que fica guardado (ver `blocoDeIdioma`).
+  const idiomaDaOrg = await idiomaDaOrganizacao(pool, tenantId);
 
   // F4-06 (acceptance 2): lead em handoff humano → NO-OP no INÍCIO do turno, antes de
   // qualquer chamada de modelo/CRM. O bot silenciou (bot_silenced_until='infinity', cache
@@ -4027,6 +4029,7 @@ async function executarTurnoDoAgente(
     const agoraBlock = renderAgora(clock(), fusoDaOrg);
     const openingSuffixes = [
       agoraBlock,
+      blocoDeIdioma(idiomaDaOrg),
       matchedSkillsBlock,
       stageHintBlock,
       splitHint,
@@ -4229,7 +4232,12 @@ async function executarTurnoDoAgente(
           // fez seu trabalho na 1ª chamada e não precisa ir de novo.
           ...openingTextOnly,
           ...responseMessages,
-          { role: 'user', content: CHECKPOINT_INSTRUCTION },
+          {
+            role: 'user',
+            content:
+              CHECKPOINT_INSTRUCTION +
+              (idiomaDaOrg === 'es' ? ' Escribe todos los textos del JSON en español.' : ''),
+          },
         ],
       },
       { registry: deps.registry, log: runLog },
@@ -4349,6 +4357,7 @@ async function executarTurnoDoAgente(
           }
         : null,
       content,
+      idiomaDaOrg,
     );
 
     if (mudanca.emit) {

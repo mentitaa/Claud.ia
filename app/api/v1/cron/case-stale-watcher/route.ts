@@ -52,7 +52,7 @@ import type { NextRequest } from "next/server";
 import { ok, fail } from "@/lib/api/wrappers";
 import { audit } from "@/lib/audit";
 import { traduzir } from "@/lib/i18n/dicionario";
-import { normalizarIdioma, type Idioma } from "@/lib/i18n/idiomas";
+import { IDIOMA_PADRAO, normalizarIdioma, type Idioma } from "@/lib/i18n/idiomas";
 import { logger } from "@/lib/logger";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { autorizaCron } from "@/lib/auth/cron-auth";
@@ -75,24 +75,14 @@ const TETO_DE_COBRANCAS = 3;
 /** Teto por rodada. Roda de hora em hora; sobra volta na seguinte. */
 const LIMITE_DA_VARREDURA = 200;
 
-function comoFaz(horas: number): string {
-  const dias = Math.floor(horas / 24);
-  if (dias >= 1) return dias === 1 ? "há um dia" : `há ${dias} dias`;
-  return `há ${Math.max(1, Math.round(horas))} horas`;
-}
-
 /**
- * O MESMO "há N dias", mas montado a partir de PEDAÇOS TRADUZÍVEIS.
+ * "há N dias", montado a partir de PEDAÇOS TRADUZÍVEIS.
  *
- * `comoFaz` devolve a frase inteira já interpolada — `t("há 2 dias")` não casa
- * chave nenhuma no dicionário e devolveria o português para quem escolheu
- * espanhol, em silêncio, que é o modo de falha de i18n que esta casa já pagou.
- * Aqui o número fica fora da tradução e só as palavras passam por `t()`.
- *
- * ⚠️ O braço dos CASOS continua usando `comoFaz` e continua saindo em português
- * para toda organização. É dívida ANTERIOR a esta onda e está declarada, não
- * consertada de carona: mudar o título daquele aviso mexeria num texto que
- * `central-avisos-*` já observa, e o lugar de decidir isso é o PR daquele braço.
+ * Uma frase inteira já interpolada — `t("há 2 dias")` — não casa chave nenhuma
+ * no dicionário e devolveria o português para quem escolheu espanhol, em
+ * silêncio, que é o modo de falha de i18n que esta casa já pagou. Aqui o número
+ * fica fora da tradução e só as palavras passam por `t()`. Os DOIS braços
+ * (casos e passagens) usam este helper, com o idioma da organização.
  */
 function esperaEmPalavras(horas: number, t: (texto: string) => string): string {
   const dias = Math.floor(horas / 24);
@@ -130,6 +120,7 @@ async function handle(req: NextRequest): Promise<Response> {
   }
 
   const casos = data ?? [];
+  const idiomas = new Map<string, Idioma>();
   let avisados = 0;
   let jaAvisados = 0;
 
@@ -154,19 +145,27 @@ async function handle(req: NextRequest): Promise<Response> {
       continue;
     }
 
+    // O idioma só é buscado DEPOIS do dedup: caso que já tem aviso aberto não
+    // gasta consulta. Mesmo motivo do braço das passagens: ninguém está logado
+    // quando o cron escreve e a Central mostra o texto cru.
+    const idioma = await idiomaDaOrganizacao(admin, caso.organization_id as string, idiomas);
+    const t = (texto: string) => traduzir(texto, idioma);
+
     const { error: erroAviso } = await admin.from("agent_inbox_items").insert({
       organization_id: caso.organization_id,
       kind: "case_stale",
       // `warn` e não `critical`: há um cliente esperando, mas nada quebrou. O
       // vermelho é para o que está fora do ar — usá-lo aqui o desvaloriza.
       severity: "warn",
-      title: `Um atendimento espera decisão ${comoFaz(horas)}`,
+      title: `${t("Um atendimento espera decisão")} ${esperaEmPalavras(horas, t)}`,
       body:
-        `"${caso.title as string}" está aguardando alguém da equipe desde que foi aberto, ` +
-        `e o cliente continua do outro lado. Abra o caso e diga o que fazer — concluir, ` +
-        `pedir informação ao cliente ou passar para uma pessoa.` +
+        `"${caso.title as string}" ` +
+        t(
+          "está aguardando alguém da equipe desde que foi aberto, e o cliente continua do outro lado. " +
+            "Abra o caso e diga o que fazer — concluir, pedir informação ao cliente ou passar para uma pessoa.",
+        ) +
         (tentativa >= TETO_DE_COBRANCAS
-          ? " Este é o último aviso automático sobre ele."
+          ? ` ${t("Este é o último aviso automático sobre ele.")}`
           : ""),
       ref_kind: "agent_case",
       ref_id: caso.id,
@@ -256,7 +255,7 @@ async function idiomaDaOrganizacao(
 ): Promise<Idioma> {
   const guardado = cache.get(organizationId);
   if (guardado !== undefined) return guardado;
-  let idioma: Idioma = "pt-BR";
+  let idioma: Idioma = IDIOMA_PADRAO;
   try {
     const { data } = await admin
       .from("organizations")
@@ -265,7 +264,7 @@ async function idiomaDaOrganizacao(
       .maybeSingle();
     idioma = normalizarIdioma((data as { locale?: string | null } | null)?.locale ?? null);
   } catch {
-    idioma = "pt-BR";
+    idioma = IDIOMA_PADRAO;
   }
   cache.set(organizationId, idioma);
   return idioma;

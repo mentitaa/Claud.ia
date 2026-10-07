@@ -157,7 +157,7 @@ function SendWhatsappForm({
           <SelectContent>
             {(sessions ?? []).map((s) => (
               <SelectItem key={s.id} value={s.id} disabled={s.status !== "WORKING"}>
-                {channelLabel(s) + (s.status !== "WORKING" ? " — desconectado" : "")}
+                {channelLabel(s) + (s.status !== "WORKING" ? ` — ${t("desconectado")}` : "")}
               </SelectItem>
             ))}
           </SelectContent>
@@ -188,7 +188,7 @@ function SendWhatsappForm({
           rows={4}
           value={config.template}
           onChange={(e) => onChange({ ...config, template: e.target.value })}
-          placeholder="Oi {{nome}}, tudo bem?"
+          placeholder={t("Oi {{nome}}, tudo bem?")}
         />
         <p className="text-xs text-muted-foreground">
           {/* NÃO cravar "7h e 22h": a janela passou a vir dos ajustes DO NÚMERO
@@ -262,7 +262,7 @@ function SendAiMessageForm({
           <SelectContent>
             {(sessions ?? []).map((s) => (
               <SelectItem key={s.id} value={s.id} disabled={s.status !== "WORKING"}>
-                {channelLabel(s) + (s.status !== "WORKING" ? " — desconectado" : "")}
+                {channelLabel(s) + (s.status !== "WORKING" ? ` — ${t("desconectado")}` : "")}
               </SelectItem>
             ))}
           </SelectContent>
@@ -306,7 +306,7 @@ function AddTagForm({ config, onChange }: FormProps<{ tags: string[] }>) {
             .filter(Boolean);
           onChange({ tags });
         }}
-        placeholder="boas-vindas, novo-lead"
+        placeholder={t("boas-vindas, novo-lead")}
       />
     </div>
   );
@@ -355,7 +355,7 @@ function CallWebhookForm({
         />
       </div>
       <div className="space-y-1">
-        <Label>Segredo (opcional)</Label>
+        <Label>{t("Segredo (opcional)")}</Label>
         <Input
           type="password"
           value={config.secret ?? ""}

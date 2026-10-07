@@ -49,6 +49,7 @@
  * lá a frase é INSTRUÇÃO ao modelo, aqui é FALA ao cliente.
  */
 
+import { IDIOMA_PADRAO } from "@/lib/i18n/idiomas";
 import { createHash } from "node:crypto";
 
 import type { Idioma } from "@/lib/i18n/idiomas";
@@ -287,7 +288,7 @@ export function textoDoAviso(
   motivo: MotivoDoAviso,
   quem: QuemPodeAssumir | null,
   leadId: string,
-  idioma: Idioma = "pt-BR",
+  idioma: Idioma = IDIOMA_PADRAO,
   urgencia = false,
 ): string {
   const aberturas = idioma === "es" ? ABERTURAS_ES : ABERTURAS;

@@ -23,7 +23,7 @@ export default function GlobalError({
   const displayId = eventId ?? error.digest ?? "—";
 
   return (
-    <html lang="pt-BR">
+    <html lang="es">
       <body
         style={{
           margin: 0,
@@ -50,10 +50,10 @@ export default function GlobalError({
           }}
         >
           <h1 style={{ fontSize: "1.5rem", margin: "0 0 0.5rem", fontWeight: 600 }}>
-            Algo deu errado
+            Algo salió mal
           </h1>
           <p style={{ color: "#57534e", margin: "0 0 1.5rem" }}>
-            Tente novamente em instantes. Se persistir, contate o suporte com o ID abaixo.
+            Inténtalo de nuevo en unos momentos. Si el problema continúa, contacta a soporte con el ID de abajo.
           </p>
           <div
             style={{
@@ -87,7 +87,7 @@ export default function GlobalError({
                 cursor: "pointer",
               }}
             >
-              {copied ? "Copiado!" : "Copiar ID"}
+              {copied ? "¡Copiado!" : "Copiar ID"}
             </button>
             <button
               type="button"
@@ -101,7 +101,7 @@ export default function GlobalError({
                 cursor: "pointer",
               }}
             >
-              Tentar de novo
+              Intentar de nuevo
             </button>
           </div>
         </div>

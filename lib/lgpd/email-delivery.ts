@@ -60,14 +60,14 @@ interface SendArgs {
 export async function sendExportEmail(args: SendArgs): Promise<{ messageId: string }> {
   const shortId = args.requestId.slice(0, 8);
   const orgName = escapeHtml(args.marca.nome);
-  const expiresFmt = args.expiresAt.toLocaleString("pt-BR", {
+  const expiresFmt = args.expiresAt.toLocaleString("es-PE", {
     timeZone: "America/Sao_Paulo",
   });
 
   const subject = `Sua solicitação LGPD #${shortId}`;
 
   const html = `<!doctype html>
-<html lang="pt-BR">
+<html lang="es">
 <body style="font-family:-apple-system,Helvetica,Arial,sans-serif;color:${NEUTROS_DE_SAIDA.texto};line-height:1.5;max-width:560px;margin:0 auto;padding:24px;">
   <h2 style="margin:0 0 12px;font-size:18px;">Solicitação LGPD #${shortId} processada</h2>
   <p>Olá,</p>

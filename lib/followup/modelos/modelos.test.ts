@@ -24,7 +24,7 @@ const DIA_MS = 86_400_000;
 describe("catálogo de modelos de follow-up", () => {
   it("tem as quatro jornadas de clínica, com id e nome únicos", () => {
     const clinica = modelosDoNicho("clinica");
-    expect(clinica.map((m) => m.jornada)).toEqual(["Consulta", "Exame", "Cirurgia", "Falta"]);
+    expect(clinica.map((m) => m.jornada)).toEqual(["Consulta", "Examen", "Cirugía", "Inasistencia"]);
     expect(new Set(MODELOS_DE_FOLLOWUP.map((m) => m.id)).size).toBe(MODELOS_DE_FOLLOWUP.length);
     // `followup_flow_pointers` tem `unique (organization_id, name)`: dois
     // modelos com o mesmo nome fariam o segundo bater 23505 na mesma org.
@@ -32,7 +32,7 @@ describe("catálogo de modelos de follow-up", () => {
   });
 
   it("acha modelo por id e não inventa o que não existe", () => {
-    expect(modeloPorId("clinica-exame-marcar")?.jornada).toBe("Exame");
+    expect(modeloPorId("clinica-exame-marcar")?.jornada).toBe("Examen");
     expect(modeloPorId("nao-existe")).toBeUndefined();
   });
 
@@ -103,16 +103,19 @@ describe("catálogo de modelos de follow-up", () => {
     });
   });
 
-  it("o que a galeria mostra tem espanhol — a chave é dinâmica e nenhum varredor a alcança", () => {
-    // `t(modelo.resumo)` é chave DINÂMICA: o varredor de AST de
-    // `i18n-espanhol-cobre-a-tela` só enxerga literal, então um modelo novo
-    // entraria na tela em português para quem escolheu espanhol, sem nada
-    // reprovar. O nome do modelo fica de fora de propósito — ele vira o `name`
-    // do ponteiro no banco, e nome de registro não se traduz.
-    const semEspanhol = MODELOS_DE_FOLLOWUP.flatMap((m) =>
-      [m.jornada, m.resumo, m.oQueDispara].filter((texto) => !DICIONARIO[texto]?.es),
+  it("o que a galeria mostra já está em espanhol — nenhum texto é chave portuguesa do dicionário", () => {
+    // Esta instalação é só em espanhol: os textos do catálogo são escritos
+    // direto em espanhol. `t(modelo.resumo)` é chave DINÂMICA e o varredor de
+    // AST de `i18n-espanhol-cobre-a-tela` só enxerga literal — então quem
+    // reprova um texto português (uma chave do dicionário cuja tradução é
+    // outra) é este teste.
+    const emPortugues = MODELOS_DE_FOLLOWUP.flatMap((m) =>
+      [m.nome, m.jornada, m.resumo, m.oQueDispara].filter((texto) => {
+        const es = DICIONARIO[texto]?.es;
+        return es !== undefined && es !== texto;
+      }),
     );
-    expect(semEspanhol).toEqual([]);
+    expect(emPortugues).toEqual([]);
   });
 
   it("a cirurgia acompanha por semanas e a falta por dias — o prazo É o modelo", () => {
@@ -147,9 +150,28 @@ describe("escada de toques", () => {
     expect(validateFlowForPublish(grafo).ok).toBe(true);
   });
 
+  it("aceita mais de um termo de resposta — cada um vira um ramo ligado ao mesmo fim", () => {
+    const grafo = montarEscada({
+      prazoDeRespostaMs: 2 * DIA_MS,
+      sim: { rotulo: "Quiere reprogramar", padrao: ["reprogramar", "reagendar"] },
+      notaDeResposta: "nota",
+      toques: [{ rotulo: "um", texto: "primeiro toque do fluxo, com texto de verdade" }],
+    });
+    const resposta = grafo.nodes.find((n) => n.id === "resposta-1")!;
+    expect(resposta.type === "match_reply" && resposta.config.branches.map((b) => [b.id, b.pattern])).toEqual([
+      ["topou", "reprogramar"],
+      ["topou-2", "reagendar"],
+    ]);
+    const alvos = grafo.edges
+      .filter((e) => e.source === "resposta-1" && e.condition.type === "branch" && e.condition.branch_id.startsWith("topou"))
+      .map((e) => e.target);
+    expect(alvos).toEqual(["fim-marcou", "fim-marcou"]);
+    expect(validateFlowForPublish(grafo).ok).toBe(true);
+  });
+
   it("escreve a espera em dias e horas, nunca em milissegundos", () => {
-    expect(rotuloDaEspera(DIA_MS)).toBe("Espera 1 dia");
-    expect(rotuloDaEspera(21 * DIA_MS)).toBe("Espera 21 dias");
+    expect(rotuloDaEspera(DIA_MS)).toBe("Espera 1 día");
+    expect(rotuloDaEspera(21 * DIA_MS)).toBe("Espera 21 días");
     expect(rotuloDaEspera(2 * 3_600_000)).toBe("Espera 2 horas");
   });
 });

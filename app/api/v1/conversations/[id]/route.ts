@@ -1,3 +1,4 @@
+import { IDIOMA_PADRAO } from "@/lib/i18n/idiomas";
 import { requireSupportWrite } from "@/lib/impersonate/support";
 /**
  * GET   /api/v1/conversations/[id] — single conversation (handler em ../_handler.ts)
@@ -67,7 +68,7 @@ export async function GET(_req: NextRequest, ctx: RouteCtx): Promise<Response> {
   }
 
   const authUser = await loadAuthUser();
-  const t = (texto: string) => traduzir(texto, authUser?.idioma ?? "pt-BR");
+  const t = (texto: string) => traduzir(texto, authUser?.idioma ?? IDIOMA_PADRAO);
   const activeOrg = authUser ? await resolveActiveOrg(authUser) : null;
   if (!activeOrg) {
     return fail("no_active_org", t("No active organization."), 403, { requestId });

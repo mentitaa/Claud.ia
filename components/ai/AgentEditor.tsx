@@ -199,7 +199,7 @@ export function AgentEditor({ agentId, initialData, readOnly = false }: Props) {
           <TabsTrigger value="model">{t("Modelo")}</TabsTrigger>
           <TabsTrigger value="rag">RAG</TabsTrigger>
           {agent.channel === "voice" && <TabsTrigger value="voz">{t("Voz")}</TabsTrigger>}
-          <TabsTrigger value="guardrails">Guardrails</TabsTrigger>
+          <TabsTrigger value="guardrails">{t("Guardrails")}</TabsTrigger>
         </TabsList>
 
         <TabsContent value="general">
@@ -279,7 +279,7 @@ export function AgentEditor({ agentId, initialData, readOnly = false }: Props) {
 
             <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
               <div className="space-y-1">
-                <Label>Temperature (0–2)</Label>
+                <Label>{t("Temperatura (0–2)")}</Label>
                 <Input
                   type="number"
                   step="0.05"
@@ -291,7 +291,7 @@ export function AgentEditor({ agentId, initialData, readOnly = false }: Props) {
                 />
               </div>
               <div className="space-y-1">
-                <Label>Max tokens (64–4096)</Label>
+                <Label>{t("Máximo de tokens (64–4096)")}</Label>
                 <Input
                   type="number"
                   step="1"
@@ -336,7 +336,7 @@ export function AgentEditor({ agentId, initialData, readOnly = false }: Props) {
                 />
               </div>
               <div className="space-y-1">
-                <Label>Similarity threshold (0–1)</Label>
+                <Label>{t("Limiar de similaridade (0–1)")}</Label>
                 <Input
                   type="number"
                   step="0.01"
@@ -350,7 +350,7 @@ export function AgentEditor({ agentId, initialData, readOnly = false }: Props) {
                 />
               </div>
               <div className="space-y-1">
-                <Label>Confidence threshold (0–1)</Label>
+                <Label>{t("Limiar de confiança (0–1)")}</Label>
                 <Input
                   type="number"
                   step="0.01"

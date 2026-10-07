@@ -100,7 +100,7 @@ const PLAN_INSTRUCTION =
   'quanto cada uma isolada. Respeite o intervalo (mínimo/máximo) de cada espera. ' +
   'Responda SOMENTE com JSON, sem explicação: ' +
   '{"esperas": [{"node_id": "<id da espera>", "aguardar_ms": <inteiro em milissegundos>, ' +
-  '"motivo": "<frase curta em pt-br explicando a escolha para um humano ler>"}]}.';
+  '"motivo": "<frase curta, no idioma das conversas desta organização, explicando a escolha para um humano ler>"}]}.';
 
 /** Espera adaptativa como o planejador a enxerga (espelha `EsperaAdaptativa` de
  *  lib/followup/timing-plan.ts — agent-engine não importa followup/*). */

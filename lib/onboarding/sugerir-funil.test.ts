@@ -57,7 +57,7 @@ describe("o pedido", () => {
   it("leva o exemplo do ramo, não uma descrição do formato em prosa", () => {
     // Descrever o formato produz JSON válido com conteúdo de manual de vendas.
     const { prompt } = pedidoDeSugestao(CTX, escolherPacotePorTexto("clínica"));
-    expect(prompt).toContain("Consulta marcada");
+    expect(prompt).toContain("Cita agendada");
     expect(prompt).toContain("Clínica Bem Viver");
     expect(prompt).toContain("Atendimento odontológico");
   });

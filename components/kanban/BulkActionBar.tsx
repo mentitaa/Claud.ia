@@ -220,7 +220,7 @@ export function BulkActionBar({
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button size="sm" variant="outline" disabled={bulk.isPending}>
-              Tag…
+              {t("Tag…")}
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="start">

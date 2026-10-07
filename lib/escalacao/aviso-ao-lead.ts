@@ -51,6 +51,8 @@
 
 import { createHash } from "node:crypto";
 
+import type { Idioma } from "@/lib/i18n/idiomas";
+
 import type { QuemPodeAssumir } from "./disponibilidade";
 
 /**
@@ -157,6 +159,60 @@ const FECHOS = {
 } as const;
 
 /**
+ * ═══ ESPAÑOL ═══
+ *
+ * O aviso é FALA AO CLIENTE, e numa organização configurada em espanhol o
+ * cliente não lê português. Mesmas regras das variantes acima: uma por motivo e
+ * por estado da equipe, redações de verdade diferentes (não sinônimos), sorteio
+ * pelo mesmo hash do lead.
+ */
+const ABERTURAS_ES: Record<MotivoDoAviso, readonly string[]> = {
+  suspeita_de_opt_out: [
+    "Entendido. Dejo de enviarte mensajes automáticos por aquí.",
+    "Listo, anotado: no te llegará nada automático a este número.",
+    "De acuerdo. Detengo ahora mismo los envíos automáticos de este canal.",
+  ],
+  pediu_humano: [
+    "¡Claro! Ya estoy llamando a alguien del equipo para que te atienda.",
+    "Sin problema, acabo de avisar a una persona del equipo para seguir desde aquí.",
+    "Perfecto. Pasé tu conversación a una persona de nuestro equipo.",
+  ],
+  orcamento_de_ia: [
+    "Voy a pasar tu atención a una persona del equipo.",
+    "Desde aquí te sigue atendiendo alguien de nuestro equipo.",
+    "Estoy transfiriendo esta conversación a una persona.",
+  ],
+  outro: [
+    "Este caso lo resuelve mejor una persona. Ya le avisé al equipo.",
+    "Prefiero no arriesgarme: pasé tu consulta a alguien del equipo.",
+    "Voy a pedirle ayuda a una persona del equipo para ver esto contigo.",
+  ],
+};
+
+const FECHOS_ES = {
+  sem_equipe: [
+    "Tu consulta quedó registrada y el equipo te responde lo antes posible.",
+    "Dejé todo anotado; te escribimos apenas podamos.",
+    "Ya lo registré, y alguien te contesta en la primera oportunidad.",
+  ],
+  fora_de_expediente: [
+    "En este momento no hay nadie disponible, pero tu consulta quedó registrada.",
+    "Ahora no hay nadie libre; dejé tu solicitud anotada para el equipo.",
+    "No hay una persona disponible en este instante; tu conversación quedó en espera.",
+  ],
+  com_equipe: [
+    "Solo espera un momento aquí en el chat.",
+    "Quédate por aquí que ya te responden.",
+    "Espera un momentito en esta conversación, por favor.",
+  ],
+} as const;
+
+const FECHO_DO_OPT_OUT = {
+  "pt-BR": "Encaminhei seu pedido para uma pessoa da equipe confirmar.",
+  es: "Pasé tu pedido a una persona del equipo para que lo confirme.",
+} as const satisfies Record<Idioma, string>;
+
+/**
  * Variante DETERMINÍSTICA por lead: sha256(lead_id) → uint32 → módulo.
  *
  * É a MESMA regra de `pickReentryVariant` (`lib/agent-engine/agent/reentry-template.ts`),
@@ -186,22 +242,25 @@ export function textoDoAviso(
   motivo: MotivoDoAviso,
   quem: QuemPodeAssumir | null,
   leadId: string,
+  idioma: Idioma = "pt-BR",
 ): string {
-  const abertura = variante(leadId, ABERTURAS[motivo]);
+  const aberturas = idioma === "es" ? ABERTURAS_ES : ABERTURAS;
+  const fechos = idioma === "es" ? FECHOS_ES : FECHOS;
+  const abertura = variante(leadId, aberturas[motivo]);
 
   if (motivo === "suspeita_de_opt_out") {
     // Sem fecho de expediente: quem pediu para parar não está esperando
     // atendimento, então "aguarde um instante" seria a resposta errada à
     // pergunta que ele fez.
-    return `${abertura} Encaminhei seu pedido para uma pessoa da equipe confirmar.`;
+    return `${abertura} ${FECHO_DO_OPT_OUT[idioma]}`;
   }
 
   const fecho =
     quem === null || quem.total === 0
-      ? variante(leadId, FECHOS.sem_equipe)
+      ? variante(leadId, fechos.sem_equipe)
       : quem.disponiveis === 0
-        ? variante(leadId, FECHOS.fora_de_expediente)
-        : variante(leadId, FECHOS.com_equipe);
+        ? variante(leadId, fechos.fora_de_expediente)
+        : variante(leadId, fechos.com_equipe);
 
   return `${abertura} ${fecho}`;
 }

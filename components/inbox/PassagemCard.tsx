@@ -8,6 +8,8 @@ import { Button } from "@/components/ui/button";
 import { useLocaleDeData } from "@/hooks/i18n/useLocaleDeData";
 import { useT } from "@/hooks/i18n/useT";
 import type { CartaoDaPassagem } from "@/lib/escalacao/cartao-da-passagem";
+import { traduzirResumoDaPassagem } from "@/lib/escalacao/traduzir-resumo-da-passagem";
+import { useIdioma } from "@/lib/i18n/IdiomaProvider";
 import { Robot, Warning } from "@/lib/ui/icons";
 
 interface Props {
@@ -126,6 +128,7 @@ export function PassagemCard({ cartao, contatoId, onAssumir, assumindo }: Props)
 /** As seções. Separado do invólucro porque o estado recolhido reusa exatamente isto. */
 function Corpo({ cartao, tituloId }: { cartao: CartaoDaPassagem; tituloId: string }) {
   const t = useT();
+  const idioma = useIdioma();
 
   if (cartao.anonimizada) {
     return (
@@ -177,7 +180,7 @@ function Corpo({ cartao, tituloId }: { cartao: CartaoDaPassagem; tituloId: strin
       {cartao.resumo !== null && (
         <Secao rotulo={t("Resumo da IA (confira)")}>
           <p className="whitespace-pre-wrap break-words" data-testid="passagem-resumo">
-            {cartao.resumo}
+            {traduzirResumoDaPassagem(cartao.resumo, idioma)}
           </p>
         </Secao>
       )}

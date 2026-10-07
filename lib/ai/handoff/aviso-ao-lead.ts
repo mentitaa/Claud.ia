@@ -53,6 +53,7 @@ import type {
   MotivoDoAviso as MotivoDoAvisoDaPassagem,
 } from "@/lib/escalacao/passagem";
 import type { QuemPodeAssumir } from "@/lib/escalacao/disponibilidade";
+import { normalizarIdioma, type Idioma } from "@/lib/i18n/idiomas";
 import { logger } from "@/lib/logger";
 
 /** Ator do envio — é o automático falando, não uma pessoa. */
@@ -110,6 +111,7 @@ export async function avisarLeadDoCrm(
       motivoDoAviso(input.reason),
       await quemPodeAssumir(admin, input.organizationId),
       input.contactId,
+      await idiomaDaOrganizacao(admin, input.organizationId),
     );
     const mensagem = await sendMessageHandler(
       admin,
@@ -185,5 +187,26 @@ async function quemPodeAssumir(
       error: err instanceof Error ? err.message.slice(0, 200) : String(err),
     });
     return null;
+  }
+}
+
+/**
+ * O idioma da ORGANIZAÇÃO (`organizations.locale`) — é nele que o cliente lê o
+ * aviso. Nunca lança: se a leitura falhar, o aviso sai no idioma padrão em vez
+ * de não sair.
+ */
+async function idiomaDaOrganizacao(
+  admin: SupabaseClient,
+  organizationId: string,
+): Promise<Idioma> {
+  try {
+    const { data } = await admin
+      .from("organizations")
+      .select("locale")
+      .eq("id", organizationId)
+      .maybeSingle();
+    return normalizarIdioma((data as { locale?: string | null } | null)?.locale ?? null);
+  } catch {
+    return "pt-BR";
   }
 }

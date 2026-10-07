@@ -78,12 +78,25 @@ describe("declaração do turno — o contrato", () => {
       expect(r.success && r.data.promessas[0]!.prazo).toBeNull();
     });
 
-    it("checkpoint com declaração malformada reprova o fechamento inteiro", () => {
-      // O turno re-tenta pela fila. Aceitar um checkpoint com declaração quebrada
-      // gravaria lixo na fronteira que a próxima camada vai consumir.
-      expect(() =>
-        parseCheckpointText('{"rolling_summary":"x","declaracao":{"intencoes":"nao é lista"}}'),
-      ).toThrow();
+    it("Claud.ia: declaração malformada vira AUSENTE, sem derrubar o turno", () => {
+      // Não grava lixo na fronteira: a declaração quebrada some ("não declarou"),
+      // e o resto do checkpoint segue valendo.
+      const c = parseCheckpointText(
+        '{"rolling_summary":"x","declaracao":{"intencoes":"nao é lista"}}',
+      );
+      expect(c.rolling_summary).toBe("x");
+      expect(c.declaracao).toBeUndefined();
+    });
+
+    it("Claud.ia: chave extra na declaração é descartada e o resto se aproveita", () => {
+      const c = parseCheckpointText(
+        '{"rolling_summary":"x","declaracao":{"intencoes":[],"promessas":[],"nada_a_declarar":true,"resumo":"extra"}}',
+      );
+      expect(c.declaracao).toEqual({ intencoes: [], promessas: [], nada_a_declarar: true });
+    });
+
+    it("erro FORA da declaração continua reprovando o fechamento", () => {
+      expect(() => parseCheckpointText('{"rolling_summary":123}')).toThrow();
     });
   });
 

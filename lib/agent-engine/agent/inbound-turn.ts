@@ -1386,6 +1386,22 @@ export function parseCheckpointText(text: string): CheckpointContent {
   }
   const parsed = checkpointContentSchema.safeParse(raw);
   if (!parsed.success) {
+    // Claud.ia: a declaração é o ÚNICO campo que o modelo costuma quebrar
+    // (Haiku acrescenta chaves que o `.strict()` recusa). Re-tentar o turno
+    // inteiro por isso custava a resposta seguinte: a nova tentativa usa o mesmo
+    // job e o envio é deduplicado — o paciente ficava sem resposta. Aqui a
+    // declaração é salva sem as chaves extras e, se nem assim valer, gravada
+    // como AUSENTE ("não declarou"), que é o estado honesto. O resto do
+    // checkpoint continua exigindo o formato completo.
+    const soNaDeclaracao = parsed.error.issues.every((i) => i.path[0] === 'declaracao');
+    if (soNaDeclaracao && raw !== null && typeof raw === 'object') {
+      const { declaracao, ...resto } = raw as Record<string, unknown>;
+      const semExtras = declaracaoDoTurnoSchema.strip().safeParse(declaracao);
+      const recuperado = checkpointContentSchema.safeParse(
+        semExtras.success ? { ...resto, declaracao: semExtras.data } : resto,
+      );
+      if (recuperado.success) return recuperado.data;
+    }
     const issues = parsed.error.issues
       .map((i) => `${i.path.join('.') || '(raiz)'}: ${i.code}`)
       .join('; ');

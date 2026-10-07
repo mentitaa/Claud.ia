@@ -77,6 +77,7 @@ describe("Claud.ia · Inicio — horario y relojes de la clínica", () => {
   });
 
   it("saludo, tiempo relativo y soles", () => {
+    expect(saludo(1)).toBe("Boa noite");
     expect(saludo(8)).toBe("Bom dia");
     expect(saludo(15)).toBe("Boa tarde");
     expect(saludo(21)).toBe("Boa noite");

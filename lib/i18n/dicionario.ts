@@ -1459,6 +1459,7 @@ export const DICIONARIO: Traducoes = {
   "Só atender em horário de funcionamento": { es: "Atender solo en horario de funcionamiento" },
   "Só enviar follow-up nestes horários": { es: "Enviar seguimientos solo en estos horarios" },
   Início: { es: "Inicio" },
+  "A Claud.ia está atendendo": { es: "Claud.ia está atendiendo" },
   "Sem resumo acumulado ainda (conversa recente) — abra a conversa no CRM para o contexto completo.": {
     es: "Aún no hay resumen acumulado (conversación reciente): abre la conversación en el CRM para ver el contexto completo.",
   },

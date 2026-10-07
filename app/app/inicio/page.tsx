@@ -256,8 +256,9 @@ export default async function InicioPage() {
   ];
 
   return (
-    <div className="mx-auto flex w-full max-w-[1240px] flex-col gap-8 px-6 py-8 lg:px-12">
-      <header className="flex flex-col gap-3">
+    <div className="mx-auto flex w-full max-w-[1240px] flex-col gap-10 px-6 py-8 lg:px-12">
+      <header className="flex items-end justify-between gap-8">
+        <div className="flex min-w-0 flex-col gap-3 pb-2">
         <p className="text-sm text-text-muted first-letter:uppercase">{fecha}</p>
         <h1 className="text-[2.75rem] leading-none sm:text-[3.5rem]">
           {t(saludo(p.hora))}
@@ -270,6 +271,25 @@ export default async function InicioPage() {
           )}
         </h1>
         <p className="max-w-[680px] text-[17px] leading-relaxed text-text-muted">{bajada}</p>
+        </div>
+        {/* Claud.ia, el personaje: saluda desde un panel menta. Solo en pantallas
+            anchas; en el celular el saludo va solo para no empujar las citas. */}
+        <figure className="relative mr-2 hidden h-[250px] w-[240px] shrink-0 md:block" aria-hidden>
+          <div className="absolute inset-x-0 bottom-0 h-[180px] rounded-[28px] bg-gradient-to-br from-accent-soft to-neutral-50 dark:from-accent-soft dark:to-surface-elevated" />
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/claudia/claudia-saludo.png"
+            alt=""
+            width={442}
+            height={540}
+            className="absolute bottom-0 left-1/2 h-[250px] w-auto -translate-x-1/2 select-none"
+            draggable={false}
+          />
+          <figcaption className="absolute -bottom-7 left-0 flex items-center gap-1.5 text-[12.5px] text-text-muted">
+            <span className="h-2 w-2 rounded-full bg-accent-500" />
+            {t("A Claud.ia está atendendo")}
+          </figcaption>
+        </figure>
       </header>
 
       <div className="grid gap-12 lg:grid-cols-[minmax(0,1.55fr)_minmax(0,1fr)] lg:gap-14">

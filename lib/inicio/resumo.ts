@@ -65,6 +65,8 @@ export function tratamientoDelTitulo(title: string | null | undefined): string |
 
 /** Chave do dicionário (português → espanhol via `t()`), como o resto da interface. */
 export function saludo(hora: number): string {
+  // De madrugada ainda é noite: 1 da manhã não é "bom dia".
+  if (hora < 5) return "Boa noite";
   if (hora < 12) return "Bom dia";
   if (hora < 19) return "Boa tarde";
   return "Boa noite";

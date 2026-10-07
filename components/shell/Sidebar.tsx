@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { useEffect, useState, useTransition } from "react";
 import { ArrowRight, CaretDoubleLeft, CaretDoubleRight, CaretDown, Gear } from "@/lib/ui/icons";
 import { cn } from "@/lib/utils";
+import { LogoClaudia } from "@/components/branding/LogoClaudia";
 import { toggleSidebar } from "@/app/actions/shell/toggleSidebar";
 import { useAuth } from "@/hooks/auth/AuthProvider";
 import { ConnectionHealthDot } from "@/components/connections/ConnectionHealthDot";
@@ -157,6 +158,9 @@ export function SidebarContent({
           ) : (
             <LogotipoDoProduto nome={nome} className="h-8 w-auto" />
           )
+        ) : /claud\.?ia/i.test(nome) && !collapsed ? (
+          // Claud.ia: el logotipo en pixeles de la marca, en el color del texto.
+          <LogoClaudia titulo={nome} className="h-6 w-auto text-text" />
         ) : (
           <span className={cn("font-semibold tracking-tight", collapsed && "sr-only")}>{nome}</span>
         )}

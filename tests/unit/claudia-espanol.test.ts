@@ -19,6 +19,7 @@ const ESTADOS: Array<QuemPodeAssumir | null> = [
   { disponiveis: 2, total: 3 },
 ];
 const PALAVRAS_EM_PORTUGUES = /\b(você|seu|sua|atendente|equipe|não|conversa entrou|fila|agora|Encaminhei|pedido ficou)\b/i;
+const FRASES_PROIBIDAS = /no hay nadie|prefiero no arriesgarme/i;
 
 describe("aviso ao paciente em espanhol", () => {
   it("nenhuma combinação de motivo, estado e lead sai com português", () => {
@@ -27,6 +28,7 @@ describe("aviso ao paciente em espanhol", () => {
         for (let i = 0; i < 40; i++) {
           const texto = textoDoAviso(motivo, quem, `lead-${i}`, "es");
           expect(texto, texto).not.toMatch(PALAVRAS_EM_PORTUGUES);
+          expect(texto, texto).not.toMatch(FRASES_PROIBIDAS);
         }
       }
     }

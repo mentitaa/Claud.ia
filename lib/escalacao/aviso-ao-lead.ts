@@ -173,32 +173,36 @@ const ABERTURAS_ES: Record<MotivoDoAviso, readonly string[]> = {
     "De acuerdo. Detengo ahora mismo los envíos automáticos de este canal.",
   ],
   pediu_humano: [
-    "¡Claro! Ya estoy llamando a alguien del equipo para que te atienda.",
-    "Sin problema, acabo de avisar a una persona del equipo para seguir desde aquí.",
+    "¡Claro! Ya le avisé a una persona del equipo para que te atienda.",
+    "Sin problema, acabo de avisar a alguien del equipo para seguir desde aquí.",
     "Perfecto. Pasé tu conversación a una persona de nuestro equipo.",
   ],
   orcamento_de_ia: [
     "Voy a pasar tu atención a una persona del equipo.",
     "Desde aquí te sigue atendiendo alguien de nuestro equipo.",
-    "Estoy transfiriendo esta conversación a una persona.",
+    "Estoy pasando esta conversación a una persona del equipo.",
   ],
+  // Claud.ia: en clínica este motivo cubre urgencias detectadas por el tono
+  // (dolor, sangrado). Nada de "prefiero no arriesgarme": calma y prioridad.
   outro: [
-    "Este caso lo resuelve mejor una persona. Ya le avisé al equipo.",
-    "Prefiero no arriesgarme: pasé tu consulta a alguien del equipo.",
-    "Voy a pedirle ayuda a una persona del equipo para ver esto contigo.",
+    "Entiendo. Para atenderte bien, ya le avisé a una persona del equipo.",
+    "Gracias por contarnos. Ya pasé tu mensaje a alguien del equipo para que te atienda.",
+    "Te entiendo. Ya le avisé al equipo para que una persona se comunique contigo.",
   ],
 };
 
+// Claud.ia: nunca "no hay nadie libre" — a un paciente preocupado eso le suena
+// a abandono. Sin prometer plazos, pero sin decir que no hay nadie.
 const FECHOS_ES = {
   sem_equipe: [
-    "Tu consulta quedó registrada y el equipo te responde lo antes posible.",
-    "Dejé todo anotado; te escribimos apenas podamos.",
-    "Ya lo registré, y alguien te contesta en la primera oportunidad.",
+    "Te escribimos lo antes posible.",
+    "Quedó registrado y te contactamos apenas podamos.",
+    "Ya está anotado; te respondemos en la primera oportunidad.",
   ],
   fora_de_expediente: [
-    "En este momento no hay nadie disponible, pero tu consulta quedó registrada.",
-    "Ahora no hay nadie libre; dejé tu solicitud anotada para el equipo.",
-    "No hay una persona disponible en este instante; tu conversación quedó en espera.",
+    "Quedó registrado con prioridad y te contactamos lo antes posible.",
+    "Tu mensaje quedó anotado para el equipo y te escribimos apenas sea posible.",
+    "Ya está en manos del equipo; te contactamos en cuanto puedan.",
   ],
   com_equipe: [
     "Solo espera un momento aquí en el chat.",

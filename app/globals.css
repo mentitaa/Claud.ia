@@ -532,10 +532,11 @@
   --color-card-foreground: var(--color-text);
 
   /* Tipografia */
-  --font-sans: var(--font-atkinson), ui-sans-serif, system-ui, -apple-system,
+  --font-sans: var(--font-geist), ui-sans-serif, system-ui, -apple-system,
     "Segoe UI", Roboto, sans-serif;
   --font-mono: var(--font-mono), ui-monospace, SFMono-Regular, Menlo, Monaco,
     Consolas, monospace;
+  --font-display: var(--font-instrument), "Instrument Serif", Georgia, serif;
 
   /* Espaçamento. Os valores são px LITERAIS (`--space-6` = 24px), não rem — e
      essa diferença é carregada por quem consome: ver o cálculo de altura em
@@ -698,7 +699,7 @@
     overflow-x: clip;
     background-color: var(--color-bg);
     color: var(--color-text);
-    font-family: var(--font-atkinson), ui-sans-serif, system-ui, -apple-system,
+    font-family: var(--font-geist), ui-sans-serif, system-ui, -apple-system,
       "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
     font-feature-settings: "rlig" 1, "calt" 1, "ss01" 1;
     -webkit-font-smoothing: antialiased;
@@ -964,3 +965,67 @@
     transform: none;
   }
 }
+
+/* ─────────────────────────────────────────────────────────────────────────
+   Claud.ia — "Una clínica en calma" (tema claro).
+
+   Capa propia ENCIMA de la paleta Sage, sin tocar el bloco `:root`: la régua
+   de contraste (`extrairRegua`, lib/branding/contraste.ts) y sus pruebas de
+   calibración leen ese bloque por selector exacto, y la rampa del accent sigue
+   siendo la Sage del producto. El verde de la marca se elige en /admin/marca
+   (sugerido #2E7048), que es el camino que el producto ya soporta y reconcilia.
+
+   `:root:not([data-theme="dark"])` gana a `:root` por especificidad y no toca
+   el tema oscuro. Solo neutros, superficies y sombras: blanco limpio, un gris
+   verdoso muy suave y líneas finas.
+   ───────────────────────────────────────────────────────────────────────── */
+:root:not([data-theme="dark"]) {
+  --color-bg: #ffffff;
+  --color-surface: #ffffff;
+  --color-surface-elevated: #f7faf7;
+  --color-overlay: rgba(21, 32, 26, 0.40);
+  --color-text: #15201a;
+  --color-text-muted: #5a665f;
+  --color-text-subtle: #66716a;
+  --color-border: #e6ece7;
+  --color-border-strong: #d3dcd5;
+  --color-neutral-50: #f7faf7;
+  --color-neutral-100: #eff3ef;
+  --color-neutral-200: #e6ece7;
+  --color-neutral-300: #d3dcd5;
+  --color-neutral-400: #a3aea7;
+  --color-neutral-500: #66716a;
+  --color-neutral-600: #5a665f;
+  --color-neutral-700: #3d4741;
+  --color-neutral-800: #28322c;
+  --color-neutral-900: #15201a;
+  --color-neutral-950: #0b120e;
+  --shadow-xs: 0 1px 2px 0 rgba(21, 32, 26, 0.04);
+  --shadow-sm: 0 1px 2px 0 rgba(21, 32, 26, 0.05), 0 1px 1px 0 rgba(21, 32, 26, 0.03);
+  --shadow-md: 0 4px 12px -2px rgba(21, 32, 26, 0.06), 0 2px 4px -1px rgba(21, 32, 26, 0.04);
+  --shadow-lg: 0 12px 32px -6px rgba(21, 32, 26, 0.10), 0 4px 12px -2px rgba(21, 32, 26, 0.06);
+  --shadow-xl: 0 24px 48px -12px rgba(21, 32, 26, 0.16), 0 8px 16px -4px rgba(21, 32, 26, 0.08);
+}
+
+/* Títulos de página en Instrument Serif (una sola espesura, 400: sin ella el
+   navegador inventaría una negrita falsa). Fuera de @layer a propósito: las
+   utilidades de Tailwind viven en @layer utilities y una regla sin capa les
+   gana, así los 100+ <h1 class="text-2xl font-semibold"> cambian sin tocarlos.
+   Los títulos en monoespaciada (ids, códigos) quedan como estaban. */
+h1:not(.font-mono):not(.text-sm):not(.text-base) {
+  font-family: var(--font-display);
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  line-height: 1.1;
+}
+h1.text-xl:not(.font-mono) { font-size: 1.875rem; }
+h1.text-2xl:not(.font-mono) { font-size: 2.25rem; }
+h1.text-3xl:not(.font-mono) { font-size: 2.75rem; }
+h2.text-2xl:not(.font-mono),
+h2.text-xl:not(.font-mono) {
+  font-family: var(--font-display);
+  font-weight: 400;
+  letter-spacing: -0.005em;
+}
+h2.text-2xl:not(.font-mono) { font-size: 1.875rem; }
+h2.text-xl:not(.font-mono) { font-size: 1.625rem; }

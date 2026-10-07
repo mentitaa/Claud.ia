@@ -7612,10 +7612,10 @@ export const DICIONARIO: Traducoes = {
   "antes": { es: "antes" },
   "Mensagem do lembrete": { es: "Mensaje del recordatorio" },
   "Oi {{nome}}! Passando pra lembrar: {{titulo}}, {{dia}} às {{hora}}.": {
-    es: "¡Hola {{nome}}! Te recuerdo: {{titulo}}, {{dia}} a las {{hora}}.",
+    es: "¡Hola {{primer_nombre}}! Te recuerdo tu cita: {{titulo}}, {{dia}} a las {{hora}}.",
   },
   "Deixe em branco para o texto padrão. Variáveis: {{nome}}, {{titulo}}, {{dia}}, {{hora}}, {{endereco}}.": {
-    es: "Déjalo en blanco para el texto predeterminado. Variables: {{nome}}, {{titulo}}, {{dia}}, {{hora}}, {{endereco}}.",
+    es: "Déjalo en blanco para el texto predeterminado. Variables: {{nombre}}, {{primer_nombre}}, {{servicio}}, {{tipo}}, {{dia}}, {{hora}}, {{direccion}}.",
   },
   "Quanto antes": { es: "Cuánto antes" },
   "Unidade": { es: "Unidad" },
@@ -7623,7 +7623,7 @@ export const DICIONARIO: Traducoes = {
   "Mensagem deste lembrete": { es: "Mensaje de este recordatorio" },
   "Adicionar lembrete": { es: "Agregar recordatorio" },
   "Deixe a mensagem em branco para o texto padrão. Variáveis: {{nome}}, {{titulo}}, {{dia}}, {{hora}}, {{endereco}}.": {
-    es: "Deja el mensaje en blanco para el texto predeterminado. Variables: {{nome}}, {{titulo}}, {{dia}}, {{hora}}, {{endereco}}.",
+    es: "Deja el mensaje en blanco para el texto predeterminado. Variables: {{nombre}}, {{primer_nombre}}, {{servicio}}, {{tipo}}, {{dia}}, {{hora}}, {{direccion}}.",
   },
   "texto próprio": { es: "texto propio" },
   "A mensagem do lembrete cabe em 1000 caracteres.": {
@@ -7980,7 +7980,10 @@ export const DICIONARIO: Traducoes = {
   "Template excluído.": { es: "Plantilla eliminada." },
   "Template atualizado.": { es: "Plantilla actualizada." },
   "Template criado.": { es: "Plantilla creada." },
-  "Oi {{primeiro_nome}}, tudo bem?": { es: "Hola {{primeiro_nome}}, ¿todo bien?" },
+  "Oi {{primeiro_nome}}, tudo bem?": { es: "Hola {{primer_nombre}}, ¿cómo estás?" },
+  "{{primeiro_nome}}": { es: "{{primer_nombre}}" },
+  "{{nome}}": { es: "{{nombre}}" },
+  "{{saudacao}}": { es: "{{saludo}}" },
   "Criar template": { es: "Crear plantilla" },
   "Nova execução iniciada.": { es: "Nueva ejecución iniciada." },
   "Execução concluída.": { es: "Ejecución concluida." },

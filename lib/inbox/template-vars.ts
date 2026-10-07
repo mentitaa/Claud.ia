@@ -3,6 +3,8 @@
  * Suporta {{nome}} e {{primeiro_nome}}. Variável sem valor ou desconhecida
  * mantém o literal `{{x}}` — nunca gera texto quebrado que iria pro cliente.
  */
+import { claveDeVariable } from "@/lib/i18n/variaveis";
+
 export interface TemplateContact {
   name?: string | null;
 }
@@ -11,7 +13,7 @@ export function interpolateTemplate(body: string, contact: TemplateContact): str
   const full = (contact.name ?? "").trim();
   const first = full.split(/\s+/)[0] ?? "";
   return body.replace(/\{\{\s*([a-zA-Z_]+)\s*\}\}/g, (literal, rawKey: string) => {
-    const key = rawKey.toLowerCase();
+    const key = claveDeVariable(rawKey);
     if (key === "nome") return full !== "" ? full : literal;
     if (key === "primeiro_nome") return first !== "" ? first : literal;
     return literal; // desconhecida: mantém

@@ -70,6 +70,8 @@ import { espacarEnvio } from "@/lib/automation/throttle";
 import { tagDeIdioma } from "@/lib/i18n/datas";
 import { traduzir } from "@/lib/i18n/dicionario";
 import { IDIOMA_PADRAO, normalizarIdioma, type Idioma } from "@/lib/i18n/idiomas";
+import { claveDeVariable } from "@/lib/i18n/variaveis";
+import { tratamientoDelTitulo } from "@/lib/inicio/resumo";
 import { nomeDoContato } from "@/lib/contacts/rotulo-do-contato";
 import { logger } from "@/lib/logger";
 import { createAdminClient } from "@/lib/supabase/admin";
@@ -131,7 +133,7 @@ export function aplicarMoldeDoLembrete(
   pecas: Record<string, string>,
 ): string {
   return molde.replace(/\{\{\s*([a-zA-Z_]+)\s*\}\}/g, (literal, raw: string) => {
-    const v = pecas[raw.toLowerCase()];
+    const v = pecas[claveDeVariable(raw)];
     return v === undefined ? literal : v;
   });
 }
@@ -179,11 +181,16 @@ export function montarLembrete(input: {
   }).format(input.quando);
 
   const nome = input.nomeDoContato?.trim() ?? "";
+  // Claud.ia: el agente titula las citas "PAGADO · Nombre · Tratamiento" para
+  // el Google Calendar del dueño. Eso es una etiqueta interna: al paciente le
+  // llega solo el tratamiento (o el tipo de cita, si el título no lo trae).
+  const tipoNome = input.tipoNome?.trim() ?? "";
+  const titulo = tratamientoDelTitulo(input.titulo) ?? (tipoNome || input.titulo);
   const pecas: Record<string, string> = {
     nome,
     primeiro_nome: nome.split(/\s+/)[0] ?? "",
-    titulo: input.titulo,
-    tipo: (input.tipoNome ?? input.titulo).trim() || input.titulo,
+    titulo,
+    tipo: tipoNome || titulo,
     dia,
     hora,
     endereco: input.local?.trim() ?? "",
@@ -203,7 +210,7 @@ export function montarLembrete(input: {
   const onde = pecas.endereco ? ` ${t("Endereço")}: ${pecas.endereco}.` : "";
   return (
     `${saudacao} ${t("Passando pra lembrar do seu compromisso:")} ` +
-    `${input.titulo}, ${dia} ${t("às")} ${hora}.${onde}`
+    `${titulo}, ${dia} ${t("às")} ${hora}.${onde}`
   );
 }
 

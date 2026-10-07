@@ -338,9 +338,9 @@ export function EditarCampanha({ id }: { id: string }) {
               <button
                 type="button"
                 className="rounded-md bg-surface-elevated px-1 font-mono text-xs"
-                onClick={() => setTexto((atual) => `${atual}{{${v}}}`)}
+                onClick={() => setTexto((atual) => `${atual}${t(`{{${v}}}`)}`)}
               >
-                {`{{${v}}}`}
+                {t(`{{${v}}}`)}
               </button>{" "}
               — {t(DESCRICAO_DA_VARIAVEL[v])}
             </li>

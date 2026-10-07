@@ -28,6 +28,7 @@
  */
 
 import { horaNoFuso } from "./relogio";
+import { claveDeVariable } from "@/lib/i18n/variaveis";
 
 /** As variáveis que existem. Oferecer uma que não resolve é prometer dado que não há. */
 export const VARIAVEIS_DA_CAMPANHA = ["nome", "primeiro_nome", "saudacao"] as const;
@@ -66,7 +67,7 @@ export function renderizar(
   const desconhecidas = new Set<string>();
 
   const texto = template.replace(TOKEN, (literal, bruto: string) => {
-    const chave = bruto.toLowerCase();
+    const chave = claveDeVariable(bruto);
     switch (chave) {
       case "nome": {
         if (nome === "") return marcarFalta(faltando, "nome", literal);
@@ -106,7 +107,7 @@ function marcarFalta(
 export function variaveisUsadas(template: string): VariavelDaCampanha[] {
   const achadas = new Set<VariavelDaCampanha>();
   for (const [, bruto] of template.matchAll(TOKEN)) {
-    const chave = (bruto ?? "").toLowerCase();
+    const chave = claveDeVariable(bruto ?? "");
     if ((VARIAVEIS_DA_CAMPANHA as readonly string[]).includes(chave)) {
       achadas.add(chave as VariavelDaCampanha);
     }

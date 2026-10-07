@@ -6,7 +6,7 @@
  */
 import { describe, expect, it } from "vitest";
 
-import { textoDoAviso, type MotivoDoAviso } from "@/lib/escalacao/aviso-ao-lead";
+import { ehAvisoDeEscalacao, mencionaUrgencia, textoDoAviso, type MotivoDoAviso } from "@/lib/escalacao/aviso-ao-lead";
 import type { QuemPodeAssumir } from "@/lib/escalacao/disponibilidade";
 import { montarBriefingDaPassagem } from "@/lib/escalacao/briefing-da-passagem";
 import { traduzirResumoDaPassagem } from "@/lib/escalacao/traduzir-resumo-da-passagem";
@@ -77,5 +77,35 @@ describe("resumo da passagem traduzido na tela", () => {
 
   it("em português não muda nada", () => {
     expect(traduzirResumoDaPassagem(body, "pt-BR")).toBe(body);
+  });
+});
+
+describe("Claud.ia: urgencia y aviso doble", () => {
+  it("detecta urgencias de salud y no confunde preguntas normales", () => {
+    expect(mencionaUrgencia("me hice la papada hace 3 dias y me esta sangrando")).toBe(true);
+    expect(mencionaUrgencia("tengo fiebre desde ayer")).toBe(true);
+    expect(mencionaUrgencia("cuanto cuesta el HIFU? duele?")).toBe(false);
+    expect(mencionaUrgencia("quiero agendar pal sabado")).toBe(false);
+  });
+
+  it("en urgencia el aviso no celebra y orienta a emergencias", () => {
+    for (let i = 0; i < 30; i++) {
+      const t = textoDoAviso("pediu_humano", { disponiveis: 0, total: 0 }, `lead-${i}`, "es", true);
+      expect(t).toContain("SAMU (106)");
+      expect(t).not.toMatch(/perfecto|claro|sin problema/i);
+    }
+  });
+
+  it("ningún aviso en español empieza celebrando", () => {
+    for (let i = 0; i < 30; i++) {
+      expect(textoDoAviso("pediu_humano", null, `lead-${i}`, "es")).not.toMatch(/^(¡?perfecto|¡?claro|sin problema)/i);
+    }
+  });
+
+  it("reconoce un aviso ya enviado para no repetirlo", () => {
+    const enviado = textoDoAviso("outro", { disponiveis: 0, total: 3 }, "lead-x", "es", true);
+    expect(ehAvisoDeEscalacao(enviado)).toBe(true);
+    expect(ehAvisoDeEscalacao(textoDoAviso("pediu_humano", null, "lead-y", "es"))).toBe(true);
+    expect(ehAvisoDeEscalacao("¡Hola! El HIFU está desde S/ 700")).toBe(false);
   });
 });

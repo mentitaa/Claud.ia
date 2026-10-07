@@ -172,10 +172,12 @@ const ABERTURAS_ES: Record<MotivoDoAviso, readonly string[]> = {
     "Listo, anotado: no te llegará nada automático a este número.",
     "De acuerdo. Detengo ahora mismo los envíos automáticos de este canal.",
   ],
+  // Claud.ia: sin "¡Perfecto!" ni "¡Claro!": la palabra clave también dispara
+  // por urgencias ("me está sangrando"), y celebrar ahí suena indolente.
   pediu_humano: [
-    "¡Claro! Ya le avisé a una persona del equipo para que te atienda.",
-    "Sin problema, acabo de avisar a alguien del equipo para seguir desde aquí.",
-    "Perfecto. Pasé tu conversación a una persona de nuestro equipo.",
+    "Ya le avisé a una persona del equipo para que te atienda.",
+    "Acabo de avisar a alguien del equipo para que siga contigo desde aquí.",
+    "Pasé tu conversación a una persona de nuestro equipo.",
   ],
   orcamento_de_ia: [
     "Voy a pasar tu atención a una persona del equipo.",
@@ -210,6 +212,45 @@ const FECHOS_ES = {
     "Espera un momentito en esta conversación, por favor.",
   ],
 } as const;
+
+/**
+ * Claud.ia — URGENCIA DE SALUD EN EL ÚLTIMO MENSAJE DEL PACIENTE.
+ *
+ * El traspaso por palabra clave o por tono sale SIN pasar por el modelo, así
+ * que la regla "orienta a emergencias" de las instrucciones nunca llegaba al
+ * paciente. Si el mensaje describe una urgencia, el aviso cambia la apertura y
+ * suma la orientación a emergencias.
+ */
+const URGENCIA = /sangr|fiebre|\bpus\b|infecci|hinchad|inflamad|desmay|no puedo respirar|me cuesta respirar|alergi|al[eé]rgic|mucho dolor|dolor (muy )?fuerte|me duele (mucho|demasiado)|emergencia|urgencia/i;
+
+export function mencionaUrgencia(texto: string | null | undefined): boolean {
+  return URGENCIA.test(texto ?? "");
+}
+
+const ABERTURAS_URGENCIA_ES = [
+  "Entiendo, y lo más importante es que te atienda alguien del equipo. Ya les avisé.",
+  "Te entiendo. Ya le avisé al equipo para que una persona te contacte con prioridad.",
+  "Gracias por avisarnos. Ya pasé tu mensaje a una persona del equipo con prioridad.",
+] as const;
+
+const ORIENTACION_EMERGENCIA_ES =
+  "Si te sientes mal o es una emergencia, acude a emergencias o llama al SAMU (106).";
+
+/**
+ * ¿Este texto es un aviso de traspaso ya enviado? Lo usan los dos emisores para
+ * no mandarlo DOS veces cuando el traspaso se dispara por dos caminos a la vez
+ * (palabra clave en el motor + tono en el CRM) — medido el 26 sep 2026.
+ */
+export function ehAvisoDeEscalacao(texto: string | null | undefined): boolean {
+  const t = (texto ?? "").trim();
+  if (t === "") return false;
+  const aberturas = [
+    ...Object.values(ABERTURAS).flat(),
+    ...Object.values(ABERTURAS_ES).flat(),
+    ...ABERTURAS_URGENCIA_ES,
+  ];
+  return aberturas.some((a) => t.startsWith(a));
+}
 
 const FECHO_DO_OPT_OUT = {
   "pt-BR": "Encaminhei seu pedido para uma pessoa da equipe confirmar.",
@@ -247,10 +288,14 @@ export function textoDoAviso(
   quem: QuemPodeAssumir | null,
   leadId: string,
   idioma: Idioma = "pt-BR",
+  urgencia = false,
 ): string {
   const aberturas = idioma === "es" ? ABERTURAS_ES : ABERTURAS;
   const fechos = idioma === "es" ? FECHOS_ES : FECHOS;
-  const abertura = variante(leadId, aberturas[motivo]);
+  const emUrgencia = urgencia && idioma === "es" && motivo !== "suspeita_de_opt_out";
+  const abertura = emUrgencia
+    ? variante(leadId, ABERTURAS_URGENCIA_ES)
+    : variante(leadId, aberturas[motivo]);
 
   if (motivo === "suspeita_de_opt_out") {
     // Sem fecho de expediente: quem pediu para parar não está esperando
@@ -266,5 +311,5 @@ export function textoDoAviso(
         ? variante(leadId, fechos.fora_de_expediente)
         : variante(leadId, fechos.com_equipe);
 
-  return `${abertura} ${fecho}`;
+  return emUrgencia ? `${abertura} ${fecho} ${ORIENTACION_EMERGENCIA_ES}` : `${abertura} ${fecho}`;
 }

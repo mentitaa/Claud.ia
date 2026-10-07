@@ -43,7 +43,7 @@ import type { ServiceBoundary } from "@/lib/atendimento/fronteira";
 import type { SupabaseClient } from "@supabase/supabase-js";
 
 import { sendMessageHandler } from "@/app/api/v1/messages/_handler";
-import { motivoDoAviso, textoDoAviso } from "@/lib/escalacao/aviso-ao-lead";
+import { ehAvisoDeEscalacao, mencionaUrgencia, motivoDoAviso, textoDoAviso } from "@/lib/escalacao/aviso-ao-lead";
 import { carregarRosterDeAtendimento, podeAssumirAgora } from "@/lib/escalacao/atendentes";
 // Dois `MotivoDoAviso` no repositório: o de `escalacao/aviso-ao-lead` diz QUE
 // FRASE o cliente lê; este diz POR QUE ele não leu nada. O apelido impede a
@@ -107,11 +107,16 @@ export async function avisarLeadDoCrm(
   input: AvisoDoCrmInput,
 ): Promise<DesfechoDoAvisoDoCrm> {
   try {
+    // Claud.ia: sin aviso doble (ver `contextoDaConversa`) y con orientación a
+    // emergencias cuando el paciente describe una urgencia.
+    const contexto = await contextoDaConversa(admin, input.organizationId, input.conversationId);
+    if (contexto.avisoRecente) return { avisado: true };
     const body = textoDoAviso(
       motivoDoAviso(input.reason),
       await quemPodeAssumir(admin, input.organizationId),
       input.contactId,
       await idiomaDaOrganizacao(admin, input.organizationId),
+      mencionaUrgencia(contexto.ultimaDoCliente),
     );
     const mensagem = await sendMessageHandler(
       admin,
@@ -208,5 +213,41 @@ async function idiomaDaOrganizacao(
     return normalizarIdioma((data as { locale?: string | null } | null)?.locale ?? null);
   } catch {
     return "pt-BR";
+  }
+}
+
+/** Claud.ia: último texto do cliente e se já saiu aviso de passagem há < 3 min. Nunca lança. */
+async function contextoDaConversa(
+  admin: SupabaseClient,
+  organizationId: string,
+  conversationId: string,
+): Promise<{ ultimaDoCliente: string | null; avisoRecente: boolean }> {
+  try {
+    const { data } = await admin
+      .from("messages")
+      .select("direction, body, media_derived_text, created_at")
+      .eq("organization_id", organizationId)
+      .eq("conversation_id", conversationId)
+      .order("created_at", { ascending: false })
+      .limit(10);
+    const linhas = (data ?? []) as Array<{
+      direction: string;
+      body: string | null;
+      media_derived_text: string | null;
+      created_at: string;
+    }>;
+    const limite = Date.now() - 3 * 60 * 1000;
+    const ultima = linhas.find((l) => l.direction === "inbound");
+    return {
+      ultimaDoCliente: ultima ? (ultima.body ?? ultima.media_derived_text) : null,
+      avisoRecente: linhas.some(
+        (l) =>
+          l.direction === "outbound" &&
+          new Date(l.created_at).getTime() > limite &&
+          ehAvisoDeEscalacao(l.body),
+      ),
+    };
+  } catch {
+    return { ultimaDoCliente: null, avisoRecente: false };
   }
 }

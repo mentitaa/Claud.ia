@@ -40,7 +40,7 @@ import type pg from 'pg';
 
 import { expectativaDeAtendimento } from '@/lib/escalacao/disponibilidade';
 import { deriveLgpdFromContact } from '../guardrails/lgpd/legal-basis';
-import { textoDoAviso, type MotivoDoAviso } from '@/lib/escalacao/aviso-ao-lead';
+import { ehAvisoDeEscalacao, mencionaUrgencia, textoDoAviso, type MotivoDoAviso } from '@/lib/escalacao/aviso-ao-lead';
 import { normalizarIdioma, type Idioma } from '@/lib/i18n/idiomas';
 // Dois `MotivoDoAviso` no repositório, e eles respondem perguntas DIFERENTES: o
 // de cima é "que frase o cliente lê"; este é "por que o cliente NÃO leu nada".
@@ -120,16 +120,25 @@ export async function avisarLeadDaEscalacao(
 ): Promise<DesfechoDoAviso> {
   let body: string;
   const idioma = await idiomaDaOrganizacao(pool, ids.tenantId);
+  // Claud.ia: el traspaso puede dispararse por dos caminos a la vez (palabra
+  // clave aquí y tono en el CRM). Si el paciente ya recibió un aviso hace
+  // instantes, no se repite.
+  const contexto = await contextoDaConversa(pool, ids.tenantId, ids.conversationId);
+  if (contexto.avisoRecente) {
+    opts.log.info('aviso de escalação já enviado há instantes — não repete');
+    return { avisado: true };
+  }
+  const urgencia = mencionaUrgencia(contexto.ultimaDoCliente);
   try {
     const { quem } = await expectativaDeAtendimento(pool, ids.tenantId, opts.now);
-    body = textoDoAviso(opts.motivo, quem, ids.leadId, idioma);
+    body = textoDoAviso(opts.motivo, quem, ids.leadId, idioma, urgencia);
   } catch (err) {
     // `expectativaDeAtendimento` já tem rede própria; se ainda assim quebrar,
     // a frase conservadora (sem prazo) é a certa — nunca a ausência de frase.
     opts.log.warn('aviso de escalação: disponibilidade não lida, usando a frase conservadora', {
       error: err instanceof Error ? err.message.slice(0, 120) : 'erro desconhecido',
     });
-    body = textoDoAviso(opts.motivo, null, ids.leadId, idioma);
+    body = textoDoAviso(opts.motivo, null, ids.leadId, idioma, urgencia);
   }
 
   try {
@@ -283,5 +292,34 @@ async function idiomaDaOrganizacao(pool: pg.Pool, tenantId: string): Promise<Idi
     return normalizarIdioma(rows[0]?.locale ?? null);
   } catch {
     return 'pt-BR';
+  }
+}
+
+/**
+ * Claud.ia: o último texto do cliente (texto ou transcrição de áudio) e se já
+ * saiu um aviso de passagem nesta conversa nos últimos 3 minutos. Nunca lança.
+ */
+async function contextoDaConversa(
+  pool: pg.Pool,
+  tenantId: string,
+  conversationId: string,
+): Promise<{ ultimaDoCliente: string | null; avisoRecente: boolean }> {
+  try {
+    const { rows } = await pool.query<{ direction: string; texto: string | null; recente: boolean }>(
+      `select direction, coalesce(body, media_derived_text) as texto,
+              created_at > now() - interval '3 minutes' as recente
+         from messages
+        where organization_id = $1 and conversation_id = $2
+        order by created_at desc
+        limit 10`,
+      [tenantId, conversationId],
+    );
+    const ultimaDoCliente = rows.find((r) => r.direction === 'inbound')?.texto ?? null;
+    const avisoRecente = rows.some(
+      (r) => r.direction === 'outbound' && r.recente && ehAvisoDeEscalacao(r.texto),
+    );
+    return { ultimaDoCliente, avisoRecente };
+  } catch {
+    return { ultimaDoCliente: null, avisoRecente: false };
   }
 }

@@ -167,6 +167,7 @@ import { capabilitiesOf } from '@/lib/channels/capabilities';
 import { renderTemplateBody } from '@/lib/channels/meta/render-template';
 import { acenderDigitando, esperarComoHumano } from './atraso-humano';
 import { sendInBubbles, splitForSend } from './split-message';
+import { formatarParaWhatsApp } from './formato-whatsapp';
 import type { DisclosureMode } from '../guardrails/disclosure/template';
 import { decidePromise } from '../guardrails/promise/engine';
 import { loadPromiseTable } from '../guardrails/promise/table';
@@ -2934,7 +2935,10 @@ async function executarTurnoDoAgente(
     }),
     send_message: tool({
       ...AGENT_TOOL_DEFS.send_message,
-      execute: async ({ body, produto_codigo }) => {
+      execute: async ({ body: corpoDoModelo, produto_codigo }) => {
+        // Claud.ia: o texto sai no formato do WhatsApp (sem `\n` literal nem
+        // `**negrito**` de Markdown) — ver `formato-whatsapp.ts`.
+        const body = formatarParaWhatsApp(corpoDoModelo);
         // CORPO VAZIO NÃO SAI. Medido ao vivo (2026-09-19): o `gpt-4o-mini`
         // chamou `send_message` várias vezes com corpo que virou vazio e o
         // WhatsApp do cliente recebeu bolhas em branco. O schema garante

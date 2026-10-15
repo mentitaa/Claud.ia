@@ -20,6 +20,14 @@ export const sesionSchema = z.object({
 });
 export type Sesion = z.infer<typeof sesionSchema>;
 
+/** Un pago (adelanto, cuota…). `pagado` del tratamiento = suma de los pagos. */
+export const pagoSchema = z.object({
+  monto: z.number().positive().max(1_000_000),
+  fecha: z.string().datetime({ offset: true }),
+  nota: z.string().max(200).default(""),
+});
+export type Pago = z.infer<typeof pagoSchema>;
+
 const camposBase = {
   nombre: z.string().trim().min(1).max(120),
   sesiones_total: z.number().int().min(1).max(50),
@@ -40,7 +48,7 @@ export const crearTratamientoSchema = z.object({
 });
 
 export const editarTratamientoSchema = z
-  .object({ ...camposBase, sesiones: z.array(sesionSchema).max(50) })
+  .object({ ...camposBase, sesiones: z.array(sesionSchema).max(50), pagos: z.array(pagoSchema).max(100) })
   .partial();
 
 export type Tratamiento = {
@@ -52,6 +60,7 @@ export type Tratamiento = {
   pagado: number;
   notas: string | null;
   sesiones: Sesion[];
+  pagos: Pago[];
   estado: "en_curso" | "terminado" | "cancelado";
   event_type_id: string | null;
   created_at: string;
@@ -59,7 +68,7 @@ export type Tratamiento = {
 };
 
 export const COLUMNAS =
-  "id, contact_id, nombre, sesiones_total, precio_total, pagado, notas, sesiones, estado, event_type_id, created_at, updated_at";
+  "id, contact_id, nombre, sesiones_total, precio_total, pagado, notas, sesiones, pagos, estado, event_type_id, created_at, updated_at";
 
 /** Las sesiones completas 1..total, conservando lo que ya estaba anotado. */
 export function sesionesCompletas(total: number, sesiones: readonly Sesion[]): Sesion[] {
@@ -86,4 +95,9 @@ export function resumenDelTratamiento(t: Pick<Tratamiento, "sesiones_total" | "s
 export function soles(n: number | null | undefined): string {
   if (n == null) return "—";
   return `S/ ${Number(n).toLocaleString("es-PE", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+}
+
+/** Suma de los pagos, con 2 decimales. */
+export function sumaDePagos(pagos: readonly Pago[]): number {
+  return Math.round(pagos.reduce((acc, p) => acc + Number(p.monto || 0), 0) * 100) / 100;
 }

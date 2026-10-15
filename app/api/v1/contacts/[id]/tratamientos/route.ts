@@ -65,6 +65,8 @@ export async function POST(req: NextRequest, ctx: { params: Promise<{ id: string
       contact_id: contactId,
       created_by: auth.user.id,
       sesiones: [],
+      // El pago inicial (si hubo) queda como el primer pago de la lista.
+      pagos: parsed.data.pagado > 0 ? [{ monto: parsed.data.pagado, fecha: new Date().toISOString(), nota: "Pago inicial" }] : [],
     } as never)
     .select(COLUMNAS)
     .single();

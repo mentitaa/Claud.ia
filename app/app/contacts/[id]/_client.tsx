@@ -190,7 +190,8 @@ export function ContactDetailClient({ contactId }: Props) {
         <TabsList>
           <TabsTrigger value="overview">{t("Visão geral")}</TabsTrigger>
           <TabsTrigger value="tratamiento">{TRATAMIENTO}</TabsTrigger>
-          <TabsTrigger value="timeline">{t("Histórico")}</TabsTrigger>
+          {/* Claud.ia: el historial técnico solo para quien administra. */}
+          {isAdmin && <TabsTrigger value="timeline">{t("Histórico")}</TabsTrigger>}
           {isAdmin && <TabsTrigger value="lgpd">{t("LGPD")}</TabsTrigger>}
         </TabsList>
 
@@ -295,9 +296,11 @@ export function ContactDetailClient({ contactId }: Props) {
           />
         </TabsContent>
 
-        <TabsContent value="timeline" className="mt-4">
-          <TimelineView contactId={contactId} />
-        </TabsContent>
+        {isAdmin && (
+          <TabsContent value="timeline" className="mt-4">
+            <TimelineView contactId={contactId} />
+          </TabsContent>
+        )}
 
         {isAdmin && (
           <TabsContent value="lgpd" className="mt-4">

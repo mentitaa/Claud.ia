@@ -53,3 +53,21 @@ describe("Claud.ia · tratamiento con sesiones", () => {
     expect(soles(null)).toBe("—");
   });
 });
+
+describe("Claud.ia · pagos del tratamiento", () => {
+  it("suma los pagos con dos decimales", async () => {
+    const { sumaDePagos } = await import("@/lib/tratamientos/tratamiento");
+    expect(
+      sumaDePagos([
+        { monto: 200.1, fecha: "2026-10-14T15:00:00Z", nota: "" },
+        { monto: 99.95, fecha: "2026-10-15T15:00:00Z", nota: "Yape" },
+      ]),
+    ).toBe(300.05);
+  });
+
+  it("la API acepta la lista de pagos y rechaza montos en cero", async () => {
+    const { editarTratamientoSchema } = await import("@/lib/tratamientos/tratamiento");
+    expect(editarTratamientoSchema.safeParse({ pagos: [{ monto: 50, fecha: "2026-10-14T15:00:00Z" }] }).success).toBe(true);
+    expect(editarTratamientoSchema.safeParse({ pagos: [{ monto: 0, fecha: "2026-10-14T15:00:00Z" }] }).success).toBe(false);
+  });
+});

@@ -62,6 +62,15 @@ export const IDIOMA_PADRAO: Idioma =
   typeof process !== "undefined" && process.env?.VITEST ? "pt-BR" : "es";
 
 /**
+ * Claud.ia es un producto solo en español de Perú: no hay selector de idioma ni
+ * forma de volver al portugués. El código heredado sigue usando frases en
+ * portugués como CLAVES internas del diccionario, pero en pantalla, correos y
+ * mensajes siempre sale el español. Solo las pruebas heredadas (vitest) siguen
+ * viendo el portugués.
+ */
+export const SOLO_ESPANOL: boolean = !(typeof process !== "undefined" && process.env?.VITEST);
+
+/**
  * O que veio do perfil é um idioma que sabemos servir?
  *
  * Fecha para o padrão em vez de confiar: o campo aceita qualquer string desde
@@ -69,6 +78,7 @@ export const IDIOMA_PADRAO: Idioma =
  * e um valor desconhecido chegando ao dicionário devolveria a CHAVE na tela.
  */
 export function normalizarIdioma(bruto: string | null | undefined): Idioma {
+  if (SOLO_ESPANOL) return "es";
   return (IDIOMAS as readonly string[]).includes(bruto ?? "")
     ? (bruto as Idioma)
     : IDIOMA_PADRAO;
@@ -86,6 +96,7 @@ export function normalizarIdioma(bruto: string | null | undefined): Idioma {
  * cabeçalho é `idiomaDoVisitante` em `lib/i18n/idiomaAnonimo.ts`, server-only.
  */
 export function parseAcceptLanguage(header: string | null | undefined): Idioma | null {
+  if (SOLO_ESPANOL) return "es";
   if (!header) return null;
   const candidatos = header
     .split(",")

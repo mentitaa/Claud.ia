@@ -16,6 +16,7 @@ import {
 import { updateTenant } from "@/app/actions/settings/updateTenant";
 import { useT } from "@/hooks/i18n/useT";
 import { IDIOMAS_VISIVEIS } from "@/lib/i18n/registro";
+import { SOLO_ESPANOL } from "@/lib/i18n/idiomas";
 import { MOEDAS_SERVIDAS, simboloDaMoeda, type MoedaServida } from "@/lib/money";
 import { paisesOferecidos } from "@/lib/legal/perfil-do-pais";
 import { tenantSchema, type Locale, type TenantInput } from "@/lib/schemas/settings";
@@ -112,6 +113,8 @@ export function TenantForm({ initial }: Props) {
               </SelectContent>
             </Select>
           </div>
+          {/* Claud.ia: solo español, sin elegir idioma. */}
+          {!SOLO_ESPANOL && (
           <div className="space-y-2">
             <Label htmlFor="locale">{t("Idioma")}</Label>
             <Select
@@ -130,6 +133,7 @@ export function TenantForm({ initial }: Props) {
               </SelectContent>
             </Select>
           </div>
+          )}
           <div className="space-y-2">
             <Label htmlFor="currency">{t("Moeda")}</Label>
             <Select

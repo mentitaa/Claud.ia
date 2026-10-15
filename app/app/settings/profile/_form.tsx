@@ -16,6 +16,7 @@ import {
 import { updateProfile } from "@/app/actions/settings/updateProfile";
 import { useT } from "@/hooks/i18n/useT";
 import { IDIOMAS_VISIVEIS } from "@/lib/i18n/registro";
+import { SOLO_ESPANOL } from "@/lib/i18n/idiomas";
 import {
   profileSchema,
   SEM_PREFERENCIA_DE_IDIOMA,
@@ -94,6 +95,8 @@ export function ProfileForm({
           />
         </div>
         <div className="grid grid-cols-2 gap-4">
+          {/* Claud.ia: solo español, sin elegir idioma. */}
+          {!SOLO_ESPANOL && (
           <div className="space-y-2">
             <Label htmlFor="locale">{t("Idioma")}</Label>
             <Select value={locale} onValueChange={(v) => setLocale(v as Locale)}>
@@ -116,6 +119,7 @@ export function ProfileForm({
               </SelectContent>
             </Select>
           </div>
+          )}
           <div className="space-y-2">
             <Label htmlFor="timezone">{t("Fuso horário")}</Label>
             <Select value={timezone} onValueChange={setTimezone}>

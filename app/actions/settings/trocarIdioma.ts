@@ -5,7 +5,7 @@ import { revalidatePath } from "next/cache";
 
 import { loadAuthUser, resolveActiveOrg } from "@/lib/auth/server";
 import { audit } from "@/lib/audit";
-import { IDIOMAS, type Idioma } from "@/lib/i18n/idiomas";
+import { IDIOMAS, SOLO_ESPANOL, type Idioma } from "@/lib/i18n/idiomas";
 import { createClient } from "@/lib/supabase/server";
 
 /**
@@ -28,7 +28,7 @@ import { createClient } from "@/lib/supabase/server";
 export async function trocarIdioma(
   idioma: Idioma,
 ): Promise<{ ok: true } | { ok: false; error: string }> {
-  if (!(IDIOMAS as readonly string[]).includes(idioma)) {
+  if (!(IDIOMAS as readonly string[]).includes(idioma) || (SOLO_ESPANOL && idioma !== "es")) {
     return { ok: false, error: "idioma_desconhecido" };
   }
 

@@ -104,6 +104,16 @@ const nextConfig: NextConfig = {
           { key: "X-Content-Type-Options", value: "nosniff" },
           { key: "X-Frame-Options", value: "DENY" },
           { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
+          // Claud.ia 21: el navegador recuerda por 1 año que el panel va SIEMPRE por https.
+          // Sin includeSubDomains/preload a propósito: no compromete a otros subdominios.
+          { key: "Strict-Transport-Security", value: "max-age=31536000" },
+          // Claud.ia 21: CSP mínima que no rompe nada (no limita scripts, Supabase,
+          // Google ni Sentry): nadie puede meter el panel en un iframe, cambiar la
+          // base de los enlaces relativos ni cargar plugins <object>/<embed>.
+          {
+            key: "Content-Security-Policy",
+            value: "frame-ancestors 'none'; base-uri 'self'; object-src 'none'",
+          },
           // microphone=(self): o gravador de voz do composer (PTT estilo WhatsApp)
           // usa getUserMedia({audio}); microphone=() bloquearia em TODA origem,
           // inclusive a própria — daria "microphone is not allowed in this document".

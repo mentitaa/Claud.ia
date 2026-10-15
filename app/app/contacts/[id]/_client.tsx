@@ -3,7 +3,8 @@
 import { useLocaleDeData } from "@/hooks/i18n/useLocaleDeData";
 
 import { useT } from "@/hooks/i18n/useT";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { TratamientosDelContacto } from "@/components/tratamientos/TratamientosDelContacto";
 import { format } from "date-fns";
 import { ShieldCheck, PencilSimple } from "@/lib/ui/icons";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -51,6 +52,11 @@ function NivelDaOrigem({ rotulo, valor }: { rotulo: string; valor: string | null
 }
 
 export function ContactDetailClient({ contactId }: Props) {
+  // Claud.ia: el panel del chat enlaza directo a la pestaña Tratamiento (?tab=tratamiento).
+  const [pestana, setPestana] = useState("overview");
+  useEffect(() => {
+    if (new URLSearchParams(window.location.search).get("tab") === "tratamiento") setPestana("tratamiento");
+  }, []);
   const localeDaData = useLocaleDeData();
   const t = useT();
   const q = useContact(contactId);
@@ -180,9 +186,10 @@ export function ContactDetailClient({ contactId }: Props) {
         />
       )}
 
-      <Tabs defaultValue="overview">
+      <Tabs value={pestana} onValueChange={setPestana}>
         <TabsList>
           <TabsTrigger value="overview">{t("Visão geral")}</TabsTrigger>
+          <TabsTrigger value="tratamiento">{TRATAMIENTO}</TabsTrigger>
           <TabsTrigger value="timeline">{t("Histórico")}</TabsTrigger>
           {isAdmin && <TabsTrigger value="lgpd">{t("LGPD")}</TabsTrigger>}
         </TabsList>
@@ -281,6 +288,13 @@ export function ContactDetailClient({ contactId }: Props) {
           </Card>
         </TabsContent>
 
+        <TabsContent value="tratamiento" className="mt-4">
+          <TratamientosDelContacto
+            contactId={contactId}
+            readonly={contact.is_anonymized || user.support?.access_mode === "support_readonly"}
+          />
+        </TabsContent>
+
         <TabsContent value="timeline" className="mt-4">
           <TimelineView contactId={contactId} />
         </TabsContent>
@@ -323,3 +337,5 @@ export function ContactDetailClient({ contactId }: Props) {
     </div>
   );
 }
+
+const TRATAMIENTO = "Tratamiento";

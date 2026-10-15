@@ -4,6 +4,7 @@ import { LeadEnrichment } from "./LeadEnrichment";
 import type { ProspectEnrichment } from "@/lib/prospecting/schema";
 import { useAuth } from "@/hooks/auth/AuthProvider";
 import { EstadoDelCliente } from "@/components/inbox/EstadoDelCliente";
+import { TratamientosDelContacto } from "@/components/tratamientos/TratamientosDelContacto";
 import { useLocaleDeData } from "@/hooks/i18n/useLocaleDeData";
 
 import type { Locale } from "date-fns";
@@ -688,6 +689,8 @@ export function CRMSidePanel({ conversation }: Props) {
         tags={conversation.tags ?? []}
         disabled={readonly}
       />
+
+      {contactId && <TratamientosDelContacto contactId={contactId} compacto />}
 
       {!simple && !readonly && <ConversationTagsEditor
         conversationId={conversation.id}

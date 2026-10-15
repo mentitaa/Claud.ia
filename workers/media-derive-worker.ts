@@ -22,6 +22,7 @@ import { logger } from "@/lib/logger";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { motivoDaRecusaDeDestino } from "@/lib/automation/destinos-internos-autorizados";
 import { DETALHE_TECNICO } from "@/lib/event-log/aviso-de-evento-morto";
+import { avisarSiEsLlegada, soloAvisosDeLlegada } from "@/lib/notifications/aviso-de-llegada";
 
 export const MEDIA_DERIVE_CONSUMER_KEY = "media_derive_v1";
 const DRAIN_MAX_ATTEMPTS = 5; // espelho de lib/event-log/drain.ts
@@ -224,6 +225,32 @@ export async function deriveMessageMedia(row: EventRow): Promise<HandlerResult> 
     await admin.from("messages")
       .update({ media_derived_text: text, media_derived_status: "ready" })
       .eq("id", msg.id).eq("organization_id", msg.organization_id);
+    // Claud.ia: un audio "ya llegué" también avisa al equipo (modo "solo llegadas").
+    // Va después de guardar la transcripción y nunca hace fallar la derivación.
+    if (msg.type === "audio" && text) {
+      try {
+        if (await soloAvisosDeLlegada(msg.organization_id, admin)) {
+          const { data: m } = await admin.from("messages")
+            .select("conversation_id, contact_id, direction")
+            .eq("id", msg.id).eq("organization_id", msg.organization_id).maybeSingle();
+          const fila = m as { conversation_id: string | null; contact_id: string | null; direction: string } | null;
+          if (fila?.direction === "inbound") {
+            await avisarSiEsLlegada({
+              organizationId: msg.organization_id,
+              conversationId: fila.conversation_id,
+              contactId: fila.contact_id,
+              texto: text,
+              admin,
+            });
+          }
+        }
+      } catch (err) {
+        logger.warn("[media-derive] aviso de llegada del audio falló", {
+          message_id: msg.id,
+          error: err instanceof Error ? err.message : String(err),
+        });
+      }
+    }
     return { consumer_key, status: "ok" };
   } catch (err) {
     const detail = err instanceof Error ? err.message : String(err);

@@ -6,6 +6,7 @@ import { enviarPushAoUsuario, enviarPushDaOrg } from "./web_push";
 import { vapidPronto } from "./vapid";
 import type { PushPayload } from "./push_payload";
 import { rotuloDoContato, SEM_NOME } from "@/lib/contacts/rotulo-do-contato";
+import { avisarSiEsLlegada, soloAvisosDeLlegada } from "./aviso-de-llegada";
 
 export const WEB_PUSH_INBOUND_KEY = "web-push-inbound.v1";
 
@@ -113,6 +114,25 @@ export const webPushInboundHandler: EventHandler = {
   async handle(row): Promise<HandlerResult> {
     if (!vapidPronto()) {
       return { consumer_key: WEB_PUSH_INBOUND_KEY, status: "skipped", detail: "vapid_ausente" };
+    }
+    // Claud.ia: con la organización en "solo llegadas", el único aviso es el de
+    // llegada (ver lib/notifications/aviso-de-llegada.ts). Los audios se revisan
+    // cuando la transcripción queda lista, en workers/media-derive-worker.ts.
+    if (await soloAvisosDeLlegada(row.organization_id)) {
+      if (row.event_type !== "message.received") {
+        return { consumer_key: WEB_PUSH_INBOUND_KEY, status: "skipped", detail: "solo_llegadas" };
+      }
+      const tipo = typeof row.payload.type === "string" ? row.payload.type : "text";
+      if (tipo !== "text") {
+        return { consumer_key: WEB_PUSH_INBOUND_KEY, status: "skipped", detail: "solo_llegadas:no_texto" };
+      }
+      const r = await avisarSiEsLlegada({
+        organizationId: row.organization_id,
+        conversationId: typeof row.payload.conversation_id === "string" ? row.payload.conversation_id : null,
+        contactId: typeof row.payload.contact_id === "string" ? row.payload.contact_id : null,
+        texto: typeof row.payload.body_preview === "string" ? row.payload.body_preview : null,
+      });
+      return { consumer_key: WEB_PUSH_INBOUND_KEY, status: r.enviado > 0 ? "ok" : "skipped", detail: r.detalle };
     }
     if (row.event_type === "message.received") return handleInbound(row);
 

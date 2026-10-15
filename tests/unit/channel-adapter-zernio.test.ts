@@ -21,6 +21,15 @@ const fetchMock = vi.fn();
 vi.stubGlobal("fetch", fetchMock);
 
 vi.mock("@/lib/supabase/admin", () => ({ createAdminClient: () => ({}) }));
+// Claud.ia: la guarda anti-SSRF resuelve el DNS de verdad; sin red (CI cerrado,
+// sandbox) "zernio.com" no resuelve y el caso de vacuidad fallaba por el ENTORNO.
+// Se fija SOLO ese host a una IP pública; todo lo demás sigue con el DNS real.
+vi.mock("node:dns/promises", async (importOriginal) => {
+  const real = await importOriginal<typeof DnsPromises>();
+  const lookup = (async (host: string, opts?: unknown) =>
+    host === "zernio.com" ? [{ address: "104.18.20.1", family: 4 }] : real.lookup(host, opts as never)) as typeof real.lookup;
+  return { ...real, default: { ...real, lookup }, lookup };
+});
 
 const credsRef: { current: unknown } = { current: null };
 vi.mock("@/lib/channels/zernio/credentials", () => ({
@@ -28,6 +37,7 @@ vi.mock("@/lib/channels/zernio/credentials", () => ({
   zernioCredsFromEnv: () => credsRef.current,
 }));
 
+import type * as DnsPromises from "node:dns/promises";
 import { zernioAdapter } from "@/lib/channels/adapters/zernio";
 
 const CREDS = {

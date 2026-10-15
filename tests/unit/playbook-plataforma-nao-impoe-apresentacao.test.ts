@@ -35,10 +35,14 @@ describe("platform.md não impõe apresentação ao agente", () => {
   it("não manda se apresentar como assistente virtual", () => {
     expect(PLATFORM).not.toMatch(/apresente-se como assistente virtual/i);
     expect(PLATFORM).not.toMatch(/Você é um assistente virtual/i);
+    // Claud.ia: el playbook está en español.
+    expect(PLATFORM).not.toMatch(/pres[eé]ntate como (un|una) asistente virtual/i);
+    expect(PLATFORM).not.toMatch(/Eres (un|una) asistente virtual/i);
   });
 
   it("mantém a regra de não afirmar ser humano e de responder com honestidade", () => {
-    expect(PLATFORM).toMatch(/Nunca afirme ser humano/);
-    expect(PLATFORM).toMatch(/responda com honestidade/);
+    // Claud.ia: el playbook de plataforma está en español (parche 9).
+    expect(PLATFORM).toMatch(/Nunca afirmes ser humano/);
+    expect(PLATFORM).toMatch(/responde con honestidad/);
   });
 });

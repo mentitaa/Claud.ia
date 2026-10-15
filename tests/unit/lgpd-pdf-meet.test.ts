@@ -120,23 +120,24 @@ it("PDF efetivamente entregue contém registros, datas, estados e controlador se
   });
   const pdf = await rendered(data);
   for (const value of [
-    "Entregas de links de reunião",
-    "Avisos sobre compromissos",
+    // Claud.ia 22: el informe sale en español.
+    "Envíos de enlaces de reunión",
+    "Avisos sobre citas",
     "envio-pendente",
     "envio-concluido",
     "compromisso-confirmado",
-    "Pendente",
-    "Processamento concluído",
+    "Pendiente",
+    "Proceso terminado",
     "aviso-aberto",
     "aviso-resolvido",
     "Reagendar consulta",
     "Paciente pediu outro horario.",
     "Horario confirmado",
-    "Aberto",
-    "Resolvido",
+    "Abierto",
+    "Resuelto",
     "02/01/2030",
     "03/01/2030",
-    "Controlador: Bem Viver Servicos Medicos LTDA",
+    "Responsable: Bem Viver Servicos Medicos LTDA",
     "encarregado@bemviver.test",
   ])
     expect(pdf.text).toContain(value);
@@ -165,9 +166,9 @@ it("arrays vazios ou ausentes em payload legado não criam seções nem quebram 
       appointment_notices: arrays,
     } as unknown as ExportPayload;
     const pdf = await rendered(data);
-    expect(pdf.text).toContain("Controlador: Bem Viver Servicos Medicos LTDA");
-    expect(pdf.text).not.toContain("Entregas de links de reunião");
-    expect(pdf.text).not.toContain("Avisos sobre compromissos");
+    expect(pdf.text).toContain("Responsable: Bem Viver Servicos Medicos LTDA");
+    expect(pdf.text).not.toContain("Envíos de enlaces de reunión");
+    expect(pdf.text).not.toContain("Avisos sobre citas");
   }
 });
 
@@ -182,5 +183,5 @@ it("quebra de páginas conserva todos os avisos e o controlador nas páginas seg
   const pdf = await rendered(data);
   expect(pdf.pages).toBeGreaterThan(1);
   for (const notice of data.appointment_notices) expect(pdf.text).toContain(notice.title);
-  expect(pdf.text.match(/Controlador: Bem Viver Servicos Medicos LTDA/g)).toHaveLength(pdf.pages);
+  expect(pdf.text.match(/Responsable: Bem Viver Servicos Medicos LTDA · Informe/g)).toHaveLength(pdf.pages);
 });

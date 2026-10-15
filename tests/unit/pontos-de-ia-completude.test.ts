@@ -54,7 +54,11 @@ function purposesDoTexto(texto: string, arquivo = "source.ts"): string[] {
       const enqueueResult = ts.isObjectLiteralExpression(object) && ts.isReturnStatement(object.parent) &&
         object.properties.some(p => ts.isPropertyAssignment(p) && p.name.getText(ast) === "kind" &&
           ts.isStringLiteralLike(p.initializer) && p.initializer.text === "enqueue_turn");
-      if (!enqueueResult) result.push(...literals(node.initializer));
+      // Claud.ia 14: o ícone do manifest (`app/manifest.ts`) tem `purpose: "any" |
+      // "maskable"` — é a FORMA de um ícone de app (`src` + `sizes`), não chamada de LLM.
+      const iconeDoManifest = ts.isObjectLiteralExpression(object) &&
+        ["src", "sizes"].every(nome => object.properties.some(p => ts.isPropertyAssignment(p) && p.name.getText(ast) === nome));
+      if (!enqueueResult && !iconeDoManifest) result.push(...literals(node.initializer));
     }
     ts.forEachChild(node, visit);
   };

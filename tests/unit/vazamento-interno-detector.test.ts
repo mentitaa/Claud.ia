@@ -371,7 +371,8 @@ describe("renderVetoDeVazamento — o veto ensina a SAÍDA, não só o problema"
   it("manda REESCREVER — um veto que só nega faz o modelo tentar de novo igual", () => {
     const texto = renderVetoDeVazamento(["webhook"]);
     expect(texto).toMatch(/REESCREVA/);
-    expect(texto).toMatch(/em português de gente/);
+    // Claud.ia 9: el veto pide reescribir en el idioma de la conversación (no en portugués).
+    expect(texto).toMatch(/no mesmo idioma da conversa/);
   });
 
   it("NÃO empurra para 'a equipe verifica' — isso cairia no casePromiseGate", () => {

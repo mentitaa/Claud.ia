@@ -41,7 +41,7 @@ function rodape(elemento: ReactElement): string {
   // então o `join` produz espaço duplo em volta de todo `{...}`. Prender o teste
   // a essa espaçagem seria prender o gate a um detalhe do parser.
   const tudo = textos(elemento).join(" ").replace(/\s+/g, " ");
-  const inicio = tudo.indexOf("Controlador:");
+  const inicio = tudo.indexOf("Responsable:"); // Claud.ia 22: «Controlador:» → «Responsable:» (Ley 29733)
   expect(inicio, "o rodapé sumiu — o gate não tem o que medir").toBeGreaterThanOrEqual(0);
   return tudo.slice(inicio);
 }
@@ -108,7 +108,7 @@ describe("rodapé do relatório LGPD", () => {
       }),
     );
     const nomeDoControlador = texto
-      .slice("Controlador:".length, texto.indexOf("· Relatório de Acesso aos Dados"))
+      .slice("Responsable:".length, texto.indexOf("· Informe de acceso a datos personales"))
       .trim();
 
     expect(nomeDoControlador).toBe("Bem Viver Serviços Médicos LTDA");
@@ -121,7 +121,7 @@ describe("rodapé do relatório LGPD", () => {
   it("nomeia o Encarregado da organização", () => {
     const tudo = rodape(LgpdExportPdf({ data: payload() }));
 
-    expect(tudo).toContain("Encarregado (DPO):");
+    expect(tudo).toContain("Contacto de protección de datos:");
     expect(tudo).toContain("encarregado@bemviver.com.br");
     // O texto anterior era "DPO: contato via canal oficial do controlador" — um
     // não-resposta num campo cuja função é dizer a quem o titular reclama.
@@ -134,7 +134,7 @@ describe("rodapé do relatório LGPD", () => {
     // `env.LGPD_DPO_EMAIL` está vazia na suíte, então este caso exercita a ponta
     // da cadeia. Um campo em branco pareceria defeito de renderização; a frase
     // diz de quem é a pendência.
-    expect(tudo).toContain("não informado pelo controlador");
+    expect(tudo).toContain("no informado por el responsable");
   });
 
   it("a organização aparece pelo NOME, e o uuid vira 'ID interno'", () => {
@@ -153,7 +153,7 @@ describe("rodapé do relatório LGPD", () => {
     // jurídico; abortar o export estouraria o SLA legal de D+7.
     const tudo = rodape(LgpdExportPdf({ data: payload({ organization_legal_name: "" }) }));
 
-    expect(tudo).toContain("Controlador: —");
+    expect(tudo).toContain("Responsable: —");
     expect(tudo).not.toMatch(/deskcomm/i);
   });
 });

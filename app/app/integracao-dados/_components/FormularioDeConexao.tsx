@@ -223,7 +223,7 @@ export function FormularioDeConexao({ open, onOpenChange, conexao }: Props) {
                 // terceiro (tests/unit/branding.test.ts) tem a categoria AMOSTRA
                 // fechada, e este domínio já está declarado lá — é a MESMA amostra
                 // do campo de webhook. Ensinar o formato não precisa de host novo.
-                placeholder="meusistema.com"
+                placeholder="misistema.com"
               />
               {erros.host && <p className="text-xs text-destructive">{erros.host}</p>}
             </div>

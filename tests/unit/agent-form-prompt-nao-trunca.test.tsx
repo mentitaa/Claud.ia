@@ -96,7 +96,7 @@ describe("editor de instruções do agente", () => {
     // ele não cabe, em vez de descobrir no salvamento — ou nunca.
     const prompt = montar();
     fireEvent.change(prompt, { target: { value: "a".repeat(20_500) } });
-    expect(screen.getByTestId("contador-do-prompt")).toHaveTextContent("20.500/20.000");
+    expect(screen.getByTestId("contador-do-prompt")).toHaveTextContent("20,500/20,000") // Claud.ia: números en es-PE, contador y límite iguales;
   });
 
   it("recusa o salvamento dizendo quanto passou", () => {
@@ -115,7 +115,7 @@ describe("editor de instruções do agente", () => {
     // aceita, e o autor ficaria preso sem entender o motivo.
     const prompt = montar();
     fireEvent.change(prompt, { target: { value: "a".repeat(20_000) + "\n\n   " } });
-    expect(screen.getByTestId("contador-do-prompt")).toHaveTextContent("20.000/20.000");
+    expect(screen.getByTestId("contador-do-prompt")).toHaveTextContent("20,000/20,000");
     fireEvent.click(screen.getByRole("button", { name: /salvar|criar/i }));
     expect(screen.queryByText(/conseguir salvar/i)).not.toBeInTheDocument();
   });

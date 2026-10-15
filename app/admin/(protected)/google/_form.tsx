@@ -67,8 +67,7 @@ export function FormularioDoGoogle({
           */}
           <Input id="redirect" readOnly value={enderecoDeRetorno} data-testid="google-redirect" />
           <p className="text-xs text-muted-foreground">
-            Cole exatamente isto em &ldquo;URIs de redirecionamento autorizados&rdquo;, na tela
-            de credenciais do Google Cloud.
+            {t("Cole exatamente isto em “URIs de redirecionamento autorizados”, na tela de credenciais do Google Cloud.")}
           </p>
         </div>
 
@@ -91,7 +90,7 @@ export function FormularioDoGoogle({
             type="password"
             value={clientSecret}
             onChange={(e) => setClientSecret(e.target.value)}
-            placeholder={temSegredoSalvo ? "••••••••  (já cadastrada)" : "GOCSPX-…"}
+            placeholder={temSegredoSalvo ? t("••••••••  (já cadastrada)") : "GOCSPX-…"}
           />
           <p className="text-xs text-muted-foreground">
             {temSegredoSalvo
@@ -129,7 +128,7 @@ export function FormularioDoGoogle({
 
         <div className="flex items-center justify-between gap-3">
           <span className="text-xs text-muted-foreground">
-            {atualizadoEm ? `Última alteração em ${atualizadoEm}.` : t("Nunca configurado por aqui.")}
+            {atualizadoEm ? `${t("Última alteração em")} ${atualizadoEm}.` : t("Nunca configurado por aqui.")}
           </span>
           <Button
             data-testid="google-salvar"
@@ -153,7 +152,7 @@ export function FormularioDoGoogle({
               })
             }
           >
-            {salvando ? "Salvando…" : "Salvar"}
+            {salvando ? t("Salvando…") : t("Salvar")}
           </Button>
         </div>
       </Card>

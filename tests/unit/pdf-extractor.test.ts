@@ -206,7 +206,10 @@ describe("extractPdfText — estratégia `processo-a-parte`", () => {
     // dos dois lados.
     const script = `
       const fs = require("node:fs");
-      import("@/lib/ai/rag/extractors/pdf").then(async (m) => {
+      import("@/lib/ai/rag/extractors/pdf").then(async (mod) => {
+        // Claud.ia: según la versión de Node/tsx, el import dinámico de un módulo
+        // transpilado a CJS llega envuelto en \`default\`.
+        const m = mod.extractPdfText ? mod : mod.default;
         const texto = await m.extractPdfText(fs.readFileSync("tests/fixtures/sample-multipagina.pdf"));
         process.stdout.write(JSON.stringify({
           estrategia: m.estrategiaPadrao(),

@@ -46,7 +46,7 @@ interface Props {
 }
 
 function paraMarkdown(itens: ItemDaFaq[]): string {
-  return itens.map((i) => `## Pergunta: ${i.question}\n## Resposta: ${i.answer}`).join("\n\n");
+  return itens.map((i) => `## Pregunta: ${i.question}\n## Respuesta: ${i.answer}`).join("\n\n");
 }
 
 export function EditarFaqDialog({ sourceId, nome, aberto, onFechar, onSalvo }: Props) {
@@ -79,14 +79,13 @@ export function EditarFaqDialog({ sourceId, nome, aberto, onFechar, onSalvo }: P
   async function salvar(): Promise<void> {
     const itens = parseFaqMarkdown(texto);
     if (itens.length === 0) {
-      // `## Pergunta:`/`## Resposta:` NÃO entram na tradução: são os marcadores
-      // que `lib/ai/rag/ingest/faq.ts` casa por regex de língua fixa. Traduzi-los
-      // faria a instrução ensinar um formato que o parser recusa.
+      // Claud.ia 22: el parser (`lib/ai/rag/ingest/faq.ts`) acepta los marcadores en
+      // español, así que la pantalla enseña `## Pregunta:` / `## Respuesta:`.
       toast.error(
         t("Não achei nenhum par pergunta/resposta. Use uma linha") +
-          " ## Pergunta: " +
+          " ## Pregunta: " +
           t("e uma") +
-          " ## Resposta: " +
+          " ## Respuesta: " +
           t("por item."),
       );
       return;
@@ -129,7 +128,7 @@ export function EditarFaqDialog({ sourceId, nome, aberto, onFechar, onSalvo }: P
             disabled={carregando || salvando}
           />
           <p className="text-xs text-text-muted">
-            {t("Uma linha")} <code>## Pergunta:</code> {t("e uma")} <code>## Resposta:</code>{" "}
+            {t("Uma linha")} <code>## Pregunta:</code> {t("e uma")} <code>## Respuesta:</code>{" "}
             {t("por item, separados por uma linha em branco.")}
           </p>
         </div>

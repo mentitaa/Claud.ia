@@ -266,7 +266,7 @@ describe("campo inválido na leitura de insights: repetição sem os dois nomes 
     if (!corpo) throw new Error("esperava a linha da campanha");
     const celulas = within(corpo).getAllByRole("cell");
 
-    expect(celulas[10]?.textContent).toBe("48,00%");
+    expect(celulas[10]?.textContent).toBe("48.00%"); // Claud.ia: es-PE
     // Medição NÃO leva o aviso do ausente: o título só existe quando FALTA, e é
     // isso que faz o hover ser sinal, e não decoração.
     expect(celulas[10]?.querySelector("[title]")).toBeNull();

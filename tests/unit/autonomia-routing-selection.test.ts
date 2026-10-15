@@ -22,7 +22,11 @@ vi.mock('@/lib/agent-engine/agent/human-handoff', async importOriginal => ({
 vi.mock('@/lib/agent-engine/guardrails/camadas-da-org', () => ({
   lerCamadasDaOrg: vi.fn(async () => ({})), camadaLigada: vi.fn(() => false),
 }));
-vi.mock('@/lib/agent-engine/agent/fuso-da-org', () => ({ fusoDaOrganizacao: vi.fn(async () => 'UTC') }));
+// Claud.ia 9: inbound-turn también pide el idioma de la organización.
+vi.mock('@/lib/agent-engine/agent/fuso-da-org', async importOriginal => ({
+  ...await importOriginal<Record<string, unknown>>(),
+  fusoDaOrganizacao: vi.fn(async () => 'UTC'), idiomaDaOrganizacao: vi.fn(async () => 'pt-BR'),
+}));
 vi.mock('@/lib/ai/elegibilidade/consulta-pg', () => ({ decidirElegibilidadeDaConversa: vi.fn(async () => null) }));
 vi.mock('@/lib/agent-engine/pacing/store', () => ({ loadChannelKnobs: vi.fn(async () => ({ knobs: {} })) }));
 vi.mock('@/lib/agent-engine/pacing/engine', () => ({ janelaDeEnvioAberta: () => true, proximaAberturaDaJanela: vi.fn() }));

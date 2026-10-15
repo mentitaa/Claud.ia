@@ -47,21 +47,18 @@ import {
 } from "@/lib/ai/rag/tipos-de-fonte";
 
 // Os DOIS exemplos ficam em português de propósito. O de FAQ é obrigação:
-// `## Pergunta:`/`## Resposta:` são os marcadores que
-// `lib/ai/rag/ingest/faq.ts` casa por regex de língua fixa, e um exemplo
-// traduzido ensinaria um formato que o parser recusa. O de documento vai junto
-// porque meio exemplo traduzido, meio não, dentro do mesmo campo, lê pior que
-// os dois iguais.
-const EXEMPLO_FAQ = `## Pergunta: Qual o prazo de entrega?
-## Resposta: De 2 a 3 dias úteis após a confirmação do pagamento.
+// Claud.ia 22: ejemplos en español y de una clínica (el público de Claud.ia). El
+// parser (`lib/ai/rag/ingest/faq.ts`) acepta `## Pregunta:` / `## Respuesta:`.
+const EXEMPLO_FAQ = `## Pregunta: ¿La evaluación tiene costo?
+## Respuesta: Sí, S/ 50, y se descuenta si haces el tratamiento.
 
-## Pergunta: Vocês fazem troca?
-## Resposta: Sim, em até 30 dias, com o produto sem uso.`;
+## Pregunta: ¿Atienden los sábados?
+## Respuesta: Sí, de 9 a. m. a 2 p. m.`;
 
-const EXEMPLO_DOCUMENTO = `# Política de troca
+const EXEMPLO_DOCUMENTO = `# Política de citas
 
-Aceitamos troca em até 30 dias da entrega, com o produto sem uso e na embalagem
-original. O frete de devolução é por nossa conta quando o defeito for de fábrica.`;
+Para separar tu cita pedimos un adelanto de S/ 50 por Yape o Plin. Si no puedes
+venir, avísanos con 24 horas de anticipación y la reprogramamos sin costo.`;
 
 interface Props {
   aberto: boolean;
@@ -192,7 +189,7 @@ export function NovoMaterialDialog({ aberto, onFechar, onCriado, podeIndexar }: 
             <Input
               id="material-nome"
               data-testid="material-nome"
-              placeholder={tipo === "faq" ? t("Perguntas frequentes da loja") : t("Política de troca")}
+              placeholder={tipo === "faq" ? t("Perguntas frequentes da clínica") : t("Política de agendamento")}
               value={nome}
               onChange={(e) => setNome(e.target.value)}
               disabled={enviando || porRotina}
@@ -235,8 +232,8 @@ export function NovoMaterialDialog({ aberto, onFechar, onCriado, podeIndexar }: 
               />
               {ePerguntaEResposta(tipo) ? (
                 <p className="text-xs text-text-muted">
-                  {t("Uma linha")} <code>## Pergunta:</code> {t("e uma")}{" "}
-                  <code>## Resposta:</code> {t("por item, separados por uma linha em branco.")}
+                  {t("Uma linha")} <code>## Pregunta:</code> {t("e uma")}{" "}
+                  <code>## Respuesta:</code> {t("por item, separados por uma linha em branco.")}
                 </p>
               ) : null}
             </div>

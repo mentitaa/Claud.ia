@@ -492,7 +492,7 @@ export function AttendantsClient({ canManage }: Props) {
             <TableHeader>
               <TableRow>
                 <TableHead>{t("Atendente")}</TableHead>
-                <TableHead>Status</TableHead>
+                <TableHead>{t("Status")}</TableHead>
                 <TableHead>{t("Carga")}</TableHead>
                 <TableHead>{t("Capacidade")}</TableHead>
                 <TableHead>{t("Horário")}</TableHead>
@@ -531,7 +531,7 @@ export function AttendantsClient({ canManage }: Props) {
                           max={1000}
                           defaultValue={capacity}
                           className="h-8 w-20"
-                          aria-label={`Capacidade de ${a.name}`}
+                          aria-label={`${t("Capacidade de")} ${a.name}`}
                           onBlur={(e) => {
                             const next = Number(e.target.value);
                             if (Number.isInteger(next) && next >= 1 && next !== capacity) {
@@ -551,7 +551,7 @@ export function AttendantsClient({ canManage }: Props) {
                             variant="ghost"
                             size="icon"
                             className="h-7 w-7"
-                            aria-label={`Editar horário de ${a.name}`}
+                            aria-label={`${t("Editar horário de")} ${a.name}`}
                             onClick={() => setScheduleFor(a)}
                           >
                             <Clock size={16} />
@@ -563,7 +563,7 @@ export function AttendantsClient({ canManage }: Props) {
                       <TableCell>
                         <Switch
                           checked={!!a.availability?.is_available}
-                          aria-label={`Disponibilidade de ${a.name}`}
+                          aria-label={`${t("Disponibilidade de")} ${a.name}`}
                           onCheckedChange={(v) =>
                             patch.mutate({ userId: a.userId, patch: { is_available: v } })
                           }

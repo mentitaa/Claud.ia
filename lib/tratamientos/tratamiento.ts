@@ -101,3 +101,28 @@ export function soles(n: number | null | undefined): string {
 export function sumaDePagos(pagos: readonly Pago[]): number {
   return Math.round(pagos.reduce((acc, p) => acc + Number(p.monto || 0), 0) * 100) / 100;
 }
+
+/**
+ * Claud.ia 22 — qué botón manda en cada sesión de la ficha.
+ *
+ * Sin fecha, lo que falta es PONER FECHA; "Marcar hecha" queda secundario (antes
+ * había un botón verde "Marcar hecha" en cada sesión pendiente y la ficha se veía
+ * cargada). Con fecha, lo principal es "Marcar hecha". Hecha, solo "Deshacer".
+ */
+export function botonPrincipalDeSesion(s: Pick<Sesion, "fecha" | "hecha">): "poner_fecha" | "marcar_hecha" | "deshacer" {
+  if (s.hecha) return "deshacer";
+  return s.fecha ? "marcar_hecha" : "poner_fecha";
+}
+
+/**
+ * El cambio al pulsar "Marcar hecha" / "Deshacer". Si la sesión se marca hecha SIN
+ * fecha, queda con la fecha de hoy, para que la ficha diga cuándo se hizo (no crea
+ * cita en la Agenda: ya pasó).
+ */
+export function cambioAlMarcarHecha(
+  s: Pick<Sesion, "fecha" | "hecha">,
+  ahora: Date = new Date(),
+): { hecha: boolean; fecha?: string } {
+  if (s.hecha) return { hecha: false };
+  return s.fecha ? { hecha: true } : { hecha: true, fecha: ahora.toISOString() };
+}

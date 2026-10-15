@@ -6,10 +6,11 @@ import { useRealtimeChannel } from "@/hooks/realtime/useRealtimeChannel";
 import type { AlertKind } from "@/app/api/v1/admin/dashboard/kpis/route";
 
 const KIND_LABELS: Record<AlertKind, string> = {
-  waha_ban: "Alerta WAHA",
-  lgpd_at_risk: "Prazo LGPD",
-  ai_budget: "Budget IA",
-  tenant_pending_overflow: "Overflow de conversas",
+  // Claud.ia: solo español (estos avisos los ve la administradora de la plataforma).
+  waha_ban: "WhatsApp en riesgo",
+  lgpd_at_risk: "plazo de datos personales",
+  ai_budget: "presupuesto de IA",
+  tenant_pending_overflow: "exceso de conversaciones",
 };
 
 interface AlertBroadcast {
@@ -24,8 +25,8 @@ export function useAlertsRealtime() {
     (payload: unknown) => {
       const data = (payload as { payload?: AlertBroadcast } | null)?.payload;
       const kind = data?.kind;
-      const label = kind ? (KIND_LABELS[kind] ?? kind) : "alerta";
-      toast.warning(`Novo ${label}`, { description: data?.message });
+      const label = kind ? (KIND_LABELS[kind] ?? kind) : "aviso";
+      toast.warning(`Nuevo aviso: ${label}`, { description: data?.message });
       qc.invalidateQueries({ queryKey: ["admin", "dashboard", "kpis"] });
     },
     [qc],

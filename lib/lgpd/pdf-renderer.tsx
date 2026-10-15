@@ -98,7 +98,15 @@ interface Props {
 function fmtDate(s: string | null | undefined): string {
   if (!s) return "—";
   try {
-    return new Date(s).toLocaleString("pt-BR", { timeZone: "America/Sao_Paulo" });
+    // Claud.ia: el informe sale en español de Perú y en hora de Lima.
+    return new Date(s).toLocaleString("es-PE", {
+      timeZone: "America/Lima",
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+    });
   } catch {
     return s;
   }
@@ -107,7 +115,7 @@ function fmtDate(s: string | null | undefined): string {
 function fmtMoney(cents: number | null | undefined, currency: string | null | undefined): string {
   if (cents == null) return "—";
   const v = cents / 100;
-  return `${currency ?? "BRL"} ${v.toFixed(2)}`;
+  return `${currency ?? "PEN"} ${v.toFixed(2)}`;
 }
 
 /**
@@ -124,22 +132,22 @@ function encarregado(data: ExportPayload): string {
   // resolve o encarregado (organização acima, instalação abaixo) é o coletor,
   // que é assíncrono e já busca `dpo_email` da organização. Deixar a busca aqui
   // obrigaria um componente de PDF a falar com o banco no meio do desenho.
-  return data.dpo_email || "não informado pelo controlador";
+  return data.dpo_email || "no informado por el responsable";
 }
 
 // Concluir o processamento do job não comprova envio: ele também pode terminar
 // com um bloqueio. O relatório conserva essa diferença, sem anunciar entrega.
 const deliveryStatus: Record<string, string> = {
-  pending: "Pendente",
-  running: "Em processamento",
-  done: "Processamento concluído",
-  failed: "Falha no processamento",
-  dead: "Tentativas encerradas",
+  pending: "Pendiente",
+  running: "En proceso",
+  done: "Proceso terminado",
+  failed: "Error en el proceso",
+  dead: "Intentos agotados",
 };
 const noticeStatus: Record<string, string> = {
-  open: "Aberto",
-  resolved: "Resolvido",
-  dismissed: "Dispensado",
+  open: "Abierto",
+  resolved: "Resuelto",
+  dismissed: "Descartado",
 };
 
 export function LgpdExportPdf({ data, unsignedWarning }: Props): React.ReactElement {
@@ -150,19 +158,19 @@ export function LgpdExportPdf({ data, unsignedWarning }: Props): React.ReactElem
       <Page size="A4" style={styles.page}>
         {/* Header */}
         <View style={styles.header}>
-          <Text style={styles.title}>Relatório de Acesso aos Dados</Text>
+          <Text style={styles.title}>Informe de acceso a tus datos personales</Text>
           <Text style={styles.subtitle}>
             {/* A lei vem do PERFIL do país da organização (issue #1033): país
                 sem citação revisada não cita lei nenhuma — citar a errada é
                 pior do que não citar artigo nenhum. */}
-            Base legal: {data.lei_citada ?? "não declarada (país sem citação revisada)"} ·
-            Solicitação #{shortId}
+            Base legal: {data.lei_citada ?? "no declarada (país sin cita revisada)"} ·
+            Solicitud #{shortId}
           </Text>
         </View>
 
         {/* Metadata */}
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Metadados da Solicitação</Text>
+          <Text style={styles.sectionTitle}>Datos de la solicitud</Text>
           <View style={styles.row}>
             <Text style={styles.label}>ID:</Text>
             <Text style={styles.value}>{data.request_id}</Text>
@@ -172,7 +180,7 @@ export function LgpdExportPdf({ data, unsignedWarning }: Props): React.ReactElem
               não responde isso a ninguém. O id continua no documento porque é
               o que o suporte pede quando alguém liga citando o relatório. */}
           <View style={styles.row}>
-            <Text style={styles.label}>Organização:</Text>
+            <Text style={styles.label}>Responsable del tratamiento:</Text>
             <Text style={styles.value}>{data.organization_legal_name || "—"}</Text>
           </View>
           <View style={styles.row}>
@@ -180,14 +188,14 @@ export function LgpdExportPdf({ data, unsignedWarning }: Props): React.ReactElem
             <Text style={styles.value}>{data.organization_id}</Text>
           </View>
           <View style={styles.row}>
-            <Text style={styles.label}>Gerado em:</Text>
+            <Text style={styles.label}>Generado el:</Text>
             <Text style={styles.value}>{fmtDate(data.generated_at)}</Text>
           </View>
           {data.no_local_footprint ? (
             <View style={styles.row}>
-              <Text style={styles.label}>Status:</Text>
+              <Text style={styles.label}>Estado:</Text>
               <Text style={styles.value}>
-                Nenhum dado pessoal localizado nos sistemas internos.
+                No se encontraron datos personales en nuestros sistemas.
               </Text>
             </View>
           ) : null}
@@ -196,52 +204,52 @@ export function LgpdExportPdf({ data, unsignedWarning }: Props): React.ReactElem
         {/* Contact */}
         {data.contact ? (
           <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Dados Pessoais (Contato)</Text>
+            <Text style={styles.sectionTitle}>Datos personales (contacto)</Text>
             <View style={styles.row}>
-              <Text style={styles.label}>Nome:</Text>
+              <Text style={styles.label}>Nombre:</Text>
               <Text style={styles.value}>{data.contact.name ?? "—"}</Text>
             </View>
             <View style={styles.row}>
-              <Text style={styles.label}>Email:</Text>
+              <Text style={styles.label}>Correo:</Text>
               <Text style={styles.value}>{data.contact.email ?? "—"}</Text>
             </View>
             <View style={styles.row}>
-              <Text style={styles.label}>Telefone:</Text>
+              <Text style={styles.label}>Teléfono:</Text>
               <Text style={styles.value}>{data.contact.phone_number ?? "—"}</Text>
             </View>
             <View style={styles.row}>
               <Text style={styles.label}>{data.documento_rotulo}:</Text>
               <Text style={styles.value}>
-                {data.contact.cpf_present ? "Armazenado (criptografado)" : "—"}
+                {data.contact.cpf_present ? "Guardado (cifrado)" : "—"}
               </Text>
             </View>
             <View style={styles.row}>
-              <Text style={styles.label}>Origem:</Text>
+              <Text style={styles.label}>Origen:</Text>
               <Text style={styles.value}>{data.contact.source ?? "—"}</Text>
             </View>
             <View style={styles.row}>
-              <Text style={styles.label}>Criado em:</Text>
+              <Text style={styles.label}>Creado el:</Text>
               <Text style={styles.value}>{fmtDate(data.contact.created_at)}</Text>
             </View>
             <View style={styles.row}>
               <Text style={styles.label}>Anonimizado:</Text>
-              <Text style={styles.value}>{data.contact.is_anonymized ? "Sim" : "Não"}</Text>
+              <Text style={styles.value}>{data.contact.is_anonymized ? "Sí" : "No"}</Text>
             </View>
           </View>
         ) : null}
 
         {/* Consents */}
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Consentimentos</Text>
+          <Text style={styles.sectionTitle}>Consentimientos</Text>
           {data.consents.length === 0 ? (
-            <Text style={styles.small}>Nenhum consentimento registrado.</Text>
+            <Text style={styles.small}>No hay consentimientos registrados.</Text>
           ) : (
             data.consents.map((c, i) => (
               <View key={i} style={styles.row}>
                 <Text style={styles.label}>{c.scope}:</Text>
                 <Text style={styles.value}>
-                  {c.granted ? "concedido" : "negado"}
-                  {c.granted_at ? ` em ${fmtDate(c.granted_at)}` : ""}
+                  {c.granted ? "otorgado" : "denegado"}
+                  {c.granted_at ? ` el ${fmtDate(c.granted_at)}` : ""}
                 </Text>
               </View>
             ))
@@ -250,19 +258,19 @@ export function LgpdExportPdf({ data, unsignedWarning }: Props): React.ReactElem
 
         {/* Conversations */}
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Histórico de Atendimento</Text>
+          <Text style={styles.sectionTitle}>Historial de atención</Text>
           <Text style={styles.small}>
-            Total de conversas: {data.conversations.length} · Total de mensagens:{" "}
-            {data.messages_count_total} · Amostra incluída neste relatório:{" "}
+            Total de conversaciones: {data.conversations.length} · Total de mensajes:{" "}
+            {data.messages_count_total} · Muestra incluida en este informe:{" "}
             {data.messages_recent.length}
           </Text>
           {data.conversations.slice(0, 10).map((c) => (
             <View key={c.id} style={styles.itemBlock}>
               <Text>
-                Conversa #{c.id.slice(0, 8)} · {c.channel} · {c.status}
+                Conversación #{c.id.slice(0, 8)} · {c.channel} · {c.status}
               </Text>
               <Text style={styles.small}>
-                Última mensagem: {fmtDate(c.last_message_at)} · Criada em{" "}
+                Último mensaje: {fmtDate(c.last_message_at)} · Creada el{" "}
                 {fmtDate(c.created_at)}
               </Text>
             </View>
@@ -272,13 +280,13 @@ export function LgpdExportPdf({ data, unsignedWarning }: Props): React.ReactElem
         {/* Recent messages preview */}
         {data.messages_recent.length > 0 ? (
           <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Mensagens Recentes (amostra)</Text>
+            <Text style={styles.sectionTitle}>Mensajes recientes (muestra)</Text>
             {data.messages_recent.slice(0, 25).map((m) => (
               <View key={m.id} style={styles.itemBlock}>
                 <Text style={styles.small}>
                   {fmtDate(m.created_at)} · {m.direction} · {m.type} · {m.status}
                 </Text>
-                <Text>{m.body ? m.body.slice(0, 280) : m.has_media ? "[mídia]" : "—"}</Text>
+                <Text>{m.body ? m.body.slice(0, 280) : m.has_media ? "[archivo]" : "—"}</Text>
               </View>
             ))}
           </View>
@@ -287,14 +295,14 @@ export function LgpdExportPdf({ data, unsignedWarning }: Props): React.ReactElem
         {/* Leads */}
         {data.leads.length > 0 ? (
           <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Atividade Comercial — Leads</Text>
+            <Text style={styles.sectionTitle}>Actividad comercial</Text>
             {data.leads.map((l) => (
               <View key={l.id} style={styles.itemBlock}>
                 <Text>
-                  {l.title ?? "(sem título)"} · {l.status} ·{" "}
+                  {l.title ?? "(sin título)"} · {l.status} ·{" "}
                   {fmtMoney(l.value_cents, l.currency)}
                 </Text>
-                <Text style={styles.small}>Criado em {fmtDate(l.created_at)}</Text>
+                <Text style={styles.small}>Creado el {fmtDate(l.created_at)}</Text>
               </View>
             ))}
           </View>
@@ -310,7 +318,7 @@ export function LgpdExportPdf({ data, unsignedWarning }: Props): React.ReactElem
                   {o.external_provider ?? "—"} #{o.external_id ?? o.id.slice(0, 8)} ·{" "}
                   {o.status} · {fmtMoney(o.total_cents, o.currency)}
                 </Text>
-                <Text style={styles.small}>Pedido em {fmtDate(o.ordered_at)}</Text>
+                <Text style={styles.small}>Pedido el {fmtDate(o.ordered_at)}</Text>
               </View>
             ))}
           </View>
@@ -322,21 +330,21 @@ export function LgpdExportPdf({ data, unsignedWarning }: Props): React.ReactElem
             compromisso, não. */}
         {data.appointments.length > 0 ? (
           <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Agenda — Compromissos</Text>
+            <Text style={styles.sectionTitle}>Agenda — Citas</Text>
             {data.appointments.map((c) => (
               <View key={c.id} style={styles.itemBlock}>
                 <Text>
-                  {c.title ?? "(sem título)"} · {c.status}
+                  {c.title ?? "(sin título)"} · {c.status}
                   {c.location_details ? ` · ${c.location_details}` : ""}
                 </Text>
                 <Text style={styles.small}>
-                  {fmtDate(c.starts_at)} até {fmtDate(c.ends_at)} ({c.time_zone})
+                  {fmtDate(c.starts_at)} hasta {fmtDate(c.ends_at)} ({c.time_zone})
                 </Text>
                 {c.description ? <Text style={styles.small}>{c.description}</Text> : null}
-                {c.notes ? <Text style={styles.small}>Anotação: {c.notes}</Text> : null}
-                {c.meeting_url ? <Text style={styles.small}>Link da reunião: {c.meeting_url}</Text> : null}
+                {c.notes ? <Text style={styles.small}>Nota: {c.notes}</Text> : null}
+                {c.meeting_url ? <Text style={styles.small}>Enlace de la reunión: {c.meeting_url}</Text> : null}
                 {c.cancellation_reason ? (
-                  <Text style={styles.small}>Cancelado: {c.cancellation_reason}</Text>
+                  <Text style={styles.small}>Cancelada: {c.cancellation_reason}</Text>
                 ) : null}
               </View>
             ))}
@@ -347,31 +355,31 @@ export function LgpdExportPdf({ data, unsignedWarning }: Props): React.ReactElem
             as disponibiliza ao titular. Consumir apenas a projeção do coletor. */}
         {data.reply_drafts?.length ? (
           <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Sugestões e respostas revisadas</Text>
+            <Text style={styles.sectionTitle}>Sugerencias y respuestas revisadas</Text>
             {data.reply_drafts.map(reply=><View key={reply.id} style={styles.itemBlock}>
               <Text>Estado: {reply.status}</Text>
-              {reply.original_body?<Text>Sugestão: {reply.original_body}</Text>:null}
-              {reply.edited_body&&reply.edited_body!==reply.original_body?<Text>Edição: {reply.edited_body}</Text>:null}
-              {reply.approved_body?<Text>Texto aprovado: {reply.approved_body}</Text>:null}
-              {reply.feedback?<Text>Revisão: {JSON.stringify(reply.feedback)}</Text>:null}
-              {Array.isArray(reply.proposals)&&reply.proposals.length?<Text>Propostas: {JSON.stringify(reply.proposals)}</Text>:null}
-              <Text style={styles.small}>Criado em {fmtDate(reply.created_at)}</Text>
+              {reply.original_body?<Text>Sugerencia: {reply.original_body}</Text>:null}
+              {reply.edited_body&&reply.edited_body!==reply.original_body?<Text>Edición: {reply.edited_body}</Text>:null}
+              {reply.approved_body?<Text>Texto aprobado: {reply.approved_body}</Text>:null}
+              {reply.feedback?<Text>Revisión: {JSON.stringify(reply.feedback)}</Text>:null}
+              {Array.isArray(reply.proposals)&&reply.proposals.length?<Text>Propuestas: {JSON.stringify(reply.proposals)}</Text>:null}
+              <Text style={styles.small}>Creado el {fmtDate(reply.created_at)}</Text>
             </View>)}
           </View>
         ):null}
 
         {data.meeting_deliveries?.length ? (
           <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Entregas de links de reunião</Text>
+            <Text style={styles.sectionTitle}>Envíos de enlaces de reunión</Text>
             {data.meeting_deliveries.map((delivery) => (
               <View key={delivery.id} style={styles.itemBlock}>
                 <Text>{deliveryStatus[delivery.status] ?? delivery.status}</Text>
                 <Text style={styles.small}>Registro: {delivery.id}</Text>
                 <Text style={styles.small}>
-                  Compromisso: {delivery.appointment_id ?? "referência indisponível"}
+                  Cita: {delivery.appointment_id ?? "referencia no disponible"}
                 </Text>
                 <Text style={styles.small}>
-                  Criado em {fmtDate(delivery.created_at)} · Programado para {fmtDate(delivery.run_after)}
+                  Creado el {fmtDate(delivery.created_at)} · Programado para el {fmtDate(delivery.run_after)}
                 </Text>
               </View>
             ))}
@@ -380,18 +388,18 @@ export function LgpdExportPdf({ data, unsignedWarning }: Props): React.ReactElem
 
         {data.appointment_notices?.length ? (
           <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Avisos sobre compromissos</Text>
+            <Text style={styles.sectionTitle}>Avisos sobre citas</Text>
             {data.appointment_notices.map((notice) => (
               <View key={notice.id} style={styles.itemBlock}>
                 <Text>{notice.title} · {noticeStatus[notice.status] ?? notice.status}</Text>
                 {notice.body ? <Text>{notice.body}</Text> : null}
                 <Text style={styles.small}>Registro: {notice.id}</Text>
                 <Text style={styles.small}>
-                  Compromisso: {notice.ref_id ?? "referência indisponível"}
+                  Cita: {notice.ref_id ?? "referencia no disponible"}
                 </Text>
                 <Text style={styles.small}>
-                  Criado em {fmtDate(notice.created_at)}
-                  {notice.resolved_at ? ` · Resolvido em ${fmtDate(notice.resolved_at)}` : ""}
+                  Creado el {fmtDate(notice.created_at)}
+                  {notice.resolved_at ? ` · Resuelto el ${fmtDate(notice.resolved_at)}` : ""}
                 </Text>
               </View>
             ))}
@@ -403,14 +411,14 @@ export function LgpdExportPdf({ data, unsignedWarning }: Props): React.ReactElem
             dela e que ela raramente imagina que existem. */}
         {data.webhook_captures.length > 0 ? (
           <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Como seus dados chegaram até nós</Text>
+            <Text style={styles.sectionTitle}>Cómo nos llegaron tus datos</Text>
             {data.webhook_captures.map((c) => (
               <View key={c.id} style={styles.itemBlock}>
                 <Text>
-                  {c.source_name ?? "(origem não identificada)"} · {c.outcome}
+                  {c.source_name ?? "(origen no identificado)"} · {c.outcome}
                 </Text>
                 <Text style={styles.small}>
-                  Recebido em {fmtDate(c.received_at)}
+                  Recibido el {fmtDate(c.received_at)}
                   {c.remote_ip ? ` · IP ${c.remote_ip}` : ""}
                 </Text>
                 {c.user_agent ? (
@@ -424,7 +432,7 @@ export function LgpdExportPdf({ data, unsignedWarning }: Props): React.ReactElem
         {/* Audit */}
         {data.audit_log_extract.length > 0 ? (
           <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Atividades de Auditoria</Text>
+            <Text style={styles.sectionTitle}>Registro de actividad</Text>
             {data.audit_log_extract.slice(0, 50).map((a) => (
               <View key={a.id} style={styles.row}>
                 <Text style={styles.label}>{fmtDate(a.created_at)}</Text>
@@ -441,9 +449,9 @@ export function LgpdExportPdf({ data, unsignedWarning }: Props): React.ReactElem
         {unsignedWarning ? (
           <View style={styles.warningBanner}>
             <Text>
-              ASSINATURA DIGITAL PAdES PENDENTE — chave LGPD_SIGNING_KEY não
-              configurada. A integridade do documento é garantida por hash SHA-256
-              registrado em log auditável.
+              FIRMA DIGITAL PAdES PENDIENTE — la clave LGPD_SIGNING_KEY no está
+              configurada. La integridad del documento se garantiza con un hash SHA-256
+              guardado en un registro auditable.
             </Text>
           </View>
         ) : null}
@@ -452,9 +460,9 @@ export function LgpdExportPdf({ data, unsignedWarning }: Props): React.ReactElem
         {/* CONTROLADOR, nunca marca — ver o cabeçalho deste arquivo. */}
         <View style={styles.footer} fixed>
           <Text>
-            Controlador: {data.organization_legal_name || "—"} · Relatório de Acesso aos
-            Dados{data.lei_citada ? ` — ${data.lei_citada}` : ""} · Encarregado (DPO):{" "}
-            {encarregado(data)} · Validade do link de download conforme e-mail recebido
+            Responsable: {data.organization_legal_name || "—"} · Informe de acceso a datos
+            personales{data.lei_citada ? ` — ${data.lei_citada}` : ""} · Contacto de protección de datos:{" "}
+            {encarregado(data)} · El enlace de descarga vence según el correo recibido
           </Text>
         </View>
       </Page>

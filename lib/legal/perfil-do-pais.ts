@@ -43,6 +43,7 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 
 import { HOLIDAYS_BR_ISO } from "@/lib/lgpd/holidays-br";
+import { FERIADOS_PE_ISO } from "@/lib/lgpd/feriados-pe";
 
 /** ISO-3166 alpha-2, em maiúsculas. `null`/vazio na coluna significa Brasil. */
 export type CodigoDePais = string;
@@ -202,6 +203,60 @@ const PERFIL_BR: PerfilDoPais = {
 };
 
 /**
+ * Claud.ia — PERÚ. Es el país de todos los clientes de Claud.ia.
+ *
+ * Documento: DNI (8 dígitos) o carné de extranjería / pasaporte (9 a 12
+ * caracteres). El número del DNI no lleva un dígito verificador que se pueda
+ * comprobar desde el número solo, así que se valida la FORMA y el mensaje lo dice.
+ *
+ * Ley: Ley N.º 29733, Ley de Protección de Datos Personales; el derecho de
+ * acceso es el art. 19 (Reglamento: D.S. N.º 016-2024-JUS). Revisado contra el
+ * texto de la ley el 15 oct 2026; pendiente la revisión de un abogado.
+ *
+ * PII: solo se redacta el DNI cuando viene escrito junto a la palabra «DNI».
+ * Ocho dígitos sueltos se confunden con el número de operación de Yape/Plin,
+ * que la IA necesita leer para validar el adelanto.
+ */
+const DOCUMENTO_PE: DocumentoDoTitular = {
+  rotulo: "DNI / CE",
+  exemplo: "12345678",
+  regra: "forma: DNI de 8 dígitos, o carné de extranjería / pasaporte de 9 a 12 letras o números (no se comprueba dígito verificador)",
+  mensagemInvalido: "Documento inválido: el DNI tiene 8 dígitos; el carné de extranjería o pasaporte, de 9 a 12 caracteres",
+  confereDigito: false,
+  apelidosDoCabecalho: ["dni", "documento", "documento_de_identidad", "nro_documento", "numero_de_documento", "ce", "carne_de_extranjeria"],
+  valida: (valor) => {
+    const v = valor.replace(/[\s.-]/g, "");
+    return /^\d{8}$/.test(v) || /^[A-Za-z0-9]{9,12}$/.test(v);
+  },
+  normaliza: (valor) => valor.replace(/[\s.-]/g, "").toUpperCase(),
+};
+
+const PERFIL_PE: PerfilDoPais = {
+  codigo: "PE",
+  nome: "Perú",
+  documento: DOCUMENTO_PE,
+  lei: {
+    nome: "Ley de Protección de Datos Personales",
+    numero: "Ley N.º 29733",
+    artigo: "art. 19",
+    revisada: true,
+  },
+  calendario: {
+    feriados: FERIADOS_PE_ISO,
+    rotulo: "feriados nacionales del Perú",
+  },
+  padroesDePii: [
+    {
+      tipo: "dni",
+      marcador: "[DNI]",
+      fonte: "\\bDNI\\s*(?:N[.°º]?\\s*[°º]?\\s*)?:?\\s*\\d{8}\\b",
+      naoCobre:
+        "un DNI suelto sin la palabra «DNI» delante (8 dígitos solos se confunden con el número de operación de Yape/Plin) ni el carné de extranjería",
+    },
+  ],
+};
+
+/**
  * O registro de países conhecidos.
  *
  * ⚠️ Conhecer ≠ oferecer. A lista que o operador escolhe é
@@ -215,6 +270,7 @@ const PERFIL_BR: PerfilDoPais = {
  */
 export const PERFIS_DO_PAIS: Record<CodigoDePais, PerfilDoPais> = {
   BR: PERFIL_BR,
+  PE: PERFIL_PE,
 };
 
 /** O perfil de um código; vazio ou desconhecido degrada para o Brasil. */

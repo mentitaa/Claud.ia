@@ -187,6 +187,7 @@ describe("taxaDeAjuda — o zero tem que ser zero de verdade", () => {
   });
 
   it("acima de 0,1 mostra o número", () => {
-    expect(taxaDeAjuda(0.059)).toBe("5,9 a cada 100");
+    // Claud.ia: números en es-PE (punto decimal).
+    expect(taxaDeAjuda(0.059)).toBe("5.9 a cada 100");
   });
 });

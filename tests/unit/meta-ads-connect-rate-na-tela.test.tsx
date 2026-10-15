@@ -77,7 +77,7 @@ describe("Connect rate na tela", () => {
   it("formata o percentual como as colunas de porcentagem vizinhas", () => {
     render(<TabelaDeCampanhas linhas={[linha({ connectRate: 70 })]} moeda="BRL" />);
 
-    expect(screen.getByText("70,00%")).toBeTruthy();
+    expect(screen.getByText("70.00%")).toBeTruthy(); // Claud.ia: es-PE
   });
 
   it("mostra “—” quando não houve medição — nunca 0,00%", () => {

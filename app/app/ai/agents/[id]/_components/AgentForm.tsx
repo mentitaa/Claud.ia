@@ -1033,7 +1033,7 @@ export function AgentForm(props: Props) {
                       : "text-xs text-muted-foreground"
                   }
                 >
-                  {form.system_prompt.trim().length.toLocaleString("es-PE")}/20.000
+                  {form.system_prompt.trim().length.toLocaleString("es-PE")}/{(20000).toLocaleString("es-PE")}
                 </span>
                 <TokenCounter
                   text={form.system_prompt}

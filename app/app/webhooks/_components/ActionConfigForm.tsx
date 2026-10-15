@@ -100,7 +100,7 @@ function CreateOrMoveLeadForm({
         >
           <SelectTrigger>
             <SelectValue
-              placeholder={config.pipeline_id ? "Escolha a etapa" : "Escolha o funil primeiro"}
+              placeholder={config.pipeline_id ? t("Escolha a etapa") : t("Escolha o funil primeiro")}
             />
           </SelectTrigger>
           <SelectContent>
@@ -277,10 +277,9 @@ function SendAiMessageForm({
           maxLength={1000}
           value={config.instruction}
           onChange={(e) => onChange({ ...config, instruction: e.target.value })}
-          placeholder={
-            "Ex.: Agradeça o interesse citando o segmento que a pessoa informou, mostre em uma frase " +
-            "como a gente resolve a dificuldade que ela descreveu, e pergunte qual o melhor horário para conversar."
-          }
+          placeholder={t(
+            "Ex.: Agradeça o interesse citando o segmento que a pessoa informou, mostre em uma frase como a gente resolve a dificuldade que ela descreveu, e pergunte qual o melhor horário para conversar.",
+          )}
         />
         <p className="text-xs text-muted-foreground">
           {t("O agente já sabe que é a PRIMEIRA mensagem, logo depois de a pessoa preencher o formulário, e recebe todos os campos que ela respondeu. Aqui você diz o que fazer com eles — quanto mais concreto, melhor a mensagem.")}
@@ -351,7 +350,7 @@ function CallWebhookForm({
           type="url"
           value={config.url}
           onChange={(e) => onChange({ ...config, url: e.target.value })}
-          placeholder="https://meusistema.com/webhook"
+          placeholder="https://misistema.com/webhook"
         />
       </div>
       <div className="space-y-1">
@@ -365,7 +364,7 @@ function CallWebhookForm({
             const { secret_enc: _enc, ...rest } = config;
             onChange(next ? { ...rest, secret: next } : { ...rest, secret: undefined });
           }}
-          placeholder={hasStoredSecret ? "•••••••• (definido — digite para trocar)" : "uma senha só sua"}
+          placeholder={hasStoredSecret ? t("•••••••• (definido — digite para trocar)") : t("uma senha só sua")}
         />
         <p className="text-xs text-muted-foreground">
           {hasStoredSecret

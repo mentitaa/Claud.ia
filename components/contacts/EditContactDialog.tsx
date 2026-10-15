@@ -108,7 +108,7 @@ export function EditContactDialog({ contact, open, onOpenChange, customFieldDefs
             <Input id="ec-name" {...form.register("name")} />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="ec-email">Email</Label>
+            <Label htmlFor="ec-email">{t("Email")}</Label>
             <Input id="ec-email" type="email" {...form.register("email")} />
           </div>
           <div className="space-y-2">
@@ -116,7 +116,7 @@ export function EditContactDialog({ contact, open, onOpenChange, customFieldDefs
             <Input id="ec-phone" {...form.register("phone_number")} />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="ec-tags">Tags</Label>
+            <Label htmlFor="ec-tags">{t("Tags")}</Label>
             <Input id="ec-tags" {...form.register("tagsRaw")} />
           </div>
           {customFieldDefs.length > 0 && (

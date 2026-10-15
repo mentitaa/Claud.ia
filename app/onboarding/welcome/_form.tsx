@@ -55,7 +55,7 @@ export function WelcomeForm({ defaultOrgName }: { defaultOrgName: string }) {
         startTransition(async () => {
           const res = await acceptWelcome(formData);
           if (res && !res.ok) {
-            toast.error(`Falha: ${res.error}`);
+            toast.error(`${t("Falha:")} ${res.error}`);
           }
         });
       }}

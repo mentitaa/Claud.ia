@@ -124,7 +124,7 @@ it("PDF entregue inclui revisão pessoal e omite contexto privado", async () => 
   });
   const pdf = await rendered(data);
   for (const value of [
-    "Sugestões e respostas revisadas",
+    "Sugerencias y respuestas revisadas", // Claud.ia 22: en español
     "Sugestão original pessoal",
     "Texto corrigido pessoal",
     "Texto aprovado pessoal",

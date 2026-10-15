@@ -160,7 +160,7 @@ export function AuditDetailClient({ entryId }: AuditDetailClientProps) {
             {actor ? (
               <div className="space-y-1 text-sm">
                 <Row label="User ID" value={actor.id} mono />
-                <Row label="Email" value={maskEmail(actor.email)} />
+                <Row label={t("Email")} value={maskEmail(actor.email)} />
               </div>
             ) : (
               <p className="text-sm text-muted-foreground">

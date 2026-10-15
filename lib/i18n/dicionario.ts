@@ -1207,7 +1207,7 @@ export const DICIONARIO: Traducoes = {
   },
   "As instruções têm": { es: "Las instrucciones tienen" },
   "caracteres, e o máximo é 20.000. Corte": {
-    es: "caracteres, y el máximo es 20.000. Recorta",
+    es: "caracteres, y el máximo es 20,000. Recorta",
   },
   "para conseguir salvar.": { es: "para poder guardar." },
   "Escolha o modelo de inteligência artificial.": {
@@ -3032,7 +3032,7 @@ export const DICIONARIO: Traducoes = {
     es: "lugares diferentes. Aquí ves cuál atiende en cada uno y puedes cambiarlo si quieres.",
   },
   manual: { es: "manual" },
-  "menos de 0,1 a cada 100": { es: "menos de 0,1 por cada 100" },
+  "menos de 0,1 a cada 100": { es: "menos de 0.1 por cada 100" },
   "nas últimas": { es: "en las últimas" },
   "no dia": { es: "en el día" },
   "no período": { es: "en el período" },
@@ -11802,6 +11802,11 @@ export const DICIONARIO: Traducoes = {
   },
   "Versão não encontrada para esta skill.": { es: "No se encontró esa versión para esta skill." },
   "Versão da skill não encontrada.": { es: "No se encontró la versión de la skill." },
+  // ---- Claud.ia 22: textos que estaban fijos en portugués ----
+  "Cole exatamente isto em “URIs de redirecionamento autorizados”, na tela de credenciais do Google Cloud.": { es: "Pega exactamente esto en “URI de redireccionamiento autorizados”, en la pantalla de credenciales de Google Cloud." },
+  "Falha de conexão.": { es: "Error de conexión." },
+  "Perguntas frequentes da clínica": { es: "Preguntas frecuentes de la clínica" },
+  "Política de agendamento": { es: "Política de citas" },
 };
 
 /**

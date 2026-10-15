@@ -107,7 +107,7 @@ export function MatchReplyForm({
                 type="button"
                 variant="ghost"
                 size="sm"
-                aria-label={`Remover regra ${index + 1}`}
+                aria-label={`${t("Remover regra")} ${index + 1}`}
                 disabled={branches.length <= 1}
                 onClick={() => {
                   const next = branches.filter((_, i) => i !== index);

@@ -26,10 +26,13 @@ export interface FaqItem {
 
 const DEFAULT_LOCALE = "pt-BR";
 
-/** Regex matching both `## Pergunta:` and `## P:` (case-insensitive). */
-const QUESTION_RE = /^##\s+(?:pergunta|p)\s*:/i;
-/** Regex matching both `## Resposta:` and `## R:` (case-insensitive). */
-const ANSWER_RE = /^##\s+(?:resposta|r)\s*:/i;
+/**
+ * Claud.ia 22: acepta `## Pregunta:` / `## Respuesta:` (español, lo que enseña la
+ * pantalla) y sigue aceptando `## Pergunta:` / `## Resposta:` y `## P:` / `## R:`,
+ * para no romper el material que ya estaba cargado.
+ */
+const QUESTION_RE = /^##\s+(?:pregunta|pergunta|p)\s*:/i;
+const ANSWER_RE = /^##\s+(?:respuesta|resposta|r)\s*:/i;
 
 interface Frontmatter {
   locale: string;
@@ -137,5 +140,6 @@ export function parseFaqMarkdown(md: string): FaqItem[] {
  */
 export function formatFaqChunk(item: FaqItem): string {
   const tagsStr = item.tags.length > 0 ? item.tags.join(", ") : "";
-  return `Pergunta: ${item.question}\nResposta: ${item.answer}${tagsStr ? `\nTags: ${tagsStr}` : ""}`;
+  // Claud.ia 22: el trozo que lee la IA sale en español, como el resto de la conversación.
+  return `Pregunta: ${item.question}\nRespuesta: ${item.answer}${tagsStr ? `\nEtiquetas: ${tagsStr}` : ""}`;
 }

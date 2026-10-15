@@ -927,7 +927,7 @@ const HOSTS_DECLARADOS: Record<string, EntradaDeHost> = {
     motivo:
       "o encurtador de link do próprio WhatsApp, num exemplo de link GERADO pela tela de Conversões (issue #924): é o formato que quem opera vai colar no botão da landing page. Não é destino de chamada — o produto nunca fala com `wa.me`; quem abre o link é o visitante do site, no navegador dele. E não é marca nossa que um revendedor troque: o endereço é da Meta, e trocá-lo faria o link não abrir conversa nenhuma. Fica AMOSTRA porque chega à TELA, que é a razão de a régua exigir declaração em vez de silêncio.",
   },
-  "meusistema.com": {
+  "misistema.com": {
     categoria: "AMOSTRA",
     motivo:
       "placeholder do campo de URL do webhook de saída: mostra o FORMATO do que digitar. A doutrina já trata endereço de rede em tela como exemplo técnico (tests/unit/i18n-espanhol-cobre-a-tela.test.ts).",
@@ -1110,8 +1110,8 @@ describe("catraca de host de terceiro no código que embarca", () => {
       // abre é o celular do atendente. Crescimento escrito, como a regra pede.
       "maps.google.com",
       "meet.google.com",
-      "meusistema.com",
       "mi-gateway.ejemplo.com",
+      "misistema.com",
       "partners.tiendanube.com",
       "platform.deepseek.com",
       "platform.openai.com",

@@ -136,7 +136,7 @@ export function ContactDetailClient({ contactId }: Props) {
           <span>
             {t("Contato anonimizado (LGPD)")}
             {contact.anonymized_at &&
-              ` em ${format(new Date(contact.anonymized_at), "dd/MM/yyyy", { locale: localeDaData })}`}
+              ` ${t("em")} ${format(new Date(contact.anonymized_at), "dd/MM/yyyy", { locale: localeDaData })}`}
             {t(" — edição bloqueada.")}
           </span>
         </div>
@@ -207,7 +207,7 @@ export function ContactDetailClient({ contactId }: Props) {
                 <dd className="mt-1">{contact.display_name ?? "—"}</dd>
               </div>
               <div>
-                <dt className="text-xs uppercase text-muted-foreground">Email</dt>
+                <dt className="text-xs uppercase text-muted-foreground">{t("Email")}</dt>
                 <dd className="mt-1">{contact.email ?? "—"}</dd>
               </div>
               <div>
@@ -276,7 +276,7 @@ export function ContactDetailClient({ contactId }: Props) {
                 </div>
               )}
               <div>
-                <dt className="text-xs uppercase text-muted-foreground">Tags</dt>
+                <dt className="text-xs uppercase text-muted-foreground">{t("Tags")}</dt>
                 <dd className="mt-1 flex flex-wrap gap-1">
                   {contact.tags.length === 0
                     ? "—"
@@ -317,7 +317,7 @@ export function ContactDetailClient({ contactId }: Props) {
                 <p className="text-sm text-muted-foreground">
                   {t("Este contato já foi anonimizado")}
                   {contact.anonymized_at &&
-                    ` em ${format(new Date(contact.anonymized_at), "dd/MM/yyyy HH:mm", { locale: localeDaData })}`}
+                    ` ${t("em")} ${format(new Date(contact.anonymized_at), "dd/MM/yyyy HH:mm", { locale: localeDaData })}`}
                   .
                 </p>
               ) : (

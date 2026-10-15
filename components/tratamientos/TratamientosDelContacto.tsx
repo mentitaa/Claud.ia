@@ -9,6 +9,8 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { apiClient } from "@/lib/api/client";
 import {
+  botonPrincipalDeSesion,
+  cambioAlMarcarHecha,
   resumenDelTratamiento,
   sesionesCompletas,
   soles,
@@ -715,16 +717,26 @@ function FilaDeSesion({
             </div>
             {!readonly && !editandoFecha && (
               <div className="flex flex-wrap gap-1.5">
+                {/* Claud.ia 22: sin fecha, lo principal es PONER FECHA ("Marcar hecha" queda
+                    secundario); con fecha, lo principal es "Marcar hecha". Así no hay un botón
+                    verde en cada sesión pendiente. */}
                 {!s.hecha && (
-                  <Button size="sm" variant="outline" disabled={ocupado} onClick={abrirFecha}>
+                  <Button
+                    size="sm"
+                    variant={botonPrincipalDeSesion(s) === "poner_fecha" ? "default" : "outline"}
+                    disabled={ocupado}
+                    onClick={abrirFecha}
+                  >
                     {s.fecha ? TX.cambiarFecha : TX.ponerFecha}
                   </Button>
                 )}
                 <Button
                   size="sm"
-                  variant={s.hecha ? "ghost" : "default"}
+                  variant={s.hecha ? "ghost" : botonPrincipalDeSesion(s) === "marcar_hecha" ? "default" : "outline"}
                   disabled={ocupado}
-                  onClick={() => void onCambiar({ hecha: !s.hecha }, s.hecha ? TX.sesionReabierta : TX.sesionHecha)}
+                  onClick={() =>
+                    void onCambiar(cambioAlMarcarHecha(s), s.hecha ? TX.sesionReabierta : TX.sesionHecha)
+                  }
                 >
                   {s.hecha ? TX.deshacer : TX.marcarHecha}
                 </Button>

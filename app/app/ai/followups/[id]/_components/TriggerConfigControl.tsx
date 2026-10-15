@@ -346,7 +346,7 @@ export function TriggerConfigControl({ flowId, triggerConfig }: Props) {
                 disabled={etapasCarregando || etapas.length === 0}
               >
                 <SelectTrigger id="trigger-stage" data-testid="trigger-stage-select" aria-invalid={stageInvalid}>
-                  <SelectValue placeholder={etapasCarregando ? "Carregando etapas…" : "Escolha a etapa"} />
+                  <SelectValue placeholder={etapasCarregando ? t("Carregando etapas…") : t("Escolha a etapa")} />
                 </SelectTrigger>
                 <SelectContent>
                   {funis.map((funil) => (

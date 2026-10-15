@@ -119,7 +119,7 @@ export function ApiTokensClient() {
                 <TableHead>{t("Nome")}</TableHead>
                 <TableHead>{t("Prefixo")}</TableHead>
                 <TableHead>{t("Escopos")}</TableHead>
-                <TableHead>Status</TableHead>
+                <TableHead>{t("Status")}</TableHead>
                 <TableHead>{t("Expira")}</TableHead>
                 <TableHead className="w-[120px]" />
               </TableRow>

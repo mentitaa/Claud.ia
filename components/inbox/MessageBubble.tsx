@@ -76,6 +76,7 @@ export function MessageBubble({
   const editada = Boolean(message.edited_at) && !apagada;
   const aiGenerated = isAiGeneratedMessage(message.metadata);
   const citations = extractCitations(message.metadata);
+  const anuncio = anuncioDelMensaje(message.metadata);
   const showCitationButton =
     isOutbound && aiGenerated && (debugCitations ?? false);
   // De quem saiu esta linha. `external_device` é a resposta pelo CELULAR — o
@@ -230,6 +231,15 @@ export function MessageBubble({
           </p>
         ) : (
           <>
+            {anuncio && (
+              // Claud.ia: el cliente escribió desde un anuncio o publicación —
+              // la secretaria ve de cuál, igual que la IA.
+              <div className="mb-1.5 rounded-md border-l-2 border-current/40 bg-black/5 px-2 py-1 text-xs dark:bg-white/5">
+                <div className="font-medium">{anuncio.pagado ? DESDE_ANUNCIO : DESDE_PUBLICACION}</div>
+                {anuncio.titulo && <div className="wrap-anywhere">{anuncio.titulo}</div>}
+                {anuncio.cuerpo && <div className="line-clamp-2 wrap-anywhere opacity-70">{anuncio.cuerpo}</div>}
+              </div>
+            )}
             {hasMedia && (
               <div className={cn(message.body && "mb-1")}>
                 <MediaRenderer message={message} />
@@ -314,4 +324,16 @@ export function MessageBubble({
       )}
     </div>
   );
+}
+
+const DESDE_ANUNCIO = "📣 Escribió desde un anuncio";
+const DESDE_PUBLICACION = "📣 Escribió desde una publicación";
+
+function anuncioDelMensaje(metadata: unknown): { titulo: string | null; cuerpo: string | null; pagado: boolean } | null {
+  const a = (metadata as { anuncio?: Record<string, unknown> } | null)?.anuncio;
+  if (!a || typeof a !== "object") return null;
+  const titulo = typeof a.titulo === "string" ? a.titulo : null;
+  const cuerpo = typeof a.cuerpo === "string" ? a.cuerpo : null;
+  if (!titulo && !cuerpo) return null;
+  return { titulo, cuerpo, pagado: a.pagado !== false };
 }

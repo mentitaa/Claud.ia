@@ -527,7 +527,7 @@ export async function loadInboundBodyForJob(
   input: { tenantId: string; conversationId: string; inboundMessageId: string },
 ): Promise<string | null> {
   const result = await db.query<CorpoDaMensagemRow>(
-    `select type, body, media_url, media_storage_path, media_derived_text
+    `select type, body, media_url, media_storage_path, media_derived_text, metadata
        from messages
       where organization_id = $1
         and conversation_id = $2

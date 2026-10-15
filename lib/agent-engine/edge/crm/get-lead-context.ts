@@ -11,6 +11,7 @@
  *     função pura do conteúdo);
  *   - is_blocked lido DIRETO da fonte (contacts) — não existe mais cache.
  */
+import { notaDelAnuncioParaLaIA } from "@/lib/anuncios/contexto-del-anuncio";
 import type { Queryable } from '../../queue/queue';
 import type { CrmEdgeConfig } from './mcp-client';
 import { deriveLgpdFromContact, type LgpdInput } from '../../guardrails/lgpd/legal-basis';
@@ -173,6 +174,8 @@ interface HistoryRow {
   media_storage_path: string | null;
   media_mime: string | null;
   media_derived_text: string | null;
+  /** Claud.ia: `metadata.anuncio` — de qué anuncio vino el mensaje. */
+  metadata?: unknown;
   sent_at: Date;
 }
 
@@ -231,7 +234,7 @@ export async function getLeadContext(
     ? (
         await db.query<HistoryRow>(
           `select direction, type, body, media_url, media_storage_path, media_mime,
-                  media_derived_text, sent_at
+                  media_derived_text, metadata, sent_at
            from messages
            where organization_id = $1 and conversation_id = $2
              and direction in ('inbound', 'outbound')
@@ -301,6 +304,8 @@ export interface CorpoDaMensagemRow {
   media_url: string | null;
   media_storage_path: string | null;
   media_derived_text: string | null;
+  /** Claud.ia: si trae `anuncio`, la IA sabe de qué anuncio vino el mensaje. */
+  metadata?: unknown;
 }
 
 /**
@@ -328,9 +333,12 @@ export function corpoDaMensagem(m: CorpoDaMensagemRow): string {
   // Onda 3: legenda e derivado (transcrição/visão/pdf) COEXISTEM, e o derivado
   // vem ENQUADRADO (frameMediaBody) — sem isso o agente caía no reflexo
   // "não consigo ver mídia" mesmo tendo o conteúdo. Sem derivado, marcador [tipo].
-  return derived
+  const base = derived
     ? frameMediaBody(m.type, m.body, derived)
     : (m.body ?? (hasMedia ? `[${m.type}]` : ''));
+  // Claud.ia: "Dame más información" + la ficha del anuncio que el cliente tocó.
+  const anuncio = notaDelAnuncioParaLaIA(m.metadata);
+  return anuncio ? (base ? `${base}\n\n${anuncio}` : anuncio) : base;
 }
 
 /**

@@ -23,6 +23,7 @@ import { canonicalPhoneBR } from "@/lib/channels/phone-variants";
 import { estamparAtribuicaoDoContato } from "@/lib/leads/atribuicao-de-anuncio";
 import { extrairEEstamparAtribuicaoGoogle } from "@/lib/plataformas-de-anuncio/google/atribuicao";
 import { extrairAtribuicaoWaha } from "@/lib/waha/atribuicao-de-anuncio";
+import { extraerContextoDelAnuncio } from "@/lib/anuncios/contexto-del-anuncio";
 import type { createAdminClient } from "@/lib/supabase/admin";
 import { ackToStatus } from "@/lib/types/messaging";
 import type { WahaEnvelope, WahaPayload } from "@/lib/waha/envelope";
@@ -639,6 +640,7 @@ async function handleInbound(
   // derrubam o inbound.
   // `estamparAtribuicaoDoContato` só grava na primeira vez — se o
   // contato já tem atribuição, o UPDATE casa zero linhas.
+  const anuncio = extraerContextoDelAnuncio(p._data?.message);
   const atribuicao = extrairAtribuicaoWaha(p._data?.message);
   if (atribuicao) await estamparAtribuicaoDoContato(admin, session.organization_id, contactId, atribuicao);
 
@@ -669,7 +671,9 @@ async function handleInbound(
       sent_via: "external_device",
       sent_at: dataDoTimestamp(p.timestamp, now),
       delivered_at: now,
-      metadata: { raw_type: p.type, ack_name: p.ackName },
+      // Claud.ia: la ficha del anuncio/publicación que el cliente tocó (si la
+      // hay) queda en ESTE mensaje, para que la IA sepa de qué le habla.
+      metadata: { raw_type: p.type, ack_name: p.ackName, ...(anuncio ? { anuncio } : {}) },
     })
     .select("id")
     .maybeSingle();

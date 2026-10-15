@@ -148,6 +148,11 @@ const ESTADO_LEGIVEL: Record<string, string> = {
   aguardando_cliente: "Aguardando o cliente",
 };
 
+/** Claud.ia: "421h" não se lê; acima de 48 h vira días ("17 días"). */
+function idadeLegivel(horas: number): string {
+  return horas < 48 ? `${horas} h` : `${Math.round(horas / 24)} días`;
+}
+
 function horasDesde(iso: string): number {
   return Math.max(0, Math.floor((Date.now() - new Date(iso).getTime()) / 3_600_000));
 }
@@ -717,7 +722,7 @@ export function CRMSidePanel({ conversation }: Props) {
                       {t(ESTADO_LEGIVEL[d.estado] ?? d.estado)}
                     </span>
                     <span className="shrink-0 tabular-nums text-muted-foreground">
-                      {t("há")} {horasDesde(d.aberta_em)}h
+                      {t("há")} {idadeLegivel(horasDesde(d.aberta_em))}
                     </span>
                   </div>
                   {/* O invariante 4 na frase, não só na cor: quem enxerga mal

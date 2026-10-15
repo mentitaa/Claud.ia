@@ -59,3 +59,6 @@ export default async function SecurityPage() {
     </div>
   );
 }
+
+/** Claud.ia: el nombre de la pestaña, en español. */
+export const metadata = { title: "Seguridad" };

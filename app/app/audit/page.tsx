@@ -7,7 +7,7 @@ import { ROLE_RANK } from "@/lib/auth/types";
 import { AuditClient } from "./_client";
 
 export const dynamic = "force-dynamic";
-export const metadata: Metadata = { title: "Audit Log" };
+export const metadata: Metadata = { title: "Registro de auditoría" };
 
 export default async function AuditPage() {
   const user = await requireAuth();

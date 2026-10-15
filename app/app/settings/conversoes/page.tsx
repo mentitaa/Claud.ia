@@ -59,7 +59,7 @@ import { FormularioDeCapturaDeUtm } from "./_formCapturaDeUtm";
 import { FormularioDeConversoes } from "./_form";
 import { FormularioDeConversoesGoogle } from "./_formGoogle";
 
-export const metadata = { title: "Conversões" };
+export const metadata = { title: "Conversiones" };
 export const dynamic = "force-dynamic";
 
 /** O que a volta do OAuth do Google Ads diz, traduzido — ver o callback. */

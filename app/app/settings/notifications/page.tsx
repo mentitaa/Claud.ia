@@ -7,6 +7,8 @@ import { NotificationPrefsClient } from "./_client";
 
 export const dynamic = "force-dynamic";
 
+const OPCIONES_AVANZADAS = "Opciones avanzadas";
+
 /**
  * A TELA PRECISA SABER O QUE ESTA INSTALAÇÃO CONSEGUE FAZER.
  *
@@ -58,6 +60,14 @@ export default async function NotificationsPage() {
 
       <ActivarAvisosEnEsteTelefono />
 
+      {/* Claud.ia: la tabla por categoría es para quien quiere afinar; el doctor
+          y la secretaria solo necesitan la tarjeta de arriba. En el celular la
+          tabla además no cabía (la columna Push se cortaba). */}
+      <details className="group space-y-4">
+        <summary className="cursor-pointer select-none text-sm text-muted-foreground">
+          {OPCIONES_AVANZADAS}
+        </summary>
+        <div className="mt-4 space-y-4">
       {pushPronto ? (
         <Card
           data-testid="push-status-pronto"
@@ -96,6 +106,11 @@ export default async function NotificationsPage() {
       )}
 
       <NotificationPrefsClient />
+        </div>
+      </details>
     </div>
   );
 }
+
+/** Claud.ia: el nombre de la pestaña, en español. */
+export const metadata = { title: "Notificaciones" };

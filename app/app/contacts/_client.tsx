@@ -114,7 +114,7 @@ export function ContactsListClient() {
           vem do PR #267, e vale para os DOIS botões agora: numa tela de 390px
           uma linha de dois botões sem isso comprime os rótulos.
         */}
-        <div className="flex shrink-0 items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2 sm:shrink-0">
           {/*
             A porta do recurso de duplicados fica AQUI, na tela que já existe, e
             não num item de menu novo: quem descobre que tem contato repetido

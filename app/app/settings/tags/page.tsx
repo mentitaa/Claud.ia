@@ -35,7 +35,7 @@ import { createClient } from "@/lib/supabase/server";
 
 import { PainelDeTags } from "./_painel";
 
-export const metadata = { title: "Tags" };
+export const metadata = { title: "Etiquetas" };
 export const dynamic = "force-dynamic";
 
 export default async function TagsPage() {

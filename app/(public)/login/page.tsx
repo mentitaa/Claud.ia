@@ -149,16 +149,12 @@ export default async function LoginPage({
             {t("Esqueci minha senha")}
           </Link>
         </p>
-        <p className="text-muted-foreground">
-          {t("Não tem conta?")}{" "}
-          <Link
-            href="/signup"
-            className="font-medium text-foreground underline underline-offset-4"
-          >
-            {t("Criar conta")}
-          </Link>
-        </p>
+        {/* Claud.ia: las cuentas se crean por invitación (el registro abierto está
+            cerrado en Supabase), así que no se ofrece "Crear cuenta". */}
+        <p className="text-muted-foreground">{SIN_CUENTA}</p>
       </div>
     </div>
   );
 }
+
+const SIN_CUENTA = "¿No tienes cuenta? Pide una invitación a quien administra tu negocio.";

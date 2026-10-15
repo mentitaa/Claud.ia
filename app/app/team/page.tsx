@@ -11,7 +11,7 @@ import { TeamInvitesClient } from "./_components/TeamInvitesClient";
 import { AttendantsClient } from "./_components/AttendantsClient";
 
 export const dynamic = "force-dynamic";
-export const metadata: Metadata = { title: "Equipe" };
+export const metadata: Metadata = { title: "Equipo" };
 
 /**
  * As duas abas são endereçáveis, e isso não é conveniência.

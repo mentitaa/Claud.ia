@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/select";
 import { updateProfile } from "@/app/actions/settings/updateProfile";
 import { useT } from "@/hooks/i18n/useT";
+import { FUSOS_OFERECIDOS } from "@/lib/tempo/fusos";
 import { IDIOMAS_VISIVEIS } from "@/lib/i18n/registro";
 import { SOLO_ESPANOL } from "@/lib/i18n/idiomas";
 import {
@@ -23,16 +24,13 @@ import {
   type Locale,
 } from "@/lib/schemas/settings";
 
-const TIMEZONES = [
-  "Africa/Luanda",
-  "America/Sao_Paulo",
-  "America/Manaus",
-  "America/Belem",
-  "America/Recife",
-  "America/Fortaleza",
-  "Europe/Lisbon",
-  "UTC",
-];
+/**
+ * Claud.ia: la misma lista que el resto del panel (`lib/tempo/fusos.ts`), con
+ * Lima. La lista vieja era solo Brasil/Angola/Portugal: con Lima guardada el
+ * campo salía vacío, y al guardar se podía cambiar la zona sin querer.
+ */
+const TIMEZONES = FUSOS_OFERECIDOS.map((f) => f.codigo);
+const ROTULO_DEL_FUSO = new Map(FUSOS_OFERECIDOS.map((f) => [f.codigo, f.rotulo]));
 
 interface Props {
   email: string;
@@ -129,7 +127,7 @@ export function ProfileForm({
               <SelectContent>
                 {TIMEZONES.map((tz) => (
                   <SelectItem key={tz} value={tz}>
-                    {tz}
+                    {t(ROTULO_DEL_FUSO.get(tz) ?? tz)}
                   </SelectItem>
                 ))}
               </SelectContent>

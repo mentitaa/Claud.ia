@@ -8,7 +8,7 @@ import { canalGraphParceiroLigado, GRAPH_PARTNER_LABEL } from "@/lib/channels/gr
 import { traduzir } from "@/lib/i18n/dicionario";
 
 export const dynamic = "force-dynamic";
-export const metadata: Metadata = { title: "Conexões" };
+export const metadata: Metadata = { title: "Conexiones" };
 
 export default async function ConnectionsPage() {
   const user = await requireAuth();

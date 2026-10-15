@@ -5,7 +5,7 @@ import { traduzir } from "@/lib/i18n/dicionario";
 import { ActivityReportClient } from "./_components/ActivityReportClient";
 
 export const dynamic = "force-dynamic";
-export const metadata: Metadata = { title: "Atividades" };
+export const metadata: Metadata = { title: "Actividades" };
 
 export default async function ActivitiesReportPage() {
   const user = await requireAuth();

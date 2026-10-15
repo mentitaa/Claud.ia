@@ -39,8 +39,11 @@ export default async function ProfilePage() {
         initialFullName={meta.full_name}
         initialAvatarUrl={meta.avatar_url}
         initialLocale={user.locale ? normalizarIdioma(user.locale) : SEM_PREFERENCIA_DE_IDIOMA}
-        initialTimezone={meta.timezone ?? "America/Sao_Paulo"}
+        initialTimezone={meta.timezone ?? "America/Lima"}
       />
     </div>
   );
 }
+
+/** Claud.ia: el nombre de la pestaña, en español. */
+export const metadata = { title: "Perfil" };

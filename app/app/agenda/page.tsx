@@ -340,3 +340,6 @@ export default async function AgendaPage() {
     />
   );
 }
+
+/** Claud.ia: el nombre de la pestaña, en español. */
+export const metadata = { title: "Agenda" };

@@ -92,11 +92,11 @@ export async function generateMetadata(): Promise<Metadata> {
   const { name } = marca;
   return {
     title: {
-      default: `${name} — atendimento e vendas por WhatsApp com agentes de IA`,
+      default: `${name} — tu asistente de WhatsApp que agenda citas`,
       template: `%s · ${name}`,
     },
     description:
-      "Centralize o atendimento por WhatsApp num funil só. Agentes de IA resolvem o que dá pra resolver e passam para o time humano o que importa — com tudo registrado. Multi-tenant, LGPD-nativo, feito para operações brasileiras.",
+      "Claud.ia responde el WhatsApp de tu negocio, agenda citas y te avisa cuando un cliente llega.",
     applicationName: name,
     authors: [{ name }],
     keywords: [

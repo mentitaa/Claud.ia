@@ -88,3 +88,6 @@ export default async function TenantSettingsPage() {
     </div>
   );
 }
+
+/** Claud.ia: el nombre de la pestaña, en español. */
+export const metadata = { title: "Organización" };

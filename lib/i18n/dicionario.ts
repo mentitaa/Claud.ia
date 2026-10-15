@@ -1104,7 +1104,7 @@ export const DICIONARIO: Traducoes = {
     es: "Quién recibe cada cliente nuevo y qué ve cada asesor.",
   },
   "Dados da empresa, retenção de dados e encarregado de LGPD.": {
-    es: "Datos de la empresa, retención de datos y encargado de LGPD.",
+    es: "Datos de la empresa, retención de datos y encargado de datos personales.",
   },
   "O nome e a cor que sua empresa mostra dentro do sistema.": {
     es: "El nombre y el color que tu empresa muestra dentro del sistema.",
@@ -3414,7 +3414,7 @@ export const DICIONARIO: Traducoes = {
   Users: { es: "Usuarios" },
   "Platform Admins": { es: "Administradores de la plataforma" },
   Marca: { es: "Marca" },
-  LGPD: { es: "LGPD" },
+  LGPD: { es: "Privacidad" },
   "Não foi possível iniciar impersonate": { es: "No se pudo iniciar el impersonate" },
   "Erro de rede ao iniciar impersonate": { es: "Error de red al iniciar el impersonate" },
   "Impersonate indisponível": { es: "Impersonate no disponible" },
@@ -3459,7 +3459,7 @@ export const DICIONARIO: Traducoes = {
   "Pendentes >10min": { es: "Pendientes >10min" },
   "conversas sem resposta": { es: "conversaciones sin respuesta" },
   "sessões com problema": { es: "sesiones con problema" },
-  "LGPD em Risco": { es: "LGPD en riesgo" },
+  "LGPD em Risco": { es: "Privacidad en riesgo" },
   "requisições próximas do prazo": { es: "solicitudes próximas a vencer" },
   "Budgets IA": { es: "Presupuestos IA" },
   "tenants com gasto acumulado ≥80% do teto": {
@@ -3529,8 +3529,8 @@ export const DICIONARIO: Traducoes = {
   Integrações: { es: "Integraciones" },
   "Conectado em": { es: "Conectado el" },
   "Compliance & IA": { es: "Compliance y IA" },
-  "Solicitações LGPD pendentes": { es: "Solicitudes LGPD pendientes" },
-  "Pendências LGPD": { es: "Pendientes LGPD" },
+  "Solicitações LGPD pendentes": { es: "Solicitudes de privacidad pendientes" },
+  "Pendências LGPD": { es: "Pendientes de privacidad" },
   "Invocações IA (30d)": { es: "Invocaciones IA (30d)" },
   "Tenant redigido — ação não disponível": { es: "Tenant anonimizado — acción no disponible" },
   "Suspender tenant": { es: "Suspender tenant" },
@@ -5046,7 +5046,7 @@ export const DICIONARIO: Traducoes = {
     es: "La pantalla de inicio de sesión siempre es la del sistema: cuando alguien escribe su contraseña, todavía no se sabe a qué empresa pertenece.",
   },
   "Os e-mails que este sistema envia (convite de time, pedidos de LGPD) já saem com o nome da sua empresa.": {
-    es: "Los correos que este sistema envía (invitación de equipo, solicitudes de LGPD) ya salen con el nombre de tu empresa.",
+    es: "Los correos que este sistema envía (invitación de equipo, solicitudes de privacidad) ya salen con el nombre de tu empresa.",
   },
   "O aplicativo de verificação em duas etapas continua registrando o nome do sistema: o cadastro acontece antes de saber de qual empresa a pessoa é.": {
     es: "La app de verificación en dos pasos sigue registrando el nombre del sistema, porque el registro ocurre antes de saber a qué empresa pertenece la persona.",
@@ -5363,7 +5363,7 @@ export const DICIONARIO: Traducoes = {
   Perdido: { es: "Perdido" },
   // ─── Achados: chamadas com aspas simples (ponto cego do checker por regex) ───
   "O relatório de LGPD entregue ao cliente traz a RAZÃO SOCIAL da sua empresa, e não o nome aqui de cima — é ela que responde legalmente pelos dados. Confira o campo \"Razão social\" em Configurações → Organização.": {
-    es: "El informe de LGPD que se entrega al cliente incluye la RAZÓN SOCIAL de tu empresa, no el nombre de arriba, porque es ella quien responde legalmente por los datos. Revisa el campo \"Razón social\" en Configuración → Organización.",
+    es: "El informe de privacidad que se entrega al cliente incluye la RAZÓN SOCIAL de tu empresa, no el nombre de arriba, porque es ella quien responde legalmente por los datos. Revisa el campo \"Razón social\" en Configuración → Organización.",
   },
   "Use a ação \"Webhooks\" → POST, apontando para o endereço acima.": {
     es: "Usa la acción \"Webhooks\" → POST y apunta a la dirección de arriba.",
@@ -5703,10 +5703,10 @@ export const DICIONARIO: Traducoes = {
     es: "El contacto pidió no recibir mensajes (opt-out). No se le enviará nada.",
   },
   "Este contato foi anonimizado (LGPD) — é proibido enviar qualquer mensagem a ele.": {
-    es: "Este contacto fue anonimizado (LGPD). Está prohibido enviarle cualquier mensaje.",
+    es: "Este contacto fue anonimizado (protección de datos). Está prohibido enviarle cualquier mensaje.",
   },
   "Não há base legal (LGPD) para o primeiro contato de prospecção com este lead. O time precisa regularizar o cadastro antes de abordar.": {
-    es: "No hay base legal (LGPD) para el primer contacto de prospección con este lead. El equipo necesita regularizar el registro antes de contactarlo.",
+    es: "No hay base legal (protección de datos) para el primer contacto de prospección con este lead. El equipo necesita regularizar el registro antes de contactarlo.",
   },
   "A resposta prometia um preço ou condição fora da tabela aprovada. O assistente foi orientado a corrigir antes de enviar.": {
     es: "La respuesta prometía un precio o una condición fuera de la tabla aprobada. Se indicó al asistente que la corrija antes de enviarla.",
@@ -6467,18 +6467,18 @@ export const DICIONARIO: Traducoes = {
 
   // ─── Contacts: lista, ficha, timeline, LGPD ───
   "Erro ao carregar contato.": { es: "Error al cargar el contacto." },
-  "Contato anonimizado (LGPD)": { es: "Contacto anonimizado (LGPD)" },
+  "Contato anonimizado (LGPD)": { es: "Contacto anonimizado (protección de datos)" },
   "edição bloqueada.": { es: "edición bloqueada." },
   "Visão geral": { es: "Resumen" },
   "Última atividade": { es: "Última actividad" },
-  "Direito ao esquecimento (LGPD)": { es: "Derecho al olvido (LGPD)" },
+  "Direito ao esquecimento (LGPD)": { es: "Derecho al olvido" },
   "A anonimização é irreversível. Use somente após confirmação formal do titular ou ordem judicial.": {
     es: "La anonimización es irreversible. Úsala solo si el titular la confirmó formalmente o si hay una orden judicial.",
   },
   "Este contato já foi anonimizado": { es: "Este contacto ya fue anonimizado" },
   "Anonimizar contato": { es: "Anonimizar contacto" },
   "Customer 360 — busque, filtre e gerencie contatos.": {
-    es: "Customer 360 — busca, filtra y gestiona contactos.",
+    es: "Todos tus clientes en un solo lugar: busca, filtra y gestiona.",
   },
   "Importar CSV": { es: "Importar CSV" },
   // ── Juntar contatos duplicados ──────────────────────────────────────────
@@ -6549,7 +6549,7 @@ export const DICIONARIO: Traducoes = {
     es: "Se retomó la anonimización: ya se redactó lo que faltaba.",
   },
   "Contato anonimizado.": { es: "Contacto anonimizado." },
-  "Anonimizar contato (LGPD)": { es: "Anonimizar contacto (LGPD)" },
+  "Anonimizar contato (LGPD)": { es: "Anonimizar contacto" },
   "Esta ação é irreversível. O nome será substituído por \"Contato Anonimizado #N\", email/telefone/CPF serão limpos, e atividades terão conteúdo redigido.": {
     es: "Esta acción es irreversible. El nombre se reemplazará por \"Contacto Anonimizado #N\", se borrarán el email, el teléfono y el CPF, y se redactará el contenido de las actividades.",
   },
@@ -6724,7 +6724,7 @@ export const DICIONARIO: Traducoes = {
   },
   "6. Seus direitos": { es: "6. Tus derechos" },
   "A LGPD garante a você confirmar se há tratamento, acessar seus dados, corrigir dados incompletos ou desatualizados, pedir anonimização ou eliminação, saber com quem foram compartilhados e revogar consentimento.": {
-    es: "La LGPD te da derecho a confirmar si se tratan tus datos, acceder a ellos, corregir datos incompletos o desactualizados, pedir su anonimización o eliminación, saber con quién se compartieron y revocar tu consentimiento.",
+    es: "La Ley de Protección de Datos Personales te da derecho a confirmar si se tratan tus datos, acceder a ellos, corregir datos incompletos o desactualizados, pedir su anonimización o eliminación, saber con quién se compartieron y revocar tu consentimiento.",
   },
   "O sistema atende esses pedidos por um fluxo próprio: a exportação reúne o que existe sobre a pessoa, e a anonimização remove a identificação preservando o histórico de atendimento — por isso ela": {
     es: "El sistema atiende estas solicitudes con un flujo propio: la exportación reúne lo que existe sobre la persona, y la anonimización elimina su identificación y conserva el historial de atención; por eso",
@@ -6828,7 +6828,7 @@ export const DICIONARIO: Traducoes = {
   "Confirme abaixo para ativar seu acesso.": { es: "Confirma abajo para activar tu acceso." },
 
   // ─── LGPD: solicitações (fila, ficha, SLA, aprovação, prévia, auditoria) ───
-  "Solicitações LGPD": { es: "Solicitudes LGPD" },
+  "Solicitações LGPD": { es: "Solicitudes de privacidad" },
   "Anonimizações e solicitações de dados de titulares. Apenas admins.": {
     es: "Anonimizaciones y solicitudes de datos de titulares. Solo admins.",
   },
@@ -6851,7 +6851,7 @@ export const DICIONARIO: Traducoes = {
   "Sujeito": { es: "Titular" },
   "Vence": { es: "Vence" },
   "Erro ao carregar solicitações.": { es: "Error al cargar solicitudes." },
-  "Nenhuma solicitação LGPD": { es: "Ninguna solicitud LGPD" },
+  "Nenhuma solicitação LGPD": { es: "Ninguna solicitud de privacidad" },
   "Solicitações de dados e anonimizações aparecerão aqui.": {
     es: "Las solicitudes de datos y anonimizaciones aparecerán aquí.",
   },
@@ -9398,7 +9398,7 @@ export const DICIONARIO: Traducoes = {
 
   // ─── Fase B: handlers compartidos REST/MCP (contacts/_handler.ts) ───
   "Contato anonimizado — edição bloqueada (LGPD).": {
-    es: "Contacto anonimizado — edición bloqueada (LGPD).",
+    es: "Contacto anonimizado — edición bloqueada (protección de datos).",
   },
   "Nenhum campo para atualizar.": { es: "Ningún campo para actualizar." },
   "Contato não encontrado após update.": { es: "Contacto no encontrado después de la actualización." },

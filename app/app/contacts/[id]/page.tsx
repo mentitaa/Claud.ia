@@ -28,3 +28,6 @@ export default async function ContactDetailPage({
   if (!contact) notFound();
   return <ContactDetailClient contactId={id} />;
 }
+
+/** Claud.ia: el nombre de la pestaña, en español. */
+export const metadata = { title: "Contacto" };

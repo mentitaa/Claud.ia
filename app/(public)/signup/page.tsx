@@ -10,7 +10,7 @@ import { createClient } from "@/lib/supabase/server";
 import { idiomaDoVisitante } from "@/lib/i18n/idiomaAnonimo";
 import { traduzir } from "@/lib/i18n/dicionario";
 
-export const metadata = { title: "Criar conta" };
+export const metadata = { title: "Crear cuenta" };
 
 /**
  * Aceita `?invite=<token>`: é o caminho de quem foi convidado e ainda não tem

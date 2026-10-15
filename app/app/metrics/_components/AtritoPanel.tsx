@@ -31,7 +31,7 @@ function MedidaLinha({ m }: { m: Medida }) {
   return (
     <div className="flex items-baseline justify-between gap-4 py-1.5">
       <div className="min-w-0">
-        <p className="truncate text-sm">{t(m.rotulo)}</p>
+        <p className="text-sm md:truncate">{t(m.rotulo)}</p>
         {m.nota ? <p className="mt-0.5 text-xs text-muted-foreground">{t(m.nota)}</p> : null}
       </div>
       <span className="shrink-0 text-sm font-medium tabular-nums">{formatarMedida(m)}</span>

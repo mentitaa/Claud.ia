@@ -117,17 +117,19 @@ describe("os fusos OFERECIDOS — a lista, não o padrão", () => {
    */
   it("oferece Luanda, e a tela da empresa também", () => {
     expect(FUSOS_OFERECIDOS.map((f) => f.codigo)).toContain("Africa/Luanda");
+    // Claud.ia: o formulário da empresa usa a MESMA lista (FUSOS_OFERECIDOS).
     const formulario = readFileSync("app/app/settings/tenant/_form.tsx", "utf8");
-    expect(formulario).toContain("Africa/Luanda");
+    expect(formulario).toContain("FUSOS_OFERECIDOS");
   });
 
   // As quatro listas são três fontes: `FUSOS_OFERECIDOS` (jornada e janela de
   // envio) e as duas escritas à mão, da empresa e do perfil. Lisboa faltava
   // nas três — e o assistente de boas-vindas já a oferecia.
-  it("oferece Lisboa nas três fontes", () => {
+  it("oferece Lisboa — e os formulários usam a lista única (Claud.ia: com Lima)", () => {
+    expect(FUSOS_OFERECIDOS.map((f) => f.codigo)).toContain("America/Lima");
     expect(FUSOS_OFERECIDOS.map((f) => f.codigo)).toContain("Europe/Lisbon");
     for (const arquivo of ["app/app/settings/tenant/_form.tsx", "app/app/settings/profile/_form.tsx"]) {
-      expect(readFileSync(arquivo, "utf8"), arquivo).toContain('"Europe/Lisbon"');
+      expect(readFileSync(arquivo, "utf8"), arquivo).toContain("FUSOS_OFERECIDOS");
     }
   });
 

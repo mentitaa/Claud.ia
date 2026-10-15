@@ -161,11 +161,15 @@ export function ConversationHeader({ conversation, onAbrirConversa }: Props) {
     // de antes (uma linha), e quando aperta a barra desce para a linha de baixo.
     // Nenhuma ação some — um menu "mais" esconderia o "Lembrar" que a spec
     // `canais-baseline` clica, e, pior, esconderia ação de quem atende.
-    <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border bg-background px-6 py-4">
+    // Claud.ia — no celular o cabeçalho ocupava meia tela (nome, telefone e duas
+    // fileiras de botões) e, com o teclado aberto, quase não sobravam mensagens.
+    // Abaixo de `md`: menos respiro, nome menor, telefone só na Ficha e as ações
+    // numa fileira só que desliza para o lado. Nenhuma ação some.
+    <div className="flex flex-wrap items-center justify-between gap-2 border-b border-border bg-background px-4 py-2 md:gap-3 md:px-6 md:py-4">
       <div className="min-w-0">
         <div className="flex items-center gap-2">
           <ChannelLogo channel={conversation.channel_sessions} size={20} />
-          <h2 className="truncate font-display text-[1.75rem] font-normal leading-tight">{displayName}</h2>
+          <h2 className="truncate font-display text-xl font-normal leading-tight md:text-[1.75rem]">{displayName}</h2>
           <Badge variant="outline" className="h-4 px-1.5 text-[10px]">
             {t(STATUS_LABEL[status] ?? status)}
           </Badge>
@@ -211,7 +215,7 @@ export function ConversationHeader({ conversation, onAbrirConversa }: Props) {
           )}
         </div>
         {phone && (
-          <p className="mt-0.5 flex items-center gap-1 text-xs text-muted-foreground">
+          <p className="mt-0.5 hidden items-center gap-1 text-xs text-muted-foreground md:flex">
             <Phone size={11} weight="regular" aria-hidden /> {phone}
           </p>
         )}
@@ -220,7 +224,7 @@ export function ConversationHeader({ conversation, onAbrirConversa }: Props) {
       {/* `shrink-0` saiu daqui: era ele que impunha o piso de largura. Agora a
           barra pode encolher e quebrar internamente, e os botões continuam
           todos visíveis e clicáveis — só que em duas linhas quando preciso. */}
-      <div className="flex min-w-0 flex-wrap items-center gap-1.5">
+      <div className="-mx-4 flex w-[calc(100%+2rem)] min-w-0 flex-nowrap items-center gap-1.5 overflow-x-auto px-4 pb-0.5 [scrollbar-width:none] md:mx-0 md:w-auto md:flex-wrap md:overflow-visible md:px-0 md:pb-0 [&>*]:shrink-0 md:[&>*]:shrink">
         {isOpen && (
           <Button
             size="sm"

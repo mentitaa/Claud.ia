@@ -4,7 +4,7 @@ import { requireAuth, resolveActiveOrg } from "@/lib/auth/server";
 import { traduzir } from "@/lib/i18n/dicionario";
 
 export const dynamic = "force-dynamic";
-export const metadata: Metadata = { title: "Análise" };
+export const metadata: Metadata = { title: "Análisis" };
 
 /**
  * Hub da Análise.

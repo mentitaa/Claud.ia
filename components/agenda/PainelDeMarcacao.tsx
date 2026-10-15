@@ -472,7 +472,7 @@ export function PainelDeMarcacao({
             {format(new Date(marcado.instante), t("EEEE, d 'de' MMMM 'às' HH:mm"), { locale: localeDaData })}
           </p>
           <p className="mt-0.5 text-xs text-text-subtle">
-            {t(tipo)} · {duracaoMin} {t("min · com")} {responsavel.nome}
+            {t(tipo)} · {duracaoMin} {t("min · com")} {responsavel.nome === "Você" ? t("Você") : responsavel.nome}
           </p>
           {quemSeraAtendido && !quemSeraAtendido.aceitaMensagem && (
             // Repetido aqui de propósito: o aviso do passo anterior sumiu da
@@ -567,8 +567,14 @@ export function PainelDeMarcacao({
         className="shrink-0 border-b border-border bg-surface-elevated/50 p-4 lg:w-[280px] lg:border-b-0 lg:border-r"
       >
         <div className="flex items-center gap-2">
-          <AvatarDaPessoa pessoa={responsavel} tamanho="sm" />
-          <span className="truncate text-sm font-semibold">{responsavel.nome}</span>
+          {/* Claud.ia: "Você" é a chave interna; na tela sai traduzido ("Tú"). */}
+          <AvatarDaPessoa
+            pessoa={responsavel.nome === "Você" ? { ...responsavel, nome: t("Você") } : responsavel}
+            tamanho="sm"
+          />
+          <span className="truncate text-sm font-semibold">
+            {responsavel.nome === "Você" ? t("Você") : responsavel.nome}
+          </span>
         </div>
         <h3 className="mt-3 text-base font-semibold leading-tight">{tipo}</h3>
         <dl className="mt-3 space-y-2 text-xs text-text-muted">

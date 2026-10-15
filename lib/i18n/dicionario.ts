@@ -1088,8 +1088,8 @@ export const DICIONARIO: Traducoes = {
   "Sua conta, os dados da empresa e quem tem acesso ao quê.": {
     es: "Tu cuenta, los datos de la empresa y quién tiene acceso a qué.",
   },
-  "Seu nome, idioma, fuso horário e avatar.": {
-    es: "Tu nombre, idioma, zona horaria y avatar.",
+  "Seu nome, fuso horário e avatar.": {
+    es: "Tu nombre, zona horaria y avatar.",
   },
   "Verificação em duas etapas, códigos de recuperação e sessões.": {
     es: "Verificación en dos pasos, códigos de recuperación y sesiones.",

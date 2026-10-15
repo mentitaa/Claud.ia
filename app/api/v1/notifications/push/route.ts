@@ -124,3 +124,27 @@ export async function DELETE(req: NextRequest): Promise<Response> {
   if (error) return fail("internal_error", error.message, 500, { requestId });
   return ok({ ok: true }, { requestId });
 }
+
+/**
+ * Claud.ia — POST: manda um aviso de PRUEBA só para quem pediu, em todos os
+ * aparelhos dele. É o botão "Enviar aviso de prueba" da tela de notificações:
+ * confirma no iPhone (e no Apple Watch) que os avisos de llegada vão chegar,
+ * sem precisar de um cliente escrevendo no WhatsApp.
+ */
+export async function POST(): Promise<Response> {
+  const requestId = randomUUID();
+  const authz = await requireRole("viewer", { requestId, resource: "push_subscriptions" });
+  if (!authz.ok) return authz.response;
+  if (!vapidPronto()) {
+    return fail("unavailable", "Los avisos al celular no están configurados en el servidor.", 503, { requestId });
+  }
+  const { enviarPushAoUsuario } = await import("@/lib/notifications/web_push");
+  const { sent } = await enviarPushAoUsuario(authz.org.orgId, authz.user.id, {
+    title: "Claud.ia",
+    body: "¡Listo! Así te avisaré cuando un cliente llegue o esté llegando.",
+    href: "/app/settings/notifications",
+    tag: "prueba",
+    forzar: true,
+  });
+  return ok({ enviados: sent }, { requestId });
+}

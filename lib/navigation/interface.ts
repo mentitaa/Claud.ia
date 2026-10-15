@@ -39,6 +39,9 @@ const SIMPLIFICADA: readonly NavDestinationId[] = [
 export const PORTAS_ESSENCIAIS = [
   "/app/settings/profile",
   "/app/settings/security",
+  // Claud.ia: los avisos de llegada al celular se activan aquí, y cada persona
+  // (doctor, secretaria) lo hace en su propio teléfono — nunca se esconde.
+  "/app/settings/notifications",
   "/app/team",
   "/app/settings/tenant",
 ] as const;

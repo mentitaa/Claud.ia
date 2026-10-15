@@ -138,9 +138,8 @@ describe("as cores do desenho", () => {
 describe("o favicon segue a mesma regra", () => {
   const icone = fs.readFileSync(path.join(process.cwd(), "app/icon.tsx"), "utf8");
 
-  it("desenha o símbolo quando a marca é a do produto, e a inicial quando não é", () => {
-    expect(icone).toMatch(/marcaEhADoProduto\(\{ name: marca\.nome, logoUrl: marca\.logoUrl \}\)/);
-    expect(icone).toMatch(/<path d=\{SIMBOLO\.d\}/);
-    expect(icone).toMatch(/letraDoIcone\(marca\.nome\)/);
+  it("Claud.ia: desenha sempre o {c} do produto, do mesmo mapa dos PNG", () => {
+    expect(icone).toMatch(/from "@\/lib\/branding\/icono-claudia"/);
+    expect(icone).toMatch(/CUADROS_DEL_ICONO\.map/);
   });
 });

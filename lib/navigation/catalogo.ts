@@ -715,7 +715,7 @@ export const NAV_CATALOG = [
   {
     href: "/app/settings/profile",
     label: "Perfil",
-    description: "Seu nome, idioma, fuso horário e avatar.",
+    description: "Seu nome, fuso horário e avatar.",
     icon: "UserCircle",
     group: "organizacao",
     section: "Sua conta",

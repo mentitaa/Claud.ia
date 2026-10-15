@@ -8,6 +8,8 @@ export const pushPayloadSchema = z.object({
   tag: z.string().optional(),
   href: z.string().optional(),
   icon: z.string().optional(),
+  /** Claud.ia: mostrar aunque el panel esté abierto (avisos de llegada y de prueba). */
+  forzar: z.boolean().optional(),
 });
 
 export type PushPayload = z.infer<typeof pushPayloadSchema>;

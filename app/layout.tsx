@@ -114,7 +114,10 @@ export async function generateMetadata(): Promise<Metadata> {
     // `/icon` faz o pedido ir para `app/icon.tsx`, que desenha a marca da
     // instalação em runtime — ver o cabeçalho daquele arquivo para por que ele
     // não pode ser um arquivo estático em `public/`.
-    icons: { icon: "/icon" },
+    icons: { icon: "/icon", apple: "/claudia/icono-180.png" },
+    // Claud.ia: el nombre que el iPhone propone al "Agregar a pantalla de inicio",
+    // y que la app abra a pantalla completa, sin la barra de Safari.
+    appleWebApp: { capable: true, title: name, statusBarStyle: "default" },
   };
 }
 

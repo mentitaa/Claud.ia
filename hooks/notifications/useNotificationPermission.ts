@@ -68,8 +68,12 @@ export function useNotificationPermission(): {
   }, []);
 
   const request = useCallback(async () => {
-    await resumeAudio();
+    // Claud.ia: o iPhone só mostra a pergunta de permissão se ela for pedida
+    // DENTRO do toque. Esperar o áudio antes podia gastar esse toque e a
+    // pergunta nunca aparecia — os dois agora começam juntos.
+    const audio = resumeAudio().catch(() => undefined);
     const next = await requestPermission();
+    await audio;
     if (next === "granted") {
       setAlertsEnabled(true);
       setEnabledState(true);

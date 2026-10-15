@@ -2,6 +2,7 @@ import { requireAuth } from "@/lib/auth/server";
 import { traduzir } from "@/lib/i18n/dicionario";
 import { Card } from "@/components/ui/card";
 import { vapidPronto } from "@/lib/notifications/vapid";
+import { ActivarAvisosEnEsteTelefono } from "./_activar";
 import { NotificationPrefsClient } from "./_client";
 
 export const dynamic = "force-dynamic";
@@ -54,6 +55,8 @@ export default async function NotificationsPage() {
         <h1 className="text-2xl font-semibold tracking-tight">{t("Notificações")}</h1>
         <p className="text-sm text-muted-foreground">{t("Canais e categorias.")}</p>
       </header>
+
+      <ActivarAvisosEnEsteTelefono />
 
       {pushPronto ? (
         <Card

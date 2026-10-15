@@ -916,6 +916,11 @@ const HOSTS_DECLARADOS: Record<string, EntradaDeHost> = {
     motivo:
       "portal de parceiros da Nuvemshop, onde o operador registra o aplicativo e pega client id e secret. Endereço da plataforma, não nosso.",
   },
+  "claudia.mentitastudio.com": {
+    categoria: "FORNECEDOR",
+    motivo:
+      "Claud.ia: os textos de privacidade e termos da Mentita Studio, para onde `app/legal/*` redireciona. É a dona do produto, não um revendedor.",
+  },
   // ── amostra de formato: mostra o que digitar, não é destino ──────────────
   "wa.me": {
     categoria: "AMOSTRA",

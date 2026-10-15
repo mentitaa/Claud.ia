@@ -102,7 +102,7 @@ export async function avisarSiEsLlegada(input: {
     const { title, body } = textoDelAvisoDeLlegada({ tipo, nombre, hora, mensaje: input.texto ?? "" });
     const href = input.conversationId ? `/app/inbox?id=${input.conversationId}` : "/app/inbox";
     const tag = input.conversationId ? `llegada:${input.conversationId}` : "llegada";
-    const { sent } = await enviarPushDaOrg(input.organizationId, { title, body, href, tag });
+    const { sent } = await enviarPushDaOrg(input.organizationId, { title, body, href, tag, forzar: true });
     return { enviado: sent, detalle: `llegada:${tipo}:sent:${sent}` };
   } catch (err) {
     logger.warn("aviso_de_llegada_fallo", {

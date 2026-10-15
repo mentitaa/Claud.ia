@@ -36,19 +36,23 @@ self.addEventListener("notificationclick", (event) => {
 self.addEventListener("push", (event) => {
   event.waitUntil(
     (async () => {
-      const clientes = await self.clients.matchAll({ type: "window", includeUncontrolled: true });
-      const visiveis = clientes.filter((c) => c.visibilityState === "visible").length;
-      if (visiveis > 0) return;
-      let data = { title: "Nova mensagem", body: "", tag: "msg", href: "/app/inbox", icon: "" };
+      let data = { title: "Nova mensagem", body: "", tag: "msg", href: "/app/inbox", icon: "", forzar: false };
       try {
         if (event.data) data = { ...data, ...event.data.json() };
       } catch {
         // payload não-JSON
       }
+      // Claud.ia: os avisos de llegada (e o de prueba) saem SEMPRE, mesmo com o
+      // painel aberto — é o que faz o iPhone e o Apple Watch vibrarem.
+      if (!data.forzar) {
+        const clientes = await self.clients.matchAll({ type: "window", includeUncontrolled: true });
+        const visiveis = clientes.filter((c) => c.visibilityState === "visible").length;
+        if (visiveis > 0) return;
+      }
       await self.registration.showNotification(data.title, {
         body: data.body,
         tag: data.tag,
-        icon: data.icon || undefined,
+        icon: data.icon || self.location.origin + "/claudia/icono-192.png",
         badge: self.location.origin + "/icon",
         renotify: true,
         data: { href: data.href || "/app/inbox" },

@@ -2,6 +2,8 @@ import { NOTIFY_KINDS, type NotifyKind } from "./kinds";
 import { areAlertsEnabled, getPermission } from "./permission";
 import { ensureNotifyServiceWorker } from "./service_worker";
 import { playSound, type SoundId } from "./sounds";
+import { traduzir } from "@/lib/i18n/dicionario";
+import { IDIOMA_PADRAO } from "@/lib/i18n/idiomas";
 
 const BODY_MAX = 140;
 
@@ -42,10 +44,13 @@ export function emitNotification(input: EmitNotificationInput): void {
   const enabled = areAlertsEnabled();
   if (!input.force && !enabled) return;
   if (perm !== "granted") return;
+  // Claud.ia: os textos fixos dos avisos nascem em português no código; aqui
+  // saem no idioma do produto (espanhol). Nome do contato e mensagem não mudam.
+  const titulo = traduzir(input.title, IDIOMA_PADRAO);
 
   const spec = NOTIFY_KINDS[input.kind];
   const sound = input.sound ?? spec.sound;
-  const body = truncateNotifyBody(input.body);
+  const body = truncateNotifyBody(traduzir(input.body, IDIOMA_PADRAO));
   const tag = input.tag ? `${spec.tagPrefix}:${input.tag}` : `${spec.tagPrefix}:${Date.now()}`;
   const marca = absUrl("/icon");
   const icon = absUrl(input.icon || marca);
@@ -69,14 +74,14 @@ export function emitNotification(input: EmitNotificationInput): void {
   }
 
   try {
-    const n = new Notification(input.title, opts);
+    const n = new Notification(titulo, opts);
     n.onclick = () => {
       window.focus();
       if (href) window.location.assign(href);
       n.close();
     };
   } catch {
-    void showInOsTray(input.title, opts);
+    void showInOsTray(titulo, opts);
   }
 }
 

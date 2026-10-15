@@ -36,7 +36,7 @@ self.addEventListener("notificationclick", (event) => {
 self.addEventListener("push", (event) => {
   event.waitUntil(
     (async () => {
-      let data = { title: "Nova mensagem", body: "", tag: "msg", href: "/app/inbox", icon: "", forzar: false };
+      let data = { title: "Mensaje nuevo", body: "", tag: "msg", href: "/app/inbox", icon: "", forzar: false };
       try {
         if (event.data) data = { ...data, ...event.data.json() };
       } catch {

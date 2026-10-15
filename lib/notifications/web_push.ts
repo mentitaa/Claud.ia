@@ -5,6 +5,8 @@ import { logger } from "@/lib/logger";
 import { env } from "@/lib/env";
 import { vapidPronto, vapidPublica, vapidSubject } from "./vapid";
 import type { PushPayload } from "./push_payload";
+import { traduzir } from "@/lib/i18n/dicionario";
+import { IDIOMA_PADRAO } from "@/lib/i18n/idiomas";
 
 export type PushSubRow = {
   id: string;
@@ -47,7 +49,12 @@ export async function enviarPushDaOrg(
 
   let sent = 0;
   let gone = 0;
-  const body = JSON.stringify(payload);
+  // Claud.ia: título e textos fixos no idioma do produto (espanhol).
+  const body = JSON.stringify({
+    ...payload,
+    title: traduzir(payload.title, IDIOMA_PADRAO),
+    body: traduzir(payload.body, IDIOMA_PADRAO),
+  });
 
   await Promise.all(
     rows.map(async (row) => {

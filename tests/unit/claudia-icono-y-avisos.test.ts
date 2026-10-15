@@ -48,3 +48,28 @@ describe("Claud.ia · Notificaciones siempre a la vista", () => {
     expect((NAV_CATALOG as readonly NavMetadata[]).some((d) => d.href === "/app/settings/notifications")).toBe(true);
   });
 });
+
+describe("Claud.ia · los avisos del celular salen en español", () => {
+  it("los textos fijos de los avisos tienen traducción", async () => {
+    const { traduzir } = await import("@/lib/i18n/dicionario");
+    for (const pt of [
+      "Alertas ligados",
+      "Alertas desligados",
+      "Novas mensagens aparecem na bandeja do sistema.",
+      "Este navegador não vai mais avisar na bandeja.",
+      "Nova mensagem",
+      "Lead atribuído a você",
+      "Lead ganho",
+      "Você foi mencionado",
+    ]) {
+      expect(traduzir(pt, "es"), pt).not.toBe(pt);
+    }
+  });
+
+  it("el aviso del sistema (celular) y el push del servidor pasan por el diccionario", () => {
+    const emit = fs.readFileSync(path.join(RAIZ, "lib/notifications/emit.ts"), "utf8");
+    expect(emit).toMatch(/traduzir\(input\.title, IDIOMA_PADRAO\)/);
+    const push = fs.readFileSync(path.join(RAIZ, "lib/notifications/web_push.ts"), "utf8");
+    expect(push).toMatch(/traduzir\(payload\.title, IDIOMA_PADRAO\)/);
+  });
+});

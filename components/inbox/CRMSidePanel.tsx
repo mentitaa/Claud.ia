@@ -3,6 +3,7 @@
 import { LeadEnrichment } from "./LeadEnrichment";
 import type { ProspectEnrichment } from "@/lib/prospecting/schema";
 import { useAuth } from "@/hooks/auth/AuthProvider";
+import { EstadoDelCliente } from "@/components/inbox/EstadoDelCliente";
 import { useLocaleDeData } from "@/hooks/i18n/useLocaleDeData";
 
 import type { Locale } from "date-fns";
@@ -16,7 +17,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Separator } from "@/components/ui/separator";
-import { Tag, Receipt, Users, ArrowRight } from "@/lib/ui/icons";
+import { Tag, Receipt, ArrowRight } from "@/lib/ui/icons";
 import { apiClient } from "@/lib/api/client";
 import { toast } from "sonner";
 import type { ConversationWithContact } from "@/hooks/inbox/useConversationsRealtime";
@@ -461,7 +462,11 @@ function CamposDoFunil({
 }
 
 export function CRMSidePanel({ conversation }: Props) {
-  const { user } = useAuth();
+  const { user, activeOrg } = useAuth();
+  // Claud.ia: el doctor y la secretaria ven el panel SIMPLE (contacto, estado
+  // del cliente y, después, el tratamiento). Casos, memoria, pedidos y
+  // actividad quedan para quien administra.
+  const simple = !!activeOrg && activeOrg.role !== "admin";
   const readonly = user.support?.access_mode === "support_readonly";
   const localeDaData = useLocaleDeData();
   const t = useT();
@@ -630,7 +635,7 @@ export function CRMSidePanel({ conversation }: Props) {
           )}
           <div className="flex flex-wrap gap-2 pt-1">
             {contactId&&conversation?<Link className="underline" href={`/app/agenda?contato=${contactId}&conversa=${conversation.id}`}>{t("Marcar compromisso")}</Link>:null}
-            <Button
+            {!simple && <Button
               size="sm"
               variant="outline"
               className="h-7 px-2 text-xs"
@@ -639,17 +644,9 @@ export function CRMSidePanel({ conversation }: Props) {
               onClick={() => setTagEditorOpen((v) => !v)}
             >
               <Tag size={12} className="mr-1" weight="regular" aria-hidden /> {t("Tags do contato")}
-            </Button>
-            <Button
-              size="sm"
-              variant="outline"
-              className="h-7 px-2 text-xs"
-              disabled={readonly || !contactId || (leadDialogOpen && defaultPipeline.isLoading)}
-              onClick={() => setLeadDialogOpen(true)}
-            >
-              <Users size={12} className="mr-1" weight="regular" aria-hidden />
-              {leadDialogOpen && defaultPipeline.isLoading ? t("Carregando…") : t("Novo Lead")}
-            </Button>
+            </Button>}
+            {/* Claud.ia: sin "Nuevo Lead" — el cliente se sigue por su estado y su
+                tratamiento, no por un negocio creado a mano. */}
             {contactId && (
               <Button asChild size="sm" variant="ghost" className="h-7 px-2 text-xs">
                 <Link href={`/app/contacts/${contactId}`}>
@@ -663,12 +660,12 @@ export function CRMSidePanel({ conversation }: Props) {
         </Card>
       </section>
 
-      <LeadEnrichment
+      {!simple && <LeadEnrichment
         data={summaryContactId === contactId && !erro && !contact?.is_anonymized ? enrichment : null}
         loading={sectionsLoading}
         error={erro || (summaryContactId === contactId && enrichmentError)}
         onRetry={recarregar}
-      />
+      />}
 
       {contactId && defaultPipeline.data && (
         <NewLeadDialog
@@ -686,12 +683,19 @@ export function CRMSidePanel({ conversation }: Props) {
 
       <Separator />
 
-      {!readonly && <ConversationTagsEditor
+      <EstadoDelCliente
+        conversationId={conversation.id}
+        tags={conversation.tags ?? []}
+        disabled={readonly}
+      />
+
+      {!simple && !readonly && <ConversationTagsEditor
         conversationId={conversation.id}
         orgId={conversation.organization_id}
         tags={conversation.tags ?? []}
       />}
 
+      {!simple && <>
       <Separator />
 
       {/* ANTES dos negócios de propósito (doutrina cap. 5): lead é o negócio,
@@ -857,6 +861,7 @@ export function CRMSidePanel({ conversation }: Props) {
           <SemLista vazio="Sem atividade." erro={erro} onTentarDeNovo={() => setTentativa((n) => n + 1)} />
         )}
       </section>
+      </>}
     </aside>
   );
 }
